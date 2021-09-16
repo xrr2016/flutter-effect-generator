@@ -4,18 +4,27 @@ import './background_controller.dart';
 class BackgroundView extends StatefulWidget {
   static const routeName = '/background';
 
-  const BackgroundView({
+  BackgroundView({
     Key? key,
-    required this.controller,
-  }) : super(key: key);
+  }) : super(key: key) {
+    controller = BackgroundController();
+  }
 
-  final BackgroundController controller;
+  late final BackgroundController controller;
 
   @override
   _BackgroundViewState createState() => _BackgroundViewState();
 }
 
 class _BackgroundViewState extends State<BackgroundView> {
+  late final BackgroundController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,33 +51,49 @@ class _BackgroundViewState extends State<BackgroundView> {
           ),
         ),
       ),
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Container(
-              alignment: Alignment.center,
-              constraints: BoxConstraints.tightForFinite(),
-              decoration: BoxDecoration(
-                color: fromCssColor('#2980b9'),
-                gradient: LinearGradient(
-                  colors: [
-                    fromCssColor('#2980b9'),
-                    fromCssColor('#2c3e50'),
-                  ],
-                ),
-              ),
-              child: Text(
-                'Nighthawk',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40.0,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+      body: LayoutBuilder(builder: (context, BoxConstraints constraints) {
+        return AnimatedBuilder(
+            animation: controller,
+            builder: (BuildContext context, Widget? child) {
+              return Stack(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    constraints: BoxConstraints.tightForFinite(),
+                    decoration: BoxDecoration(
+                      color: fromCssColor('#2980b9'),
+                      gradient: LinearGradient(
+                        colors: [
+                          fromCssColor('#2980b9'),
+                          fromCssColor('#2c3e50'),
+                        ],
+                      ),
+                    ),
+                    child: Text(
+                      controller.text,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40.0,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 20.0,
+                    left: constraints.maxWidth / 2 - 150.0,
+                    child: Container(
+                      width: 300.0,
+                      color: Colors.amber,
+                      child: TextField(
+                        onChanged: (val) {
+                          controller.changeText(val);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            });
+      }),
     );
   }
 }

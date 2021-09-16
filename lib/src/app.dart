@@ -23,7 +23,7 @@ class App extends StatelessWidget {
           theme: ThemeData(),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
-          home: const BackgroundView(controller: BackgroundController()),
+          home: BackgroundView(),
           routes: appRoutes,
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
