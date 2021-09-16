@@ -1,0 +1,6 @@
+{
+  "appTitle": "flutter_effect_generator",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
