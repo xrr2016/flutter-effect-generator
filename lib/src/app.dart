@@ -1,12 +1,7 @@
 import './exports.dart';
 
-import 'sample_feature/sample_item_details_view.dart';
-import 'sample_feature/sample_item_list_view.dart';
-import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
-
-class MyApp extends StatelessWidget {
-  const MyApp({
+class App extends StatelessWidget {
+  const App({
     Key? key,
     required this.settingsController,
   }) : super(key: key);
@@ -28,6 +23,8 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
+          home: const BackgroundView(controller: BackgroundController()),
+          routes: appRoutes,
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
               settings: routeSettings,
@@ -35,11 +32,12 @@ class MyApp extends StatelessWidget {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
-                  case SampleItemDetailsView.routeName:
-                    return const SampleItemDetailsView();
-                  case SampleItemListView.routeName:
+                  // case SampleItemDetailsView.routeName:
+                  //   return const SampleItemDetailsView();
+                  // case SampleItemListView.routeName:
+                  //   return const SampleItemListView();
                   default:
-                    return const SampleItemListView();
+                    return const HomeView();
                 }
               },
             );

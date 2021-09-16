@@ -1,0 +1,3 @@
+class BackgroundController {
+  const BackgroundController();
+}
