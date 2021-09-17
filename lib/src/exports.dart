@@ -11,3 +11,4 @@ export './routes.dart';
 export './home/home_view.dart';
 export './settings/index.dart';
 export './background/background_view.dart';
+export './matrix/matrix_view.dart';
