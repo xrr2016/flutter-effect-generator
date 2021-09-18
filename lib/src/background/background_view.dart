@@ -1,4 +1,5 @@
 import '../exports.dart';
+import './model/gradient_item.dart';
 import './background_controller.dart';
 
 class BackgroundView extends StatefulWidget {
@@ -6,28 +7,88 @@ class BackgroundView extends StatefulWidget {
 
   BackgroundView({
     Key? key,
-  }) : super(key: key) {
-    controller = BackgroundController();
-  }
-
-  late final BackgroundController controller;
+  }) : super(key: key);
 
   @override
   _BackgroundViewState createState() => _BackgroundViewState();
 }
 
 class _BackgroundViewState extends State<BackgroundView> {
-  late final BackgroundController controller;
+  final BackgroundController controller = BackgroundController();
+
+  final TextEditingController _textEditingController = TextEditingController();
+
+  GradientItem defaultGradientItem = GradientItem(colors: [
+    fromCssColor('blue'),
+    fromCssColor('yellow'),
+  ], name: 'Gradient Background');
+
+  List<Widget> _buildColorItems() {
+    List<Widget> items = [];
+
+    controller.gradients.asMap().forEach((key, GradientItem gradientItem) {
+      items.add(
+        InkWell(
+          onTap: () {
+            controller.changleGradient(gradientItem);
+            Navigator.pop(context);
+          },
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: gradientItem.colors.first,
+              gradient: LinearGradient(colors: gradientItem.colors),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: FittedBox(
+              alignment: Alignment.center,
+              fit: BoxFit.cover,
+              child: Text(
+                gradientItem.name,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+
+    return items.toList();
+  }
+
+  void _openDialog() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(10.0),
+          title: Text('Choose'),
+          content: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.8,
+            padding: const EdgeInsets.all(20.0),
+            child: GridView.count(
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
+              crossAxisCount: 3,
+              semanticChildCount: 3,
+              children: _buildColorItems(),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    controller = widget.controller;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('Gradient Background'),
         centerTitle: false,
@@ -55,30 +116,33 @@ class _BackgroundViewState extends State<BackgroundView> {
         return AnimatedBuilder(
             animation: controller,
             builder: (BuildContext context, Widget? child) {
+              final List<Color> colors = controller.gradient.colors.isNotEmpty
+                  ? controller.gradient.colors
+                  : defaultGradientItem.colors;
+              final String text = controller.text.isNotEmpty
+                  ? controller.text
+                  : controller.gradient.name;
+
               return Stack(
                 children: [
                   Container(
-                    alignment: Alignment.center,
+                    alignment: Alignment.topCenter,
                     constraints: BoxConstraints.tightForFinite(),
                     decoration: BoxDecoration(
-                      color: fromCssColor('#2980b9'),
                       gradient: LinearGradient(
-                        colors: [
-                          fromCssColor('#2980b9'),
-                          fromCssColor('#2c3e50'),
-                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: colors,
                       ),
                     ),
-                    child: Padding(
+                    child: Container(
+                      margin: EdgeInsets.only(top: 300.0),
                       padding: const EdgeInsets.symmetric(horizontal: 100.0),
                       child: Text(
-                        controller.text,
+                        text,
                         maxLines: 2,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40.0,
-                        ),
+                        style: TextStyle(color: Colors.white, fontSize: 40.0),
                       ),
                     ),
                   ),
@@ -86,8 +150,8 @@ class _BackgroundViewState extends State<BackgroundView> {
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       margin: EdgeInsets.only(bottom: 50.0),
-                      height: 200.0,
-                      width: 800.0,
+                      height: 160.0,
+                      width: 720.0,
                       child: Column(
                         children: [
                           ListTile(
@@ -96,12 +160,15 @@ class _BackgroundViewState extends State<BackgroundView> {
                               style: const TextStyle(color: Colors.white),
                             ),
                             trailing: InkWell(
-                              onTap: () {},
+                              onTap: _openDialog,
                               child: Container(
                                 width: 60.0,
                                 height: 24.0,
                                 decoration: BoxDecoration(
                                   color: Colors.amber,
+                                  gradient: LinearGradient(
+                                    colors: colors,
+                                  ),
                                   border: Border.all(
                                     color: Colors.white,
                                     width: 2.0,
@@ -118,10 +185,22 @@ class _BackgroundViewState extends State<BackgroundView> {
                               style: const TextStyle(color: Colors.white),
                             ),
                             title: Padding(
-                              padding: const EdgeInsets.only(left: 26.0),
+                              padding: const EdgeInsets.only(left: 40.0),
                               child: TextField(
                                 maxLength: 50,
+                                controller: _textEditingController,
+                                cursorColor: Colors.white,
                                 decoration: InputDecoration(
+                                  suffix: IconButton(
+                                    onPressed: () {
+                                      controller.clearText();
+                                      _textEditingController.clear();
+                                    },
+                                    icon: Icon(
+                                      Icons.clear_sharp,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                   counterStyle: TextStyle(color: Colors.white),
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
@@ -135,25 +214,6 @@ class _BackgroundViewState extends State<BackgroundView> {
                                   controller.changeText(val);
                                 },
                               ),
-                            ),
-                          ),
-                          ListTile(
-                            leading: Text(
-                              'Angle',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            title: Slider(
-                              min: 0.0,
-                              max: 360,
-                              value: 180.0,
-                              label: '111',
-                              activeColor: Colors.amber,
-                              inactiveColor: Colors.white70,
-                              onChanged: (val) {},
-                            ),
-                            trailing: Text(
-                              '180.0',
-                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         ],

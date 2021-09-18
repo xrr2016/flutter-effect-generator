@@ -1,43 +1,37 @@
 import '../exports.dart';
-
-// List<Map<String, dynamic>> parrtens = [
-//   {
-//     "text": "Nighthawk",
-//     "gradient": [fromCssColor('#2980b9'), fromCssColor('#2c3e50')],
-//   },
-//   {
-//     "text": "Grade Grey",
-//     "gradient": [fromCssColor('#bdc3c7'), fromCssColor('#2c3e50')],
-//   },
-//   {
-//     "text": "Grade Grey",
-//     "gradient": [fromCssColor('#bdc3c7'), fromCssColor('#2c3e50')],
-//   },
-// ];
+import './model/gradient_item.dart';
 
 class BackgroundService {
   String text;
-  String pattern;
-  double angle;
   String code;
+  List<GradientItem> gradients;
+  GradientItem gradient;
 
   BackgroundService({
-    this.text = 'Nighthawk',
-    this.pattern = '',
-    this.angle = 0.0,
+    this.text = '',
+    this.gradient = const GradientItem(colors: [], name: ''),
+    this.gradients = const [],
     this.code = '',
   }) {
-    print('BackgroundService');
     loadJson();
+  }
+
+  List<GradientItem> _parseGradients(String data) {
+    final jsonResult = json.decode(data) as List;
+    return jsonResult.map((json) => GradientItem.fromJson(json)).toList();
   }
 
   loadJson() async {
     String data = await rootBundle.loadString('assets/data/gradients.json');
-    final jsonResult = json.decode(data);
-    print(jsonResult);
+    gradients = await compute(_parseGradients, data);
+    gradient = gradients.first;
   }
 
   changeText(String text) {
-    this.text = text;
+    text = text;
+  }
+
+  changleGradient(GradientItem item) {
+    gradient = item;
   }
 }
