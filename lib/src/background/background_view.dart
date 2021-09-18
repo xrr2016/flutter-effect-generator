@@ -132,6 +132,7 @@ class _BackgroundViewState extends State<BackgroundView> {
             return Stack(
               children: [
                 Container(
+                  constraints: BoxConstraints.tightForFinite(),
                   alignment: Alignment.topCenter,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -143,12 +144,17 @@ class _BackgroundViewState extends State<BackgroundView> {
                   child: Container(
                     width: constraints.maxWidth / 2,
                     margin: EdgeInsets.only(top: 300.0),
-                    padding: const EdgeInsets.symmetric(horizontal: 100.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 100.0,
+                    ),
                     child: Text(
                       text,
                       maxLines: 2,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 50.0),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 50.0,
+                      ),
                     ),
                   ),
                 ),
@@ -234,7 +240,7 @@ class _BackgroundViewState extends State<BackgroundView> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Container(
-                      width: 600.0,
+                      width: 500.0,
                       height: 800.0,
                       color: Colors.transparent,
                       child: SingleChildScrollView(

@@ -53,7 +53,6 @@ class BackgroundController with ChangeNotifier {
     _code = '''
       Container(
         alignment: Alignment.topCenter,
-        constraints: BoxConstraints.tightForFinite(),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
@@ -62,13 +61,19 @@ class BackgroundController with ChangeNotifier {
           ),
         ),
         child: Container(
+          width: 800,
           margin: EdgeInsets.only(top: 300.0),
-          padding: const EdgeInsets.symmetric(horizontal: 100.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 100.0,
+          ),
           child: Text(
             '$text',
             maxLines: 2,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 40.0),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 50.0,
+            ),
           ),
         ),
       ),
