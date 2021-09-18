@@ -15,6 +15,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   from_css_color: ^2.0.0
+  google_fonts: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +32,4 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+    - assets/data/

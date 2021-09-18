@@ -20,10 +20,12 @@ class App extends StatelessWidget {
           supportedLocales: AppLocalizations.supportedLocales,
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,
-          theme: ThemeData(),
+          theme: ThemeData(
+            textTheme: GoogleFonts.latoTextTheme(),
+          ),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
-          home: MatrixView(),
+          home: BackgroundView(),
           routes: appRoutes,
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
