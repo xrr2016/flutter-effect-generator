@@ -1,7 +1,8 @@
-import 'dart:async';
+import 'package:flutter/rendering.dart';
 
 import '../exports.dart';
 import './vertical_textline.dart';
+import './matrix_patinter.dart';
 
 class MatrixView extends StatefulWidget {
   const MatrixView({Key? key}) : super(key: key);
@@ -56,7 +57,12 @@ class _MatrixViewState extends State<MatrixView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(children: _verticalLines),
+      body: CustomPaint(
+        child: Container(
+          constraints: BoxConstraints.tightForFinite(),
+        ),
+        painter: MatrixPainter(),
+      ),
     );
   }
 }

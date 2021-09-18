@@ -24,7 +24,7 @@ class VerticalTextLine extends StatefulWidget {
 class _VerticalTextLineState extends State<VerticalTextLine> {
   late int _maxLength;
   late Duration _stepInterval;
-  final List<String> _characters = ['T', 'E', 'S', 'T'];
+  final List<String> _characters = [];
   late Timer _timer;
 
   @override
