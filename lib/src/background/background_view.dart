@@ -15,13 +15,14 @@ class BackgroundView extends StatefulWidget {
 
 class _BackgroundViewState extends State<BackgroundView> {
   final BackgroundController controller = BackgroundController();
-
   final TextEditingController _textEditingController = TextEditingController();
 
   GradientItem defaultGradientItem = GradientItem(colors: [
     fromCssColor('blue'),
     fromCssColor('yellow'),
   ], name: 'Gradient Background');
+
+  Map<String, TextStyle> codeTheme = {};
 
   List<Widget> _buildColorItems() {
     List<Widget> items = [];
@@ -45,7 +46,7 @@ class _BackgroundViewState extends State<BackgroundView> {
               fit: BoxFit.cover,
               child: Text(
                 gradientItem.name,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),
             ),
           ),
@@ -66,11 +67,12 @@ class _BackgroundViewState extends State<BackgroundView> {
           content: Container(
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.8,
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(10.0),
             child: GridView.count(
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 20.0,
+              mainAxisSpacing: 20.0,
               crossAxisCount: 3,
+              childAspectRatio: 16 / 9,
               semanticChildCount: 3,
               children: _buildColorItems(),
             ),
@@ -82,71 +84,77 @@ class _BackgroundViewState extends State<BackgroundView> {
 
   @override
   void initState() {
+    codeTheme.addAll(atomOneDarkTheme);
+
+    codeTheme.update(
+      'root',
+      (value) => value.copyWith(
+        backgroundColor: Colors.transparent,
+      ),
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Gradient Background'),
-        centerTitle: false,
-        actions: [
-          Builder(builder: (context) {
-            return IconButton(
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-              icon: Icon(Icons.code),
-            );
-          }),
-        ],
-      ),
-      endDrawer: SizedBox(
-        width: 400.0,
-        child: Drawer(
-          child: Container(
-            constraints: BoxConstraints.tightForFinite(),
-            color: Colors.white,
-          ),
-        ),
-      ),
-      body: LayoutBuilder(builder: (context, BoxConstraints constraints) {
-        return AnimatedBuilder(
-            animation: controller,
-            builder: (BuildContext context, Widget? child) {
-              final List<Color> colors = controller.gradient.colors.isNotEmpty
-                  ? controller.gradient.colors
-                  : defaultGradientItem.colors;
-              final String text = controller.text.isNotEmpty
-                  ? controller.text
-                  : controller.gradient.name;
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (BuildContext context, Widget? child) {
+        final List<Color> colors = controller.gradient.colors.isNotEmpty
+            ? controller.gradient.colors
+            : defaultGradientItem.colors;
+        final String text = controller.text.isNotEmpty
+            ? controller.text
+            : controller.gradient.name;
 
-              return Stack(
-                children: [
-                  Container(
-                    alignment: Alignment.topCenter,
-                    constraints: BoxConstraints.tightForFinite(),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: colors,
-                      ),
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.only(top: 300.0),
-                      padding: const EdgeInsets.symmetric(horizontal: 100.0),
-                      child: Text(
-                        text,
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white, fontSize: 40.0),
-                      ),
+        return Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            title: const Text('Gradient Background'),
+            centerTitle: false,
+            actions: [
+              Switch(
+                activeColor: Colors.amber,
+                value: controller.showControl,
+                onChanged: controller.toggleShowControl,
+              ),
+              Builder(builder: (context) {
+                return IconButton(
+                  onPressed: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                  icon: Icon(Icons.code),
+                );
+              }),
+            ],
+          ),
+          body: LayoutBuilder(builder: (context, BoxConstraints constraints) {
+            return Stack(
+              children: [
+                Container(
+                  alignment: Alignment.topCenter,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: colors,
                     ),
                   ),
-                  Align(
+                  child: Container(
+                    width: constraints.maxWidth / 2,
+                    margin: EdgeInsets.only(top: 300.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 100.0),
+                    child: Text(
+                      text,
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: 50.0),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: controller.showControl,
+                  child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       margin: EdgeInsets.only(bottom: 50.0),
@@ -220,10 +228,35 @@ class _BackgroundViewState extends State<BackgroundView> {
                       ),
                     ),
                   ),
-                ],
-              );
-            });
-      }),
+                ),
+                Visibility(
+                  visible: controller.showControl,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      width: 600.0,
+                      height: 800.0,
+                      color: Colors.transparent,
+                      child: SingleChildScrollView(
+                        child: HighlightView(
+                          controller.code,
+                          theme: codeTheme,
+                          language: 'dart',
+                          padding: const EdgeInsets.only(top: 20.0),
+                          textStyle: GoogleFonts.robotoMono(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }),
+        );
+      },
     );
   }
 }

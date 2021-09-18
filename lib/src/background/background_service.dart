@@ -34,4 +34,8 @@ class BackgroundService {
   changleGradient(GradientItem item) {
     gradient = item;
   }
+
+  setCode(String code) {
+    code = code;
+  }
 }
