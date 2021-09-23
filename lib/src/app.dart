@@ -25,7 +25,7 @@ class App extends StatelessWidget {
           ),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
-          home: BackgroundView(),
+          home: GlassmorphismView(),
           routes: appRoutes,
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
