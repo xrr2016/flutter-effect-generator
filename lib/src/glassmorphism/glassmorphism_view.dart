@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import '../exports.dart';
 
 class GlassmorphismView extends StatefulWidget {
@@ -11,11 +12,25 @@ class GlassmorphismView extends StatefulWidget {
 
 class _GlassmorphismViewState extends State<GlassmorphismView> {
   bool _show = true;
+  Map<String, TextStyle> theme = {};
 
   void _toggleCodeShow() {
     setState(() {
       _show = !_show;
     });
+  }
+
+  @override
+  void initState() {
+    theme.addAll(atomOneDarkTheme);
+
+    theme.update(
+      'root',
+      (value) => value.copyWith(
+        backgroundColor: Colors.transparent,
+      ),
+    );
+    super.initState();
   }
 
   @override
@@ -35,30 +50,90 @@ class _GlassmorphismViewState extends State<GlassmorphismView> {
         child: Row(
           children: [
             Expanded(
-              flex: 3,
               child: Container(
-                width: 600.0,
-                height: 600.0,
-                color: Color(0xff333333),
-                child: Center(
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Color(0xff333333),
-                      borderRadius: BorderRadius.circular(12.0),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0xff242424),
-                          offset: Offset(10.0, 10.0),
-                          blurRadius: 4.0,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: ResizeImage(
+                      NetworkImage(
+                        'https://cdn.pixabay.com/photo/2017/12/10/13/37/christmas-3009949_960_720.jpg',
+                      ),
+                      width: 960,
+                      height: 720,
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(32.0),
+                  child: BackdropFilter(
+                    filter: ui.ImageFilter.blur(
+                      sigmaX: 30.0,
+                      sigmaY: 30.0,
+                      tileMode: TileMode.clamp,
+                    ),
+                    child: Container(
+                      width: 720.0,
+                      height: 400.0,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.01),
+                        borderRadius: BorderRadius.circular(32.0),
+                        border: Border.all(
+                          width: 1.5,
+                          color: Colors.white.withOpacity(0.2),
                         ),
-                        BoxShadow(
-                          color: Color(0xff424242),
-                          offset: Offset(-10.0, -10.0),
-                          blurRadius: 4.0,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Card',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.75),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.credit_card_sharp,
+                                  color: Colors.white.withOpacity(0.75),
+                                )
+                              ],
+                            ),
+                            const Spacer(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'TL Templates',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.75),
+                                  ),
+                                ),
+                                Text(
+                                  '07/25',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.75),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '5555 5555 5555 4444',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.75),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -69,10 +144,23 @@ class _GlassmorphismViewState extends State<GlassmorphismView> {
               curve: Curves.easeIn,
               width: _show ? 480.0 : 0.0,
               color: Colors.green,
+              child: SingleChildScrollView(
+                child: HighlightView(
+                  '111',
+                  theme: theme,
+                  padding: const EdgeInsets.only(top: 20.0),
+                  language: 'dart',
+                  textStyle: GoogleFonts.robotoMono(
+                    color: Colors.white,
+                    fontSize: 13.0,
+                  ),
+                ),
+              ),
             )
           ],
         ),
       ),
+      drawer: appDrawer,
     );
   }
 }

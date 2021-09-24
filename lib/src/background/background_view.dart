@@ -108,7 +108,6 @@ class _BackgroundViewState extends State<BackgroundView> {
             : controller.gradient.name;
 
         return Scaffold(
-          backgroundColor: Colors.black,
           appBar: AppBar(
             title: const Text('Gradient Background'),
             centerTitle: false,
@@ -128,139 +127,146 @@ class _BackgroundViewState extends State<BackgroundView> {
               }),
             ],
           ),
-          body: LayoutBuilder(builder: (context, BoxConstraints constraints) {
-            return Stack(
-              children: [
-                Container(
-                  constraints: BoxConstraints.tightForFinite(),
-                  alignment: Alignment.topCenter,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: colors,
+          backgroundColor: Colors.black,
+          body: LayoutBuilder(
+            builder: (context, BoxConstraints constraints) {
+              return Stack(
+                children: [
+                  Container(
+                    constraints: BoxConstraints.tightForFinite(),
+                    alignment: Alignment.topCenter,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: colors,
+                      ),
                     ),
-                  ),
-                  child: Container(
-                    width: constraints.maxWidth / 2,
-                    margin: EdgeInsets.only(top: 300.0),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 100.0,
-                    ),
-                    child: Text(
-                      text,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 50.0,
+                    child: Container(
+                      width: constraints.maxWidth / 2,
+                      margin: EdgeInsets.only(top: 300.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 100.0,
+                      ),
+                      child: Text(
+                        text,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 50.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: controller.showControl,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 50.0),
-                      height: 160.0,
-                      width: 720.0,
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: Text(
-                              'Background',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            trailing: InkWell(
-                              onTap: _openDialog,
-                              child: Container(
-                                width: 60.0,
-                                height: 24.0,
-                                decoration: BoxDecoration(
-                                  color: Colors.amber,
-                                  gradient: LinearGradient(
-                                    colors: colors,
+                  Visibility(
+                    visible: controller.showControl,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 50.0),
+                        height: 160.0,
+                        width: 720.0,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: Text(
+                                'Background',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              trailing: InkWell(
+                                onTap: _openDialog,
+                                child: Container(
+                                  width: 60.0,
+                                  height: 24.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    gradient: LinearGradient(
+                                      colors: colors,
+                                    ),
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    // gradient:
                                   ),
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  // gradient:
                                 ),
                               ),
                             ),
-                          ),
-                          ListTile(
-                            leading: Text(
-                              'Text',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(left: 40.0),
-                              child: TextField(
-                                maxLength: 50,
-                                controller: _textEditingController,
-                                cursorColor: Colors.white,
-                                decoration: InputDecoration(
-                                  suffix: IconButton(
-                                    onPressed: () {
-                                      controller.clearText();
-                                      _textEditingController.clear();
-                                    },
-                                    icon: Icon(
-                                      Icons.clear_sharp,
-                                      color: Colors.white,
+                            ListTile(
+                              leading: Text(
+                                'Text',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              title: Padding(
+                                padding: const EdgeInsets.only(left: 40.0),
+                                child: TextField(
+                                  maxLength: 50,
+                                  controller: _textEditingController,
+                                  cursorColor: Colors.white,
+                                  decoration: InputDecoration(
+                                    suffix: IconButton(
+                                      onPressed: () {
+                                        controller.clearText();
+                                        _textEditingController.clear();
+                                      },
+                                      icon: Icon(
+                                        Icons.clear_sharp,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    counterStyle:
+                                        TextStyle(color: Colors.white),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
                                     ),
                                   ),
-                                  counterStyle: TextStyle(color: Colors.white),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
+                                  style: TextStyle(color: Colors.white),
+                                  onChanged: (val) {
+                                    controller.changeText(val);
+                                  },
                                 ),
-                                style: TextStyle(color: Colors.white),
-                                onChanged: (val) {
-                                  controller.changeText(val);
-                                },
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: controller.showControl,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      width: 500.0,
-                      height: 800.0,
-                      color: Colors.transparent,
-                      child: SingleChildScrollView(
-                        child: HighlightView(
-                          controller.code,
-                          theme: codeTheme,
-                          language: 'dart',
-                          padding: const EdgeInsets.only(top: 20.0),
-                          textStyle: GoogleFonts.robotoMono(
-                            color: Colors.white,
-                            fontSize: 14.0,
+                  Visibility(
+                    visible: controller.showControl,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        width: 500.0,
+                        height: 800.0,
+                        color: Colors.transparent,
+                        child: SingleChildScrollView(
+                          child: HighlightView(
+                            controller.code,
+                            theme: codeTheme,
+                            language: 'dart',
+                            padding: const EdgeInsets.only(top: 20.0),
+                            textStyle: GoogleFonts.robotoMono(
+                              color: Colors.white,
+                              fontSize: 14.0,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          }),
+                ],
+              );
+            },
+          ),
+          drawer: appDrawer,
         );
       },
     );
