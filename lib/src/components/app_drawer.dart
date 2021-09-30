@@ -32,6 +32,15 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            title: Text('Matrix'),
+            onTap: () {
+              Navigator.restorablePushNamed(
+                context,
+                MatrixView.routeName,
+              );
+            },
+          ),
         ],
       ),
     );

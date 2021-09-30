@@ -5,6 +5,8 @@ import './vertical_textline.dart';
 import './matrix_patinter.dart';
 
 class MatrixView extends StatefulWidget {
+  static const routeName = '/matrix';
+
   const MatrixView({Key? key}) : super(key: key);
 
   @override
@@ -58,11 +60,11 @@ class _MatrixViewState extends State<MatrixView> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: CustomPaint(
-        child: Container(
-          constraints: BoxConstraints.tightForFinite(),
-        ),
-        painter: MatrixPainter(),
-      ),
+          // child: Container(
+          //   constraints: BoxConstraints.tightForFinite(),
+          // ),
+          // painter: MatrixPainter(),
+          ),
     );
   }
 }

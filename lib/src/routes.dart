@@ -3,5 +3,6 @@ import './exports.dart';
 Map<String, Widget Function(BuildContext)> appRoutes = {
   HomeView.routeName: (BuildContext context) => HomeView(),
   BackgroundView.routeName: (BuildContext context) => BackgroundView(),
+  MatrixView.routeName: (BuildContext context) => MatrixView(),
   GlassmorphismView.routeName: (BuildContext context) => GlassmorphismView(),
 };
