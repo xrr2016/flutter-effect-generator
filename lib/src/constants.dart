@@ -4,6 +4,7 @@ const String bgImg = 'assets/images/bg.jpg';
 const String bg2Img = 'assets/images/bg2.jpg';
 
 final List<Color> colors = [
+  const Color(0xfff5f5f5),
   const Color(0xff333333),
   const Color(0xff4caf50),
   const Color(0xff9c27b0),

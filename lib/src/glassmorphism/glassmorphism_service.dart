@@ -2,26 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../exports.dart';
 
-class GlassmorphismState {
+class GlassmorphismService {
   Color color;
-  double blur;
   double width;
   double height;
-  double radius;
+  double blur;
   double opacity;
-  double padding;
-  double saturation;
+  double radius;
   String code;
 
-  GlassmorphismState({
-    this.color = Colors.black12,
-    this.blur = 0.0,
-    this.width = 0.0,
-    this.height = 0.0,
-    this.radius = 0.0,
-    this.opacity = 0.0,
-    this.padding = 0.0,
-    this.saturation = 0.0,
+  GlassmorphismService({
+    this.color = Colors.white,
+    this.width = 360.0,
+    this.height = 520.0,
+    this.blur = 10.0,
+    this.opacity = 0.2,
+    this.radius = 12.0,
     this.code = '',
   });
 }
