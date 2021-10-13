@@ -14,7 +14,7 @@ class GlassmorphismService {
   GlassmorphismService({
     this.color = Colors.white,
     this.width = 360.0,
-    this.height = 520.0,
+    this.height = 360.0,
     this.blur = 10.0,
     this.opacity = 0.2,
     this.radius = 12.0,

@@ -4,6 +4,14 @@ import './glassmorphism_service.dart';
 class GlassmorphismController with ChangeNotifier {
   static final GlassmorphismService _service = GlassmorphismService();
 
+  bool _showControl = true;
+  bool get showControl => _showControl;
+
+  toggleShowControl(bool val) {
+    _showControl = val;
+    notifyListeners();
+  }
+
   double _width = _service.width;
   double get width => _width;
 

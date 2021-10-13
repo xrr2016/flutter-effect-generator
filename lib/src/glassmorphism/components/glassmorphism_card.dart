@@ -34,30 +34,28 @@ class GlassmorphismCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
             color: color.withOpacity(opacity),
+            boxShadow: [
+              BoxShadow(color: color.withOpacity(opacity), offset: Offset(0, 1))
+            ],
             gradient: RadialGradient(
               radius: 2.0,
               center: Alignment(-1, -1),
               colors: [
-                color.withOpacity(.4),
+                color.withOpacity(opacity),
                 color.withOpacity(0.01),
               ],
             ),
-            border: Border.all(
-              width: 1.0,
-              color: color.withOpacity(opacity),
-            ),
           ),
           child: Padding(
-            padding: EdgeInsets.all(26.0),
+            padding: EdgeInsets.all(20.0),
             child: Column(
               children: [
+                SizedBox(height: 10.0),
                 CircleAvatar(
-                  radius: 50.0,
-                  child: FlutterLogo(
-                    size: 50.0,
-                  ),
+                  radius: 36.0,
+                  child: FlutterLogo(size: 36.0),
                 ),
-                SizedBox(height: 12.0),
+                SizedBox(height: 20.0),
                 Text(
                   'Charles McBrayer',
                   style: TextStyle(
