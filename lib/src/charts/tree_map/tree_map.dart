@@ -29,9 +29,9 @@ class _TreeMapState extends State<TreeMap> with SingleTickerProviderStateMixin {
       vsync: this,
       duration: Duration(seconds: 5),
     )..addListener(() {
-        print(
-          {'scale': _scale.value},
-        );
+        // print(
+        //   {'scale': _scale.value},
+        // );
       });
 
     _scale = Tween(begin: 0.0, end: 1.0).animate(
@@ -78,10 +78,9 @@ class TreeMapPainter extends CustomPainter {
     Paint paint = Paint()
       ..color = Colors.black26
       ..style = PaintingStyle.fill;
-
     Rect rootRect = Rect.fromLTWH(0, 0, size.width, size.height);
     TreeNode rootNode = parseArrayToBST(datas);
-    // canvas.drawRect(rootRect, paint);
+    canvas.drawRect(rootRect, paint);
 
     drawTreeRects(
       rootNode,

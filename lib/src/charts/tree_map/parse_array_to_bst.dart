@@ -44,7 +44,6 @@ TreeNode parseArrayToBST(List<double> array) {
 
     double valueLeft = sums[left] - valueOffset;
     double valueRight = node.value - valueLeft;
-
     TreeNode nodeLeft = TreeNode(valueLeft, null, null);
     TreeNode nodeRight = TreeNode(valueRight, null, null);
 

@@ -37,13 +37,16 @@ Paint linePaint = Paint()
   ..strokeWidth = 2.0
   ..isAntiAlias = true;
 
+Paint paint = Paint()
+  ..style = PaintingStyle.fill
+  ..isAntiAlias = true;
+
 void drawTreeRects(
   TreeNode? node,
   Rect rootRectLeft,
   TreeNode? rootNodeLeft,
   int level,
   Canvas canvas, {
-  double scale = 1.0,
   Color? color = Colors.blue,
 }) {
   if (node == null) {
@@ -53,16 +56,12 @@ void drawTreeRects(
     return;
   }
 
-  Paint paint = Paint()
-    ..style = PaintingStyle.fill
-    // ..color = colors[Random().nextInt(colors.length)]
-    ..color = colors[0]
-    ..isAntiAlias = true;
-
   Rect rectLeft;
   Rect rectRight;
 
   if (level.isEven) {
+    paint.color = colors[Random().nextInt(colors.length)];
+
     double left;
     double top;
     double width;
@@ -72,9 +71,6 @@ void drawTreeRects(
     left = rootRectLeft.left;
     width = rootRectLeft.width;
     height = (node.left!.value / rootNodeLeft!.value) * rootRectLeft.height;
-
-    double scaleWidth = width * scale;
-    double scaleHeight = height * scale;
 
     Offset rectLeftCenter = Offset(width / 2 + left, height / 2 + top);
     rectLeft = Rect.fromCenter(
@@ -98,9 +94,6 @@ void drawTreeRects(
     width = rootRectLeft.width;
     height = (node.right!.value / rootNodeLeft.value) * rootRectLeft.height;
 
-    scaleWidth = width * scale;
-    scaleHeight = height * scale;
-
     Offset rectRightCenter = Offset(width / 2 + left, height / 2 + top);
     rectRight = Rect.fromCenter(
       center: rectRightCenter,
@@ -118,6 +111,8 @@ void drawTreeRects(
       Offset(left + width / 2 - 12.0, top + height / 2 - 12.0),
     );
   } else {
+    paint.color = colors[Random().nextInt(colors.length)];
+
     double left;
     double width;
     double top = rootRectLeft.top;
@@ -126,9 +121,6 @@ void drawTreeRects(
     // left node
     left = rootRectLeft.left;
     width = (node.left!.value / rootNodeLeft!.value) * rootRectLeft.width;
-
-    double scaleWidth = width * scale;
-    double scaleHeight = height * scale;
 
     Offset rectLeftCenter = Offset(width / 2 + left, height / 2 + top);
     rectLeft = Rect.fromCenter(
@@ -151,9 +143,6 @@ void drawTreeRects(
     height = rootRectLeft.height;
     left = rootRectLeft.left + width;
     width = (node.right!.value / rootNodeLeft.value) * rootRectLeft.width;
-
-    scaleWidth = width * scale;
-    scaleHeight = height * scale;
 
     Offset rectRightCenter = Offset(width / 2 + left, height / 2 + top);
     rectRight = Rect.fromCenter(
@@ -182,7 +171,6 @@ void drawTreeRects(
     node.left,
     level,
     canvas,
-    scale: scale,
     color: color,
   );
   // 递归绘制右节点
@@ -192,7 +180,6 @@ void drawTreeRects(
     node.right,
     level,
     canvas,
-    scale: scale,
     color: color,
   );
 }
