@@ -41,6 +41,15 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            title: Text('Charts'),
+            onTap: () {
+              Navigator.restorablePushNamed(
+                context,
+                ChartsView.routeName,
+              );
+            },
+          ),
         ],
       ),
     );

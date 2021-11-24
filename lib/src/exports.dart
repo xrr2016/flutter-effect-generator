@@ -20,3 +20,4 @@ export './settings/index.dart';
 export './matrix/matrix_view.dart';
 export './background/background_view.dart';
 export './glassmorphism/glassmorphism_view.dart';
+export './charts/charts_view.dart';
