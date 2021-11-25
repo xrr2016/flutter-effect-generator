@@ -2,6 +2,8 @@ import '../exports.dart';
 import './tree_map/tree_map.dart';
 import './bar_chart/bar_chart.dart';
 import './column_chart/column_chart.dart';
+import './line_chart/line_chart.dart';
+import './charts_controller.dart';
 
 class ChartsView extends StatefulWidget {
   static const routeName = '/charts';
@@ -13,18 +15,7 @@ class ChartsView extends StatefulWidget {
 }
 
 class _ChartsViewState extends State<ChartsView> {
-  String _currentChart = '矩形树图';
-  final List<String> _charts = [
-    '矩形树图',
-    '柱状图',
-    '折线图',
-    '条形图',
-    '雷达图',
-    '饼图',
-    '环图',
-    '区域图',
-    '热力图',
-  ];
+  final ChartsController _chartsController = ChartsController();
   final List<double> _datas = [2, 10, 4, 3, 7, 5, 9, 8, 1, 6, 9];
 
   List<Widget> _renderDatas() {
@@ -47,18 +38,17 @@ class _ChartsViewState extends State<ChartsView> {
     );
   }
 
-  List<Widget> _renderCharts() {
+  List<Widget> _renderChartNames() {
     return List.generate(
-      _charts.length,
+      ChartType.values.length,
       (index) => CheckboxListTile(
-        value: _currentChart == _charts[index],
+        value: ChartType.values[index] == _chartsController.chartType,
         onChanged: (checked) {
-          setState(() {
-            _currentChart = _charts[index];
-          });
+          debugPrint(checked.toString());
+          _chartsController.changeChartType(ChartType.values[index]);
         },
         title: Text(
-          _charts[index],
+          ChartType.values[index].name,
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -66,15 +56,20 @@ class _ChartsViewState extends State<ChartsView> {
   }
 
   Widget _renderChart() {
-    switch (_currentChart) {
-      case '矩形树图':
+    switch (_chartsController.chartType) {
+      case ChartType.treeMap:
         return TreeMap(datas: _datas);
-      case '柱状图':
+      case ChartType.column:
         return ColumnChart(
           data: [180.0, 98.0, 126.0, 64.0, 118.0],
           xAxis: ['一月', '二月', '三月', '四月', '五月'],
         );
-      case '条形图':
+      case ChartType.line:
+        return LineChart(
+          datas: [120.0, 90.0, 80.0, 60.0, 108.0],
+          xAxis: ['一月', '二月', '三月', '四月', '五月'],
+        );
+      case ChartType.bar:
         return BarChart(
           data: [
             {
@@ -111,46 +106,51 @@ class _ChartsViewState extends State<ChartsView> {
       appBar: AppBar(
         actions: [],
       ),
-      body: Container(
-        color: Colors.amber,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              width: 200.0,
-              color: Colors.blue,
-              child: ListView(
-                padding: EdgeInsets.all(10.0),
-                children: _renderCharts(),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: Container(
-                  width: 500.0,
-                  height: 500.0,
-                  child: _renderChart(),
-                ),
-              ),
-            ),
-            Container(
-              width: 200.0,
-              color: Colors.pink,
-              child: Column(
+      body: AnimatedBuilder(
+          animation: _chartsController,
+          builder: (context, Widget? child) {
+            return Container(
+              color: Colors.amber,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
+                  Container(
+                    width: 200.0,
+                    color: Colors.blue,
                     child: ListView(
                       padding: EdgeInsets.all(10.0),
-                      children: _renderDatas(),
+                      children: _renderChartNames(),
                     ),
                   ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.add))
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        color: Colors.white,
+                        width: 500.0,
+                        height: 500.0,
+                        child: _renderChart(),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 200.0,
+                    color: Colors.pink,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            padding: EdgeInsets.all(10.0),
+                            children: _renderDatas(),
+                          ),
+                        ),
+                        IconButton(onPressed: () {}, icon: Icon(Icons.add))
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 }

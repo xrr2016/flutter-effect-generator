@@ -66,21 +66,6 @@ class _ColumnChartState extends State<ColumnChart>
           ),
           child: Container(width: 300, height: 300),
         ),
-        SizedBox(height: 48),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            color: Colors.white,
-            icon: Icon(Icons.refresh),
-            onPressed: () {
-              _controller.reset();
-              _controller.forward();
-            },
-          ),
-        ),
       ],
     );
   }
