@@ -4,11 +4,11 @@ enum ChartType {
   area,
   bar,
   column,
+  calenderHeatMap,
   donut,
   line,
   radar,
   pie,
-  heatMap,
   treeMap,
   timeSheet,
 }
@@ -23,15 +23,15 @@ extension ChartTypeName on ChartType {
       case ChartType.column:
         return '柱状图';
       case ChartType.donut:
-        return '区域图';
+        return '环形图';
       case ChartType.line:
         return '折线图';
       case ChartType.radar:
         return '雷达图';
       case ChartType.pie:
         return '饼图';
-      case ChartType.heatMap:
-        return '热力图';
+      case ChartType.calenderHeatMap:
+        return '日历热力图';
       case ChartType.treeMap:
         return '矩形树图';
       case ChartType.timeSheet:
@@ -47,7 +47,6 @@ class ChartsController extends ChangeNotifier {
 
   void changeChartType(ChartType type) {
     chartType = type;
-    debugPrint(chartType.name);
     notifyListeners();
   }
 }

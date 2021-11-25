@@ -1,9 +1,15 @@
 import '../exports.dart';
+import './charts_controller.dart';
 import './tree_map/tree_map.dart';
 import './bar_chart/bar_chart.dart';
 import './column_chart/column_chart.dart';
 import './line_chart/line_chart.dart';
-import './charts_controller.dart';
+import './donut_chart/donut_chart.dart';
+import './radar_chart/radar_chart.dart';
+import './pie_chart/pie_chart.dart';
+import './area_chart/area_chart.dart';
+import './time_sheet/time_sheet.dart';
+import './calender_heatmap/calendar_heatmap.dart';
 
 class ChartsView extends StatefulWidget {
   static const routeName = '/charts';
@@ -44,7 +50,6 @@ class _ChartsViewState extends State<ChartsView> {
       (index) => CheckboxListTile(
         value: ChartType.values[index] == _chartsController.chartType,
         onChanged: (checked) {
-          debugPrint(checked.toString());
           _chartsController.changeChartType(ChartType.values[index]);
         },
         title: Text(
@@ -57,13 +62,58 @@ class _ChartsViewState extends State<ChartsView> {
 
   Widget _renderChart() {
     switch (_chartsController.chartType) {
+      case ChartType.area:
+        return AreaChart(
+          datas: [120.0, 90.0, 80.0, 60.0, 108.0],
+          // xAxis: ['一月', '二月', '三月', '四月', '五月'],
+        );
+      case ChartType.calenderHeatMap:
+        return CalenderHeatMap(datas: _datas);
       case ChartType.treeMap:
         return TreeMap(datas: _datas);
+      case ChartType.pie:
+        return PieChart(
+          datas: [60.0, 50.0, 40.0, 80.0, 90.0],
+          legends: ['一月', '二月', '三月', '四月', '五月'],
+        );
+      case ChartType.radar:
+        return RadarChart(
+          datas: [
+            [60.0, 70.0, 80.0, 30.0, 70.0, 80.0],
+            [80.0, 50.0, 60.0, 80.0, 40.0, 90.0],
+            [40.0, 70.0, 90.0, 50.0, 60.0, 80.0],
+          ],
+          scores: [60.0, 70.0, 80.0, 90.0],
+          features: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
+        );
+      case ChartType.donut:
+        return DonutCahrt(
+          datas: [
+            {
+              'name': '青年',
+              'value': 90.0,
+            },
+            {
+              'name': '少年',
+              'value': 40.0,
+            },
+            {
+              'name': '老年',
+              'value': 120.0,
+            },
+            {
+              'name': '幼年',
+              'value': 200.0,
+            },
+          ],
+        );
       case ChartType.column:
         return ColumnChart(
           data: [180.0, 98.0, 126.0, 64.0, 118.0],
           xAxis: ['一月', '二月', '三月', '四月', '五月'],
         );
+      case ChartType.timeSheet:
+        return TimeSheet();
       case ChartType.line:
         return LineChart(
           datas: [120.0, 90.0, 80.0, 60.0, 108.0],
