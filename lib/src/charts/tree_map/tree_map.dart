@@ -94,7 +94,7 @@ class TreeMapPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(TreeMapPainter oldDelegate) => false;
+  bool shouldRepaint(TreeMapPainter oldDelegate) => true;
 
   @override
   bool shouldRebuildSemantics(TreeMapPainter oldDelegate) => false;
