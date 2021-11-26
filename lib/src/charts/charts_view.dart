@@ -113,7 +113,11 @@ class _ChartsViewState extends State<ChartsView> {
           xAxis: ['一月', '二月', '三月', '四月', '五月'],
         );
       case ChartType.timeSheet:
-        return TimeSheet();
+        return TimeSheet(
+          startDate: DateTime(1949),
+          endDate: DateTime(2021),
+          events: [],
+        );
       case ChartType.line:
         return LineChart(
           datas: [120.0, 90.0, 80.0, 60.0, 108.0],
@@ -176,7 +180,7 @@ class _ChartsViewState extends State<ChartsView> {
                     child: Center(
                       child: Container(
                         color: Colors.white,
-                        width: 500.0,
+                        width: 800.0,
                         height: 500.0,
                         child: _renderChart(),
                       ),
