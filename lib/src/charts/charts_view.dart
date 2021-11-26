@@ -56,6 +56,8 @@ class _ChartsViewState extends State<ChartsView> {
           ChartType.values[index].name,
           style: TextStyle(color: Colors.white),
         ),
+        contentPadding: EdgeInsets.all(10.0),
+        selected: ChartType.values[index] == _chartsController.chartType,
       ),
     );
   }
@@ -164,13 +166,13 @@ class _ChartsViewState extends State<ChartsView> {
           animation: _chartsController,
           builder: (context, Widget? child) {
             return Container(
-              color: Colors.amber,
+              color: Colors.white,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
                     width: 200.0,
-                    color: Colors.blue,
+                    color: Colors.blueAccent,
                     child: ListView(
                       padding: EdgeInsets.all(10.0),
                       children: _renderChartNames(),
@@ -178,8 +180,7 @@ class _ChartsViewState extends State<ChartsView> {
                   ),
                   Expanded(
                     child: Center(
-                      child: Container(
-                        color: Colors.white,
+                      child: SizedBox(
                         width: 800.0,
                         height: 500.0,
                         child: _renderChart(),
@@ -188,7 +189,7 @@ class _ChartsViewState extends State<ChartsView> {
                   ),
                   Container(
                     width: 200.0,
-                    color: Colors.pink,
+                    color: Colors.blueAccent,
                     child: Column(
                       children: [
                         Expanded(

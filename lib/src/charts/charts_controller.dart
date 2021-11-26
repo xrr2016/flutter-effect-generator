@@ -43,7 +43,7 @@ extension ChartTypeName on ChartType {
 }
 
 class ChartsController extends ChangeNotifier {
-  ChartType chartType = ChartType.timeSheet;
+  ChartType chartType = ChartType.column;
 
   void changeChartType(ChartType type) {
     chartType = type;
