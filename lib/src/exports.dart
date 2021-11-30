@@ -15,6 +15,7 @@ export './app.dart';
 export './routes.dart';
 export './constants.dart';
 export './components/app_drawer.dart';
+export './components/photo_frame.dart';
 export './home/home_view.dart';
 export './settings/index.dart';
 export './matrix/matrix_view.dart';

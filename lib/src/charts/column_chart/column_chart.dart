@@ -1,13 +1,15 @@
 import '../../exports.dart';
+import '../models/data_item.dart';
 
 class ColumnChart extends StatefulWidget {
-  final List<double> data;
-  final List<String> xAxis;
+  final List<DataItem> datas;
+  final Widget title;
 
   ColumnChart({
-    required this.data,
-    required this.xAxis,
-  });
+    Key? key,
+    required this.title,
+    required this.datas,
+  }) : super(key: key);
 
   @override
   _ColumnChartState createState() => _ColumnChartState();
@@ -16,201 +18,209 @@ class ColumnChart extends StatefulWidget {
 class _ColumnChartState extends State<ColumnChart>
     with TickerProviderStateMixin {
   late AnimationController _controller;
-  final _animations = <double>[];
 
   @override
   void initState() {
     super.initState();
-    double begin = 0.0;
-    List<double> datas = widget.data;
-    // 初始化动画控制器，并调用 forward 方法启动动画
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 3000),
+      duration: Duration(milliseconds: 1500),
     )..forward();
+  }
 
-    for (int i = 0; i < datas.length; i++) {
-      final double end = datas[i];
-      // 使用一个补间值 Tween 创建每个矩形的动画值
-      final Tween<double> tween = Tween(begin: begin, end: end);
-      // 初始化数组里面的值
-      _animations.add(begin);
-
-      // 创建补间动画
-      Animation<double> animation = tween.animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Curves.ease,
-        ),
-      );
-      _controller.addListener(() {
-        // 使用 setState 更新 _animations 数组里面的动画值
-        setState(() {
-          _animations[i] = animation.value;
-        });
-      });
-    }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
       children: [
-        CustomPaint(
-          painter: ColumnChartPainter(
-            // 最后向 ColumnChartPainter 传入 _animations 数组
-            datas: _animations,
-            xAxis: widget.xAxis,
-            animation: _controller,
+        Align(
+          alignment: Alignment.center,
+          child: CustomPaint(
+            painter: ColumnChartPainter(
+              datas: widget.datas,
+              animation: _controller,
+            ),
+            child: SizedBox(width: 480.0, height: 480.0),
           ),
-          child: Container(width: 300, height: 300),
         ),
+        Align(alignment: Alignment.topCenter, child: widget.title),
       ],
     );
   }
 }
 
 class ColumnChartPainter extends CustomPainter {
-  final List<double> datas;
-  final List<String> xAxis;
-  final Animation<double> animation;
-
-  static double _barGap = 18;
-  static double _barWidth = _barGap * 2;
-  static double labelFontSize = 12.0;
-
   ColumnChartPainter({
-    required this.xAxis,
     required this.datas,
     required this.animation,
-  }) : super(repaint: animation);
+  }) : super(repaint: animation) {
+    maxData = datas.map((DataItem item) => item.value).reduce(max);
+  }
+
+  final List<DataItem> datas;
+  final Animation<double> animation;
+  final double _scaleHeight = 10;
+  final TextPainter _textPainter = TextPainter(
+    textDirection: TextDirection.ltr,
+  );
+
+  Path axisPath = Path();
+  Paint axisPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1;
+  Paint gridPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = Colors.grey
+    ..strokeWidth = 0.5;
+  Paint barPaint = Paint()..color = Colors.blue;
+
+  double xStep = 0; // x 间隔
+  double yStep = 0; // y 间隔
+  double maxData = 0.0;
 
   void _drawAxis(Canvas canvas, Size size) {
-    final double sw = size.width;
-    final double sh = size.height;
-
-    // 使用 Paint 定义路径的样式
-    final Paint paint = Paint()
-      ..color = Colors.black87
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
-
-    // 使用 Path 定义绘制的路径，从画布的左上角到左下角在到右下角
-    final Path path = Path()
-      ..moveTo(0, 0)
-      ..lineTo(0, sh)
-      ..lineTo(sw, sh);
-
-    // 使用 drawPath 方法绘制路径
-    canvas.drawPath(path, paint);
+    canvas.translate(0, size.height);
+    canvas.translate(_scaleHeight, -_scaleHeight);
+    axisPath.moveTo(-_scaleHeight, 0);
+    axisPath.relativeLineTo(size.width, 0);
+    axisPath.moveTo(0, _scaleHeight);
+    axisPath.relativeLineTo(0, -size.height);
+    canvas.drawPath(axisPath, axisPaint..color);
   }
 
-  void _drawLabels(Canvas canvas, Size size) {
-    final double gap = 50.0;
-    final double sh = size.height;
-    final List<double> yAxisLabels = [];
+  // void _drawLabels(Canvas canvas, Size size) {}
 
-    Paint paint = Paint()
-      ..color = Colors.black87
-      ..strokeWidth = 2.0;
+  // void _drawLegend(Canvas canvas, Size size) {}
 
-    // 使用 50.0 为间隔绘制比传入数据多一个的标识
-    for (int i = 1; i <= datas.length; i++) {
-      yAxisLabels.add(gap * i);
-    }
-
-    yAxisLabels.asMap().forEach(
-      (index, label) {
-        // 标识的高度为画布高度减去标识的值
-        final double top = sh - label;
-        final rect = Rect.fromLTWH(-4, top, 4, 1);
-        final Offset textOffset = Offset(
-          0 - labelFontSize * 3,
-          top - labelFontSize / 2,
-        );
-
-        // 绘制 Y 轴右边的线条
-        canvas.drawRect(rect, paint);
-
-        // 绘制文字需要用 `TextPainter`，最后调用 paint 方法绘制文字
-        TextPainter(
-          text: TextSpan(
-            text: label.toStringAsFixed(0),
-            style: TextStyle(fontSize: labelFontSize, color: Colors.black87),
-          ),
-          textAlign: TextAlign.right,
-          textDirection: TextDirection.ltr,
-          textWidthBasis: TextWidthBasis.longestLine,
-        )
-          ..layout(minWidth: 0, maxWidth: 24)
-          ..paint(canvas, textOffset);
-      },
+  void _drawAxisText(
+    Canvas canvas,
+    String str, {
+    Color color = Colors.black,
+    Alignment alignment = Alignment.centerRight,
+    Offset offset = Offset.zero,
+  }) {
+    TextSpan text = TextSpan(
+      text: str,
+      style: TextStyle(
+        fontSize: 12,
+        color: color,
+      ),
     );
+
+    _textPainter.text = text;
+    _textPainter.layout(); // 进行布局
+    Size size = _textPainter.size;
+    Offset offsetPos = Offset(
+      -size.width / 2,
+      -size.height / 2,
+    ).translate(
+      -size.width / 2 * alignment.x + offset.dx,
+      0.0 + offset.dy,
+    );
+    _textPainter.paint(canvas, offsetPos);
   }
 
-  void _darwBars(Canvas canvas, Size size) {
-    final sh = size.height;
-    final paint = Paint()..style = PaintingStyle.fill;
+  double _getYMaxNum(double num) {
+    int len = num.toString().length;
+    double n = pow(10, len).toDouble();
+    double h = n / 2;
 
-    for (int i = 0; i < datas.length; i++) {
-      // 每个矩形使用预设的 colors 数组里面的颜色
-      paint.color = colors[i];
-      final double textFontSize = 14.0;
-      final double data = datas[i];
-      // 矩形的上边缘为画布高度减去数据值
-      final double top = sh - data;
-      // 矩形的左边缘为当前索引值乘以矩形宽度加上矩形之间的间距
-      final double left = i * _barWidth + (i * _barGap) + _barGap;
+    return num > h ? n : h;
+  }
 
-      // 使用 Rect.fromLTWH 方法创建要绘制的矩形
-      final rect = Rect.fromLTWH(left, top, _barWidth, data);
-      // 使用 drawRect 方法绘制矩形
-      canvas.drawRect(rect, paint);
+  double _getYStepNum(double num) {
+    int len = num.toString().length;
 
-      final offset = Offset(
-        left + _barWidth / 2 - textFontSize * 1.2,
-        top - textFontSize * 2,
-      );
-      // 使用 TextPainter 绘制矩形上放的数值
-      TextPainter(
-        text: TextSpan(
-          text: data.toStringAsFixed(1),
-          style: TextStyle(fontSize: textFontSize, color: paint.color),
-        ),
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      )
-        ..layout(
-          minWidth: 0,
-          maxWidth: textFontSize * data.toString().length,
-        )
-        ..paint(canvas, offset);
+    return pow(10, len - 1).toDouble();
+  }
 
-      final xData = xAxis[i];
-      final xOffset = Offset(left + _barWidth / 2 - textFontSize, sh + 12);
-      // 绘制横轴标识
-      TextPainter(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          text: '$xData',
-          style: TextStyle(fontSize: 12, color: Colors.black87),
-        ),
-        textDirection: TextDirection.ltr,
-      )
-        ..layout(
-          minWidth: 0,
-          maxWidth: size.width,
-        )
-        ..paint(canvas, xOffset);
+  void _drawYText(Canvas canvas, Size size) {
+    double maxYNum = _getYMaxNum(maxData);
+    double numStep = _getYStepNum(maxData);
+    int steps = 0;
+    double c = 0.0;
+
+    while (c < maxYNum) {
+      steps++;
+      c += numStep;
     }
+
+    yStep = (size.height - _scaleHeight) / (steps + 1);
+    canvas.save();
+    _drawAxisText(canvas, '0', offset: Offset(-_scaleHeight - 4, 0));
+    canvas.translate(0, -yStep);
+    for (int i = 1; i <= steps + 1; i++) {
+      if (i == steps + 1) {
+        canvas.drawLine(Offset(-_scaleHeight, 0), Offset.zero, axisPaint);
+        continue;
+      }
+      canvas.drawLine(Offset(-_scaleHeight, 0), Offset.zero, axisPaint);
+      final String str = (numStep * i).toStringAsFixed(0);
+      _drawAxisText(canvas, str, offset: Offset(-_scaleHeight - 4, 0));
+      canvas.translate(0, -yStep);
+    }
+    canvas.restore();
+  }
+
+  void _drawXText(Canvas canvas, Size size) {
+    xStep = (size.width - _scaleHeight) / (datas.length + 1);
+
+    canvas.save();
+    canvas.translate(xStep, 0);
+    for (int i = 0; i <= datas.length; i++) {
+      if (i == datas.length) {
+        canvas.drawLine(Offset.zero, Offset(0, _scaleHeight), axisPaint);
+        continue;
+      }
+      canvas.drawLine(Offset.zero, Offset(0, _scaleHeight), axisPaint);
+      _drawAxisText(
+        canvas,
+        datas[i].name,
+        alignment: Alignment.center,
+        offset: Offset(0, _scaleHeight + 8),
+      );
+      canvas.translate(xStep, 0);
+    }
+    canvas.restore();
+  }
+
+  void _drawBars(Canvas canvas, Size size) {
+    double maxYNum = _getYMaxNum(maxData);
+    double barWidth = xStep / 2;
+    double aValue = animation.value;
+
+    canvas.save();
+    canvas.translate(xStep, 0);
+    for (int i = 0; i < datas.length; i++) {
+      double height =
+          ((size.height - _scaleHeight - yStep) * (datas[i].value) / maxYNum) *
+              aValue;
+      canvas.drawRect(
+        Rect.fromLTWH(0, -1, barWidth, -height).translate(-barWidth / 2, 0),
+        barPaint,
+      );
+      _drawAxisText(
+        canvas,
+        (datas[i].value * aValue).toStringAsFixed(0),
+        alignment: Alignment.center,
+        offset: Offset(0, -height - _scaleHeight),
+      );
+      canvas.translate(xStep, 0);
+    }
+    canvas.restore();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     _drawAxis(canvas, size);
-    _drawLabels(canvas, size);
-    _darwBars(canvas, size);
+    _drawYText(canvas, size);
+    _drawXText(canvas, size);
+    _drawBars(canvas, size);
   }
 
   @override

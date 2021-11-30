@@ -10,6 +10,7 @@ import './pie_chart/pie_chart.dart';
 import './area_chart/area_chart.dart';
 import './time_sheet/time_sheet.dart';
 import './calender_heatmap/calendar_heatmap.dart';
+import './models/data_item.dart';
 
 class ChartsView extends StatefulWidget {
   static const routeName = '/charts';
@@ -22,7 +23,7 @@ class ChartsView extends StatefulWidget {
 
 class _ChartsViewState extends State<ChartsView> {
   final ChartsController _chartsController = ChartsController();
-  final List<double> _datas = [2, 10, 4, 3, 7, 5, 9, 8, 1, 6, 9];
+  final List<double> _datas = [30.0, 200.0, 100.0, 400.0, 150.0, 250.0];
 
   List<Widget> _renderDatas() {
     return List.generate(
@@ -111,8 +112,14 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.column:
         return ColumnChart(
-          data: [180.0, 98.0, 126.0, 64.0, 118.0],
-          xAxis: ['一月', '二月', '三月', '四月', '五月'],
+          datas: List.generate(
+            _datas.length,
+            (index) => DataItem(name: '$index 月', value: _datas[index]),
+          ),
+          title: Text(
+            '游客访问量 - 2040年',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
         );
       case ChartType.timeSheet:
         return TimeSheet(
@@ -122,7 +129,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.line:
         return LineChart(
-          datas: [120.0, 90.0, 80.0, 60.0, 108.0],
+          datas: _datas,
           xAxis: ['一月', '二月', '三月', '四月', '五月'],
         );
       case ChartType.bar:
@@ -163,49 +170,50 @@ class _ChartsViewState extends State<ChartsView> {
         actions: [],
       ),
       body: AnimatedBuilder(
-          animation: _chartsController,
-          builder: (context, Widget? child) {
-            return Container(
-              color: Colors.white,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    width: 200.0,
-                    color: Colors.blueAccent,
-                    child: ListView(
-                      padding: EdgeInsets.all(10.0),
-                      children: _renderChartNames(),
+        animation: _chartsController,
+        builder: (context, Widget? child) {
+          return Container(
+            color: Colors.white,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  width: 200.0,
+                  color: Colors.blueAccent,
+                  child: ListView(
+                    padding: EdgeInsets.all(10.0),
+                    children: _renderChartNames(),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: SizedBox(
+                      child: _renderChart(),
+                      width: 720.0,
+                      height: 720.0,
                     ),
                   ),
-                  Expanded(
-                    child: Center(
-                      child: SizedBox(
-                        width: 800.0,
-                        height: 500.0,
-                        child: _renderChart(),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 200.0,
-                    color: Colors.blueAccent,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: ListView(
-                            padding: EdgeInsets.all(10.0),
-                            children: _renderDatas(),
-                          ),
+                ),
+                Container(
+                  width: 200.0,
+                  color: Colors.blueAccent,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView(
+                          padding: EdgeInsets.all(10.0),
+                          children: _renderDatas(),
                         ),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.add))
-                      ],
-                    ),
+                      ),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.add))
+                    ],
                   ),
-                ],
-              ),
-            );
-          }),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
