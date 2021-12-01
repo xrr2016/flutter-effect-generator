@@ -2,13 +2,13 @@ import '../../exports.dart';
 import '../models/data_item.dart';
 
 class ColumnChart extends StatefulWidget {
-  final List<DataItem> datas;
   final Widget title;
+  final List<DataItem> data;
 
   ColumnChart({
     Key? key,
     required this.title,
-    required this.datas,
+    required this.data,
   }) : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class _ColumnChartState extends State<ColumnChart>
           alignment: Alignment.center,
           child: CustomPaint(
             painter: ColumnChartPainter(
-              datas: widget.datas,
+              data: widget.data,
               animation: _controller,
             ),
             child: SizedBox(width: 480.0, height: 480.0),
@@ -56,14 +56,15 @@ class _ColumnChartState extends State<ColumnChart>
 
 class ColumnChartPainter extends CustomPainter {
   ColumnChartPainter({
-    required this.datas,
+    required this.data,
     required this.animation,
   }) : super(repaint: animation) {
-    maxData = datas.map((DataItem item) => item.value).reduce(max);
+    maxData = data.map((DataItem item) => item.value).reduce(max);
   }
 
-  final List<DataItem> datas;
+  final List<DataItem> data;
   final Animation<double> animation;
+
   final double _scaleHeight = 10;
   final TextPainter _textPainter = TextPainter(
     textDirection: TextDirection.ltr,
@@ -83,19 +84,10 @@ class ColumnChartPainter extends CustomPainter {
   double yStep = 0; // y 间隔
   double maxData = 0.0;
 
-  void _drawAxis(Canvas canvas, Size size) {
+  void _moveOrigin(Canvas canvas, Size size) {
     canvas.translate(0, size.height);
     canvas.translate(_scaleHeight, -_scaleHeight);
-    axisPath.moveTo(-_scaleHeight, 0);
-    axisPath.relativeLineTo(size.width, 0);
-    axisPath.moveTo(0, _scaleHeight);
-    axisPath.relativeLineTo(0, -size.height);
-    canvas.drawPath(axisPath, axisPaint..color);
   }
-
-  // void _drawLabels(Canvas canvas, Size size) {}
-
-  // void _drawLegend(Canvas canvas, Size size) {}
 
   void _drawAxisText(
     Canvas canvas,
@@ -139,7 +131,7 @@ class ColumnChartPainter extends CustomPainter {
     return pow(10, len - 1).toDouble();
   }
 
-  void _drawYText(Canvas canvas, Size size) {
+  void _drawYAxis(Canvas canvas, Size size) {
     double maxYNum = _getYMaxNum(maxData);
     double numStep = _getYStepNum(maxData);
     int steps = 0;
@@ -152,14 +144,12 @@ class ColumnChartPainter extends CustomPainter {
 
     yStep = (size.height - _scaleHeight) / (steps + 1);
     canvas.save();
-    _drawAxisText(canvas, '0', offset: Offset(-_scaleHeight - 4, 0));
-    canvas.translate(0, -yStep);
-    for (int i = 1; i <= steps + 1; i++) {
-      if (i == steps + 1) {
-        canvas.drawLine(Offset(-_scaleHeight, 0), Offset.zero, axisPaint);
-        continue;
-      }
-      canvas.drawLine(Offset(-_scaleHeight, 0), Offset.zero, axisPaint);
+    for (int i = 0; i <= steps; i++) {
+      canvas.drawLine(
+        Offset.zero,
+        Offset(size.width - _scaleHeight, 0),
+        gridPaint,
+      );
       final String str = (numStep * i).toStringAsFixed(0);
       _drawAxisText(canvas, str, offset: Offset(-_scaleHeight - 4, 0));
       canvas.translate(0, -yStep);
@@ -167,20 +157,15 @@ class ColumnChartPainter extends CustomPainter {
     canvas.restore();
   }
 
-  void _drawXText(Canvas canvas, Size size) {
-    xStep = (size.width - _scaleHeight) / (datas.length + 1);
+  void _drawXAxis(Canvas canvas, Size size) {
+    xStep = (size.width - _scaleHeight) / (data.length + 1);
 
     canvas.save();
     canvas.translate(xStep, 0);
-    for (int i = 0; i <= datas.length; i++) {
-      if (i == datas.length) {
-        canvas.drawLine(Offset.zero, Offset(0, _scaleHeight), axisPaint);
-        continue;
-      }
-      canvas.drawLine(Offset.zero, Offset(0, _scaleHeight), axisPaint);
+    for (int i = 0; i < data.length; i++) {
       _drawAxisText(
         canvas,
-        datas[i].name,
+        data[i].name,
         alignment: Alignment.center,
         offset: Offset(0, _scaleHeight + 8),
       );
@@ -190,23 +175,23 @@ class ColumnChartPainter extends CustomPainter {
   }
 
   void _drawBars(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
     double barWidth = xStep / 2;
+    double maxYNum = _getYMaxNum(maxData);
     double aValue = animation.value;
 
     canvas.save();
     canvas.translate(xStep, 0);
-    for (int i = 0; i < datas.length; i++) {
+    for (int i = 0; i < data.length; i++) {
       double height =
-          ((size.height - _scaleHeight - yStep) * (datas[i].value) / maxYNum) *
+          ((size.height - _scaleHeight - yStep) * (data[i].value) / maxYNum) *
               aValue;
       canvas.drawRect(
-        Rect.fromLTWH(0, -1, barWidth, -height).translate(-barWidth / 2, 0),
+        Rect.fromLTWH(0, 0, barWidth, -height).translate(-barWidth / 2, 0),
         barPaint,
       );
       _drawAxisText(
         canvas,
-        (datas[i].value * aValue).toStringAsFixed(0),
+        (data[i].value * aValue).toStringAsFixed(0),
         alignment: Alignment.center,
         offset: Offset(0, -height - _scaleHeight),
       );
@@ -217,9 +202,9 @@ class ColumnChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    _drawAxis(canvas, size);
-    _drawYText(canvas, size);
-    _drawXText(canvas, size);
+    _moveOrigin(canvas, size);
+    _drawYAxis(canvas, size);
+    _drawXAxis(canvas, size);
     _drawBars(canvas, size);
   }
 

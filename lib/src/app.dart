@@ -20,9 +20,7 @@ class App extends StatelessWidget {
           supportedLocales: AppLocalizations.supportedLocales,
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,
-          theme: ThemeData(
-            textTheme: GoogleFonts.latoTextTheme(),
-          ),
+          theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
           home: HomeView(),

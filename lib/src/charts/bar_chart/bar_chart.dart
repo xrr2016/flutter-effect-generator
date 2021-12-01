@@ -1,183 +1,209 @@
 import 'dart:ui';
 import '../../exports.dart';
-// import '../colors.dart';
+import '../models/data_item.dart';
 
 class BarChart extends StatefulWidget {
-  final double max;
-  final List<Map<String, dynamic>> data;
+  final Widget title;
+  final List<DataItem> data;
 
   BarChart({
+    Key? key,
+    required this.title,
     required this.data,
-    required this.max,
-  });
+  }) : super(key: key);
 
   @override
   _BarChartState createState() => _BarChartState();
 }
 
-class _BarChartState extends State<BarChart> {
+class _BarChartState extends State<BarChart> with TickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1500),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 300,
-        height: 300,
-        child: CustomPaint(
-          painter:
-              BarChartPainter(data: widget.data, max: widget.max, xAxis: []),
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: CustomPaint(
+            painter: BarChartPainter(
+              data: widget.data,
+              animation: _controller,
+            ),
+            child: SizedBox(width: 480.0, height: 480.0),
+          ),
         ),
-      ),
+        Align(alignment: Alignment.topCenter, child: widget.title),
+      ],
     );
   }
 }
 
 class BarChartPainter extends CustomPainter {
-  final List<Map<String, dynamic>> data;
-  final List<String> xAxis;
-  final double max;
-
   BarChartPainter({
     required this.data,
-    required this.xAxis,
-    required this.max,
-  });
-
-  void _drawGrid(Canvas canvas, Size size) {
-    final double sw = size.width;
-    final double sh = size.height;
-    final double vgap = sw / 10;
-    final double hgap = sh / 10;
-
-    final Paint paint = Paint()
-      ..color = Colors.black12
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = .5;
-
-    for (double i = 0; i <= sw; i += vgap) {
-      Offset p1 = Offset(i, 0);
-      Offset p2 = Offset(i, sh);
-      canvas.drawLine(p1, p2, paint);
-    }
-
-    for (double i = 0; i < sh; i += hgap) {
-      Offset p1 = Offset(0.0, i);
-      Offset p2 = Offset(sw, i);
-      canvas.drawLine(p1, p2, paint);
-    }
+    required this.animation,
+  }) : super(repaint: animation) {
+    maxData = data.map((DataItem item) => item.value).reduce(max);
   }
 
-  void _drawAxis(Canvas canvas, Size size) {
-    final double sw = size.width;
-    final double sh = size.height;
+  final List<DataItem> data;
+  final Animation<double> animation;
 
-    final paint = Paint()
-      ..color = Colors.black87
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0
-      ..isAntiAlias = true;
+  final double _scaleHeight = 10;
+  final TextPainter _textPainter = TextPainter(
+    textDirection: TextDirection.ltr,
+  );
 
-    final Path path = Path()
-      ..moveTo(0.0, 0.0)
-      ..lineTo(0.0, sh)
-      ..lineTo(sw, sh);
-    canvas.drawPath(path, paint);
+  double xStep = 0;
+  double yStep = 0;
+  double maxData = 0.0;
+  Paint gridPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = Colors.grey
+    ..strokeWidth = 0.5;
+  Paint barPaint = Paint()..color = Colors.blue;
+
+  void _drawAxisText(
+    Canvas canvas,
+    String str, {
+    Color color = Colors.black,
+    Alignment alignment = Alignment.centerRight,
+    Offset offset = Offset.zero,
+  }) {
+    TextSpan text = TextSpan(
+      text: str,
+      style: TextStyle(
+        fontSize: 12,
+        color: color,
+      ),
+    );
+
+    _textPainter.text = text;
+    _textPainter.layout(); // 进行布局
+    Size size = _textPainter.size;
+    Offset offsetPos = Offset(
+      -size.width / 2,
+      -size.height / 2,
+    ).translate(
+      -size.width / 2 * alignment.x + offset.dx,
+      0.0 + offset.dy,
+    );
+    _textPainter.paint(canvas, offsetPos);
+  }
+
+  double _getYMaxNum(double num) {
+    int len = num.toString().length;
+    double n = pow(10, len).toDouble();
+    double h = n / 2;
+
+    return num > h ? n : h;
+  }
+
+  double _getYStepNum(double num) {
+    int len = num.toString().length;
+
+    return pow(10, len - 1).toDouble();
   }
 
   void _drawXAxis(Canvas canvas, Size size) {
-    final double sw = size.width;
-    final double sh = size.height;
-    final double fontSize = 16.0;
-    final double vgap = sw / data.length;
-    double val = 0.0;
+    double maxYNum = _getYMaxNum(maxData);
+    double numStep = _getYStepNum(maxData);
+    int steps = 0;
+    double c = 0.0;
 
-    for (double i = 0; i <= sw; i += vgap) {
-      final Offset offset = Offset(i, sh + fontSize);
-
-      TextPainter(
-        text: TextSpan(
-          text: val.toInt().toString(),
-          style: TextStyle(
-            fontSize: fontSize,
-            color: Colors.black87,
-          ),
-        ),
-        textDirection: TextDirection.ltr,
-      )
-        ..layout(minWidth: 0, maxWidth: sw)
-        ..paint(canvas, offset);
-      val += max / data.length;
+    while (c < maxYNum) {
+      steps++;
+      c += numStep;
     }
+
+    xStep = (size.width - _scaleHeight) / data.length;
+
+    canvas.save();
+    for (int i = 0; i <= steps; i++) {
+      canvas.drawLine(
+        Offset.zero,
+        Offset(0, size.height),
+        gridPaint,
+      );
+      canvas.save();
+      canvas.translate(0.0, size.height + _scaleHeight);
+      final String str = (numStep * i).toStringAsFixed(0);
+      _drawAxisText(canvas, str, alignment: Alignment.center);
+      canvas.restore();
+      canvas.translate(xStep, 0.0);
+    }
+    canvas.restore();
+  }
+
+  void _drawYAxis(Canvas canvas, Size size) {
+    yStep = (size.height - _scaleHeight) / data.length;
+    final double barHeight = yStep / 2;
+
+    canvas.save();
+    canvas.translate(-_scaleHeight * 3, barHeight / 2 + _scaleHeight);
+
+    for (var i = 0; i < data.length; i++) {
+      _drawAxisText(
+        canvas,
+        data[i].name.toString(),
+        alignment: Alignment.center,
+      );
+      canvas.translate(0.0, yStep);
+    }
+    canvas.restore();
   }
 
   void _drawBars(Canvas canvas, Size size) {
-    final datas = data;
-    final double sh = size.height;
-    final double sw = size.width;
-    final double topOffset = 30.0;
-    final double barGap = 20.0;
-    final double barHeright = sh / datas.length - barGap - 10;
-    final Paint paint = Paint()..isAntiAlias = true;
+    final double barHeight = yStep / 2;
+    final double aValue = animation.value;
+    final double maxXNum = _getYMaxNum(maxData);
 
-    for (var i = 0; i < datas.length; i++) {
-      paint.color = colors[i];
-      final data = datas[i];
-      final double barTop = i * (barHeright + barGap) + topOffset;
-      final double barWidth = data["value"] * sw / max;
+    canvas.save();
+    canvas.translate(0.0, _scaleHeight);
 
-      Rect bar = Rect.fromLTWH(
+    for (var i = 0; i < data.length; i++) {
+      final double barWidth = (data[i].value / maxXNum) *
+          (size.width - _scaleHeight - xStep) *
+          aValue;
+      final Rect bar = Rect.fromLTWH(
         0.0,
-        barTop,
+        0.0,
         barWidth,
-        barHeright,
+        barHeight,
       );
-      canvas.drawRect(bar, paint);
-
-      final double valueFontSize = 16.0;
-      final Offset valueOffset =
-          Offset(barWidth + valueFontSize, barTop + valueFontSize / 2);
-
-      TextPainter(
-        text: TextSpan(
-          text: data["value"].toString(),
-          style: TextStyle(fontSize: 12.0, color: Colors.black87),
-        ),
-        textDirection: TextDirection.ltr,
-      )
-        ..layout(minWidth: 0, maxWidth: sw)
-        ..paint(canvas, valueOffset);
-
-      final tipWidth = 4.0;
-      final double tipTop = barTop + (barHeright / 2);
-      final Rect tip = Rect.fromLTWH(-tipWidth, tipTop, tipWidth, 1);
-      final Paint tipPaint = Paint()
-        ..isAntiAlias = true
-        ..color = Colors.black;
-
-      canvas.drawRect(tip, tipPaint);
-
-      final double labelFontSize = 16.0;
-      final Offset labelOffset = Offset(
-        -40.0,
-        tipTop - labelFontSize / 2,
+      canvas.drawRect(bar, barPaint);
+      canvas.save();
+      canvas.translate(barWidth + 30.0, barHeight / 2);
+      _drawAxisText(
+        canvas,
+        (data[i].value * aValue).toStringAsFixed(0),
       );
-
-      TextPainter(
-        text: TextSpan(
-          text: data["label"],
-          style: TextStyle(fontSize: 12.0, color: Colors.black87),
-        ),
-        textDirection: TextDirection.ltr,
-      )
-        ..layout(minWidth: 0, maxWidth: 24)
-        ..paint(canvas, labelOffset);
+      canvas.restore();
+      canvas.translate(0.0, yStep);
     }
+    canvas.restore();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     _drawXAxis(canvas, size);
-    _drawGrid(canvas, size);
-    _drawAxis(canvas, size);
+    _drawYAxis(canvas, size);
     _drawBars(canvas, size);
   }
 

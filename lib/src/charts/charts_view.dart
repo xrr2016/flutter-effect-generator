@@ -11,6 +11,7 @@ import './area_chart/area_chart.dart';
 import './time_sheet/time_sheet.dart';
 import './calender_heatmap/calendar_heatmap.dart';
 import './models/data_item.dart';
+import '../components/grid_brackground.dart';
 
 class ChartsView extends StatefulWidget {
   static const routeName = '/charts';
@@ -112,9 +113,9 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.column:
         return ColumnChart(
-          datas: List.generate(
+          data: List.generate(
             _datas.length,
-            (index) => DataItem(name: '$index 月', value: _datas[index]),
+            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
           ),
           title: Text(
             '游客访问量 - 2040年',
@@ -134,29 +135,14 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.bar:
         return BarChart(
-          data: [
-            {
-              'label': '中国',
-              'value': 2800.0,
-            },
-            {
-              'label': '印度',
-              'value': 3000.0,
-            },
-            {
-              'label': '美国',
-              'value': 2200.0,
-            },
-            {
-              'label': '巴西',
-              'value': 3800.0,
-            },
-            {
-              'label': '法国',
-              'value': 5200.0,
-            },
-          ],
-          max: 6000,
+          data: List.generate(
+            _datas.length,
+            (index) => DataItem(name: '产品 ${index + 1}', value: _datas[index]),
+          ),
+          title: Text(
+            '产品销售量 - 2020年',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
         );
       default:
         return Container();
@@ -186,12 +172,17 @@ class _ChartsViewState extends State<ChartsView> {
                   ),
                 ),
                 Expanded(
-                  child: Center(
-                    child: SizedBox(
-                      child: _renderChart(),
-                      width: 720.0,
-                      height: 720.0,
-                    ),
+                  child: Stack(
+                    children: [
+                      // GridBackground(),
+                      Center(
+                        child: SizedBox(
+                          child: _renderChart(),
+                          width: 720.0,
+                          height: 640.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(
