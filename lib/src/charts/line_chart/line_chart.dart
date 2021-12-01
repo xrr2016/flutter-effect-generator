@@ -1,16 +1,17 @@
 import 'dart:ui';
-import 'package:flutter/material.dart';
-import '../colors.dart';
+import '../../exports.dart';
 import '../utils/create_animated_path.dart';
+import '../models/data_item.dart';
 
 class LineChart extends StatefulWidget {
-  final List<double> datas;
-  final List<String> xAxis;
+  final Widget title;
+  final List<DataItem> data;
 
   LineChart({
-    required this.datas,
-    required this.xAxis,
-  });
+    Key? key,
+    required this.title,
+    required this.data,
+  }) : super(key: key);
 
   @override
   _LineChartState createState() => _LineChartState();
@@ -19,240 +20,234 @@ class LineChart extends StatefulWidget {
 class _LineChartState extends State<LineChart>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  final _animationPoints = <double>[];
 
   @override
   void initState() {
     super.initState();
-    double begin = 0.0;
-    double end = 4.0;
-    List<double> datas = widget.datas;
+
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 3000),
-    );
+    )..forward();
+  }
 
-    final double interval = 1 / datas.length;
-
-    for (int i = 0; i < datas.length; i++) {
-      _animationPoints.add(begin);
-      final tween = Tween(begin: begin, end: end);
-
-      Animation<double> animation = tween.animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Interval(
-            interval * i,
-            interval * i + interval,
-            curve: Curves.ease,
-          ),
-        ),
-      );
-      _controller.addListener(() {
-        _animationPoints[i] = animation.value;
-      });
-    }
-
-    _controller.forward();
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
       children: [
-        CustomPaint(
-          painter: LineChartPainter(
-            xAxis: widget.xAxis,
-            datas: widget.datas,
-            animation: _controller,
-            points: _animationPoints,
-          ),
-          child: Container(width: 300, height: 300),
-        ),
-        SizedBox(height: 48),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            color: Colors.white,
-            icon: Icon(Icons.refresh),
-            onPressed: () {
-              _controller.reset();
-              _controller.forward();
-            },
+        Align(
+          alignment: Alignment.center,
+          child: CustomPaint(
+            painter: LineChartPainter(
+              data: widget.data,
+              animation: _controller,
+            ),
+            child: SizedBox(width: 720.0, height: 480.0),
           ),
         ),
+        Align(alignment: Alignment.topCenter, child: widget.title),
       ],
     );
   }
 }
 
 class LineChartPainter extends CustomPainter {
-  final List<double> datas;
-  final List<String> xAxis;
-  final List<double> points;
+  LineChartPainter({
+    required this.data,
+    required this.animation,
+  }) : super(repaint: animation) {
+    maxData = data.map((DataItem item) => item.value).reduce(max);
+  }
+
+  final List<DataItem> data;
   final Animation<double> animation;
 
-  LineChartPainter({
-    required this.datas,
-    required this.xAxis,
-    required this.points,
-    required this.animation,
-  }) : super(repaint: animation);
+  final double _scaleHeight = 10;
+  final TextPainter _textPainter = TextPainter(
+    textDirection: TextDirection.ltr,
+  );
+
+  Paint gridPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = Colors.grey
+    ..strokeWidth = 0.5;
+  final pathPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = Colors.blue
+    ..isAntiAlias = true
+    ..strokeCap = StrokeCap.round
+    ..strokeJoin = StrokeJoin.round
+    ..strokeWidth = 1.5;
+
+  double xStep = 0; // x 间隔
+  double yStep = 0; // y 间隔
+  double maxData = 0.0;
+
+  void _drawAxisText(
+    Canvas canvas,
+    String str, {
+    Color color = Colors.black,
+    Alignment alignment = Alignment.centerRight,
+    Offset offset = Offset.zero,
+  }) {
+    TextSpan text = TextSpan(
+      text: str,
+      style: TextStyle(
+        fontSize: 12,
+        color: color,
+      ),
+    );
+
+    _textPainter.text = text;
+    _textPainter.layout(); // 进行布局
+    Size size = _textPainter.size;
+    Offset offsetPos = Offset(
+      -size.width / 2,
+      -size.height / 2,
+    ).translate(
+      -size.width / 2 * alignment.x + offset.dx,
+      0.0 + offset.dy,
+    );
+    _textPainter.paint(canvas, offsetPos);
+  }
 
   void _drawLines(Canvas canvas, Size size) {
-    final sw = size.width;
-    final sh = size.height;
-    final gap = sw / datas.length;
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = Colors.blue
-      ..isAntiAlias = true
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..strokeWidth = 1.5;
+    double maxYNum = _getYMaxNum(maxData);
+    List<Offset> points = [];
 
-    final path = Path()..moveTo(gap / 2, sh - datas[0]);
+    final path = Path();
+    canvas.translate(xStep, 0.0);
 
-    for (int i = 1; i < datas.length; i++) {
-      final data = datas[i];
-      final x = gap * i + gap / 2;
-      final y = sh - data;
+    for (int i = 0; i < data.length; i++) {
+      final double dx = xStep * i;
+      final double dy =
+          (size.height - _scaleHeight - yStep) * (data[i].value / maxYNum);
+      points.add(Offset(dx, dy));
 
-      path.lineTo(x, y);
+      if (i == 0) {
+        path.moveTo(dx, -dy);
+      } else {
+        path.lineTo(dx, -dy);
+        // path.quadraticBezierTo(points[i - 1].dx, -points[i - 1].dy, dx, -dy);
+      }
     }
 
-    canvas.drawPath(createAnimatedPath(path, animation.value), paint);
+    canvas.drawPath(createAnimatedPath(path, animation.value), pathPaint);
   }
 
   void _drawPoints(Canvas canvas, Size size) {
-    final sw = size.width;
-    final sh = size.height;
-    final gap = sw / datas.length;
+    double maxYNum = _getYMaxNum(maxData);
+    double aValue = animation.value;
 
     final paint = Paint()
       ..isAntiAlias = true
-      ..style = PaintingStyle.fill;
+      ..style = PaintingStyle.fill
+      ..color = Colors.blue;
 
-    for (int i = 0; i < datas.length; i++) {
-      paint.color = colors[i];
-      final data = datas[i];
-      final dx = 0.0;
-      final dy = sh - data;
-      final offset = Offset(dx + gap * i + gap / 2, dy);
-      canvas.drawCircle(offset, points[i], paint);
+    canvas.save();
+    for (int i = 0; i < data.length; i++) {
+      const double dx = 0.0;
+      final double dy =
+          (size.height - _scaleHeight - yStep) * (data[i].value / maxYNum);
+      final offset = Offset(dx, -dy);
+      canvas.drawCircle(offset, 4.0, paint);
 
-      final textOffset = Offset(dx + gap * i + 14, dy - 30);
-      TextPainter(
-        text: TextSpan(
-          text: '$data',
-          style: TextStyle(
-            fontSize: points[i] * 3,
-            color: Colors.black87,
-          ),
-        ),
-        textDirection: TextDirection.ltr,
-      )
-        ..layout(
-          minWidth: 0,
-          maxWidth: size.width,
-        )
-        ..paint(canvas, textOffset);
+      double textDy = 0.0;
+      if (i == 0) {
+        textDy = -_scaleHeight * 2;
+      } else {
+        textDy = (data[i].value > data[i - 1].value)
+            ? -_scaleHeight * 2
+            : _scaleHeight * 2;
+      }
 
-      final xData = xAxis[i];
-      final double labelFontSize = 12.0;
-      final xOffset = Offset(dx + gap * i + labelFontSize, sh + labelFontSize);
-
-      TextPainter(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          text: '$xData',
-          style: TextStyle(
-            fontSize: labelFontSize,
-            color: Colors.black87,
-          ),
-        ),
-        textDirection: TextDirection.ltr,
-      )
-        ..layout(
-          minWidth: 0,
-          maxWidth: size.width,
-        )
-        ..paint(canvas, xOffset);
+      _drawAxisText(
+        canvas,
+        (data[i].value * aValue).toStringAsFixed(0),
+        alignment: Alignment.center,
+        offset: offset.translate(0.0, textDy),
+      );
+      canvas.translate(xStep, 0.0);
     }
+    canvas.restore();
   }
 
-  void _drawAxis(Canvas canvas, Size size) {
-    final double sw = size.width;
-    final double sh = size.height;
+  void _drawXAxis(Canvas canvas, Size size) {
+    xStep = (size.width - _scaleHeight) / (data.length + 1);
 
-    // 设置绘制属性
-    final paint = Paint()
-      ..color = Colors.black87
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0
-      ..isAntiAlias = true;
+    canvas.save();
+    canvas.translate(xStep, 0.0);
 
-    // 创建一个 Path 对象，并规定它的路线
-    final Path path = Path()
-      ..moveTo(0.0, 0.0)
-      ..lineTo(0.0, sh)
-      ..lineTo(sw, sh);
-    // 绘制路径
-    canvas.drawPath(path, paint);
+    for (int i = 0; i < data.length; i++) {
+      canvas.drawLine(Offset(0.0, _scaleHeight / 2), Offset.zero, gridPaint);
+
+      _drawAxisText(
+        canvas,
+        data[i].name,
+        alignment: Alignment.center,
+        offset: Offset(0, _scaleHeight + 8),
+      );
+      canvas.translate(xStep, 0);
+    }
+    canvas.restore();
   }
 
-  void _drawLabels(Canvas canvas, Size size) {
-    final double labelFontSize = 12.0;
-    final double gap = 50.0;
-    final double sh = size.height;
-    final List<double> yAxisLabels = [];
+  double _getYMaxNum(double num) {
+    int len = num.toString().length;
+    double n = pow(10, len).toDouble();
+    double h = n / 2;
 
-    Paint paint = Paint()
-      ..color = Colors.black87
-      ..strokeWidth = 2.0;
+    return num > h ? n : h;
+  }
 
-    // 使用 50.0 为间隔绘制比传入数据多一个的标识
-    for (int i = 0; i <= datas.length; i++) {
-      yAxisLabels.add(gap * i);
+  double _getYStepNum(double num) {
+    int len = num.toString().length;
+
+    return pow(10, len - 1).toDouble();
+  }
+
+  void _drawYAxis(Canvas canvas, Size size) {
+    double maxYNum = _getYMaxNum(maxData);
+    double numStep = _getYStepNum(maxData);
+    int steps = 0;
+    double c = 0.0;
+
+    while (c < maxYNum) {
+      steps++;
+      c += numStep;
     }
 
-    yAxisLabels.asMap().forEach(
-      (index, label) {
-        // 标识的高度为画布高度减去标识的值
-        final double top = sh - label;
-        final rect = Rect.fromLTWH(0.0, top, 4, 1);
-        final Offset textOffset = Offset(
-          0 - labelFontSize * 3,
-          top - labelFontSize / 2,
-        );
+    yStep = (size.height - _scaleHeight) / (steps + 1);
+    canvas.save();
+    for (int i = 0; i <= steps; i++) {
+      canvas.drawLine(
+        Offset.zero,
+        Offset(size.width - _scaleHeight, 0.0),
+        gridPaint,
+      );
+      final String str = (numStep * i).toStringAsFixed(0);
+      _drawAxisText(canvas, str, offset: Offset(-_scaleHeight - 4, 0));
+      canvas.translate(0, -yStep);
+    }
+    canvas.restore();
+  }
 
-        // 绘制 Y 轴右边的线条
-        canvas.drawRect(rect, paint);
-
-        // 绘制文字需要用 `TextPainter`，最后调用 paint 方法绘制文字
-        TextPainter(
-          text: TextSpan(
-            text: label.toStringAsFixed(0),
-            style: TextStyle(fontSize: labelFontSize, color: Colors.black87),
-          ),
-          textAlign: TextAlign.right,
-          textDirection: TextDirection.ltr,
-          textWidthBasis: TextWidthBasis.longestLine,
-        )
-          ..layout(minWidth: 0, maxWidth: 24)
-          ..paint(canvas, textOffset);
-      },
-    );
+  void _moveOrigin(Canvas canvas, Size size) {
+    canvas.translate(0, size.height);
+    canvas.translate(_scaleHeight, -_scaleHeight);
   }
 
   @override
   void paint(Canvas canvas, Size size) {
-    _drawAxis(canvas, size);
-    _drawLabels(canvas, size);
+    _moveOrigin(canvas, size);
+    _drawXAxis(canvas, size);
+    _drawYAxis(canvas, size);
     _drawLines(canvas, size);
     _drawPoints(canvas, size);
   }

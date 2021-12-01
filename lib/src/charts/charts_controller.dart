@@ -7,6 +7,7 @@ enum ChartType {
   calenderHeatMap,
   donut,
   line,
+  curve,
   radar,
   pie,
   treeMap,
@@ -26,6 +27,8 @@ extension ChartTypeName on ChartType {
         return '环形图';
       case ChartType.line:
         return '折线图';
+      case ChartType.curve:
+        return '曲线图';
       case ChartType.radar:
         return '雷达图';
       case ChartType.pie:
@@ -43,7 +46,7 @@ extension ChartTypeName on ChartType {
 }
 
 class ChartsController extends ChangeNotifier {
-  ChartType chartType = ChartType.bar;
+  ChartType chartType = ChartType.line;
 
   void changeChartType(ChartType type) {
     chartType = type;

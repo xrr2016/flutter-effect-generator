@@ -163,6 +163,7 @@ class ColumnChartPainter extends CustomPainter {
     canvas.save();
     canvas.translate(xStep, 0);
     for (int i = 0; i < data.length; i++) {
+      canvas.drawLine(Offset(0.0, _scaleHeight / 2), Offset.zero, gridPaint);
       _drawAxisText(
         canvas,
         data[i].name,

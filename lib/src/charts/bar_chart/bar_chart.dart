@@ -157,12 +157,12 @@ class BarChartPainter extends CustomPainter {
 
     canvas.save();
     canvas.translate(-_scaleHeight * 3, barHeight / 2 + _scaleHeight);
-
     for (var i = 0; i < data.length; i++) {
       _drawAxisText(
         canvas,
         data[i].name.toString(),
         alignment: Alignment.center,
+        color: Colors.grey,
       );
       canvas.translate(0.0, yStep);
     }
@@ -188,6 +188,11 @@ class BarChartPainter extends CustomPainter {
         barHeight,
       );
       canvas.drawRect(bar, barPaint);
+      canvas.drawLine(
+        Offset(0.0, barHeight / 2),
+        Offset(-_scaleHeight, barHeight / 2),
+        gridPaint,
+      );
       canvas.save();
       canvas.translate(barWidth + 30.0, barHeight / 2);
       _drawAxisText(
