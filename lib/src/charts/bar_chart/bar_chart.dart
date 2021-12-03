@@ -138,7 +138,7 @@ class BarChartPainter extends CustomPainter {
     for (int i = 0; i <= steps; i++) {
       canvas.drawLine(
         Offset.zero,
-        Offset(0, size.height),
+        Offset(0, size.height - _scaleHeight),
         gridPaint,
       );
       canvas.save();
@@ -152,11 +152,10 @@ class BarChartPainter extends CustomPainter {
   }
 
   void _drawYAxis(Canvas canvas, Size size) {
-    yStep = (size.height - _scaleHeight) / data.length;
-    final double barHeight = yStep / 2;
+    yStep = (size.height - _scaleHeight) / (data.length + 1);
 
     canvas.save();
-    canvas.translate(-_scaleHeight * 3, barHeight / 2 + _scaleHeight);
+    canvas.translate(-_scaleHeight * 3, yStep + _scaleHeight / 2);
     for (var i = 0; i < data.length; i++) {
       _drawAxisText(
         canvas,
@@ -175,7 +174,7 @@ class BarChartPainter extends CustomPainter {
     final double maxXNum = _getYMaxNum(maxData);
 
     canvas.save();
-    canvas.translate(0.0, _scaleHeight);
+    canvas.translate(0.0, yStep - _scaleHeight);
 
     for (var i = 0; i < data.length; i++) {
       final double barWidth = (data[i].value / maxXNum) *

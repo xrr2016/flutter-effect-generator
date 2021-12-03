@@ -129,53 +129,6 @@ class CurveChartPainter extends CustomPainter {
 
   List<Offset> points = [];
 
-  void _initPoints(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
-
-    Paint paint = Paint()
-      ..color = Colors.orange
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    Paint _helpPaint = Paint()
-      ..color = Colors.purple
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    for (int i = 0; i < data.length; i++) {
-      final double dx = i * xStep;
-      final double dy =
-          (size.height - _scaleHeight - yStep) * (data[i].value / maxYNum);
-      final offset = Offset(dx, -dy);
-
-      points.add(offset);
-    }
-    Path path = Path();
-
-    canvas.save();
-    canvas.translate(xStep, 0.0);
-    canvas.drawCircle(points[0], 5.0, _helpPaint);
-    canvas.drawCircle(points[1], 5.0, _helpPaint);
-    canvas.drawCircle(points[2], 5.0, _helpPaint);
-
-    Offset p0 = points[0];
-    Offset p1 = points[1];
-    Offset p2 = points[2];
-
-    path.moveTo(p0.dx, p0.dy);
-
-    // path.cubicTo(p0.dx, p0.dy, p1.dx, p1.dy - 100, p2.dx, p2.dy);
-    path.quadraticBezierTo(
-      p1.dx,
-      p1.dy - 100,
-      p2.dx,
-      p2.dy,
-    );
-
-    canvas.drawPath(path, paint);
-    canvas.restore();
-  }
-
   void _drawAxisText(
     Canvas canvas,
     String str, {
@@ -355,68 +308,9 @@ class CurveChartPainter extends CustomPainter {
     _moveOrigin(canvas, size);
     _drawXAxis(canvas, size);
     _drawYAxis(canvas, size);
-    // // _initPoints(canvas, size);
     _drawLines(canvas, size);
     _drawPoints(canvas, size);
     canvas.restore();
-
-    // if (pos.length < 3) {
-    //   canvas.drawPoints(PointMode.points, pos, _helpPaint..strokeWidth = 8);
-    // } else {
-    //   path.moveTo(pos[0].dx, pos[0].dy);
-    //   path.quadraticBezierTo(
-    //     pos[1].dx,
-    //     pos[1].dy,
-    //     pos[2].dx,
-    //     pos[2].dy,
-    //   );
-    //   // path.cubicTo(
-    //   //   pos[1].dx,
-    //   //   pos[1].dy,
-    //   //   pos[2].dx,
-    //   //   pos[2].dy,
-    //   //   pos[3].dx,
-    //   //   pos[3].dy,
-    //   // );
-    //   // path.lineTo(pos[3].dx, pos[3].dy);
-    //   // path.close();
-    // }
-    // canvas.save();
-    // canvas.translate(size.width / 2, size.height / 2);
-    // pos = repaint.points
-    //     .map((e) => e.translate(-size.width / 2, -size.height / 2))
-    //     .toList();
-
-    // debugPrint(pos.toString());
-    // if (pos.isNotEmpty) {
-    //   Path path = Path();
-    //   Paint paint = Paint()
-    //     ..color = Colors.orange
-    //     ..style = PaintingStyle.stroke
-    //     ..strokeWidth = 2;
-    //   path.moveTo(pos[0].dx, pos[0].dy);
-    //   for (var i = 1; i < pos.length - 1; i++) {
-    //     path.quadraticBezierTo(
-    //       pos[i].dx,
-    //       pos[i].dy,
-    //       pos[i + 1].dx,
-    //       pos[i + 1].dy,
-    //     );
-    //     // path.cubicTo(
-    //     //   pos[i].dx,
-    //     //   pos[i].dy,
-    //     //   pos[i + 1].dx,
-    //     //   pos[i + 1].dy,
-    //     //   pos[i + 2].dx,
-    //     //   pos[i + 2].dy,
-    //     // );
-    //   }
-
-    //   canvas.drawPath(path, paint);
-    //   _drawHelp(canvas);
-    //   _drawSelectPos(canvas, size);
-    // }
-    // canvas.restore();
   }
 
   @override

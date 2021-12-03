@@ -2,14 +2,14 @@ import '../../exports.dart';
 import '../models/data_item.dart';
 
 class ColumnChart extends StatefulWidget {
-  final Widget title;
-  final List<DataItem> data;
-
   ColumnChart({
     Key? key,
     required this.title,
     required this.data,
   }) : super(key: key);
+
+  final Widget title;
+  final List<DataItem> data;
 
   @override
   _ColumnChartState createState() => _ColumnChartState();
@@ -181,7 +181,7 @@ class ColumnChartPainter extends CustomPainter {
     double aValue = animation.value;
 
     canvas.save();
-    canvas.translate(xStep, 0);
+    canvas.translate(xStep, 0.0);
     for (int i = 0; i < data.length; i++) {
       double height =
           ((size.height - _scaleHeight - yStep) * (data[i].value) / maxYNum) *

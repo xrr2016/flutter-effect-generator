@@ -134,7 +134,6 @@ class LineChartPainter extends CustomPainter {
         path.moveTo(dx, -dy);
       } else {
         path.lineTo(dx, -dy);
-        // path.quadraticBezierTo(points[i - 1].dx, -points[i - 1].dy, dx, -dy);
       }
     }
 

@@ -25,7 +25,7 @@ class ChartsView extends StatefulWidget {
 
 class _ChartsViewState extends State<ChartsView> {
   final ChartsController _chartsController = ChartsController();
-  final List<double> _datas = [30.0, 200.0, 100.0, 400.0, 150.0, 250.0];
+  final List<double> _datas = [30.0, 200.0, 100.0, 300.0, 350.0, 350.0];
 
   List<Widget> _renderDatas() {
     return List.generate(
@@ -69,8 +69,14 @@ class _ChartsViewState extends State<ChartsView> {
     switch (_chartsController.chartType) {
       case ChartType.area:
         return AreaChart(
-          datas: [120.0, 90.0, 80.0, 60.0, 108.0],
-          // xAxis: ['一月', '二月', '三月', '四月', '五月'],
+          data: List.generate(
+            _datas.length,
+            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
+          ),
+          title: Text(
+            '游客访问量 - 2040年',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
         );
       case ChartType.calenderHeatMap:
         return CalenderHeatMap(datas: _datas);
