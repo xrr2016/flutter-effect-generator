@@ -11,7 +11,8 @@ import './area_chart/area_chart.dart';
 import './time_sheet/time_sheet.dart';
 import './calender_heatmap/calendar_heatmap.dart';
 import './models/data_item.dart';
-import '../components/grid_brackground.dart';
+// import '../components/grid_brackground.dart';
+import './curve_chart/curve_chart.dart';
 
 class ChartsView extends StatefulWidget {
   static const routeName = '/charts';
@@ -130,6 +131,17 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.line:
         return LineChart(
+          data: List.generate(
+            _datas.length,
+            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
+          ),
+          title: Text(
+            '产品销售量-2022年',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        );
+      case ChartType.curve:
+        return CurveChart(
           data: List.generate(
             _datas.length,
             (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
