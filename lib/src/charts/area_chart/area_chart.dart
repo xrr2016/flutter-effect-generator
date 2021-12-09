@@ -164,20 +164,11 @@ class AreaChartPainter extends CustomPainter {
           (size.height - _scaleHeight - yStep) * (data[i].value / maxYNum);
       final offset = Offset(dx, -dy);
 
-      double textDy = 0.0;
-      if (i == 0) {
-        textDy = -_scaleHeight * 2;
-      } else {
-        textDy = (data[i].value > data[i - 1].value)
-            ? -_scaleHeight * 2
-            : _scaleHeight * 2;
-      }
-
       _drawAxisText(
         canvas,
         (data[i].value * aValue).toStringAsFixed(0),
         alignment: Alignment.center,
-        offset: offset.translate(0.0, textDy),
+        offset: offset.translate(0.0, -_scaleHeight * 2),
       );
       canvas.translate(xStep, 0.0);
     }

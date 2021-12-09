@@ -92,7 +92,7 @@ class PeiChartPainter extends CustomPainter {
 
   double maxData = 0.0;
 
-  void drawParts(Canvas canvas, Size size) {
+  void _drawParts(Canvas canvas, Size size) {
     final sw = size.width;
     final sh = size.height;
     final double radius = math.min(sw, sh);
@@ -119,7 +119,7 @@ class PeiChartPainter extends CustomPainter {
     canvas.restore();
   }
 
-  void drawCircle(Canvas canvas, Size size) {
+  void _drawCircle(Canvas canvas, Size size) {
     final sw = size.width;
     final sh = size.height;
     final double radius = math.min(sw, sh) / 2;
@@ -131,7 +131,7 @@ class PeiChartPainter extends CustomPainter {
     canvas.drawCircle(Offset.zero, radius, paint);
   }
 
-  void drawInfos(Canvas canvas, Size size) {
+  void _drawInfos(Canvas canvas, Size size) {
     final sw = size.width;
     final sh = size.height;
     final double radius = math.min(sw, sh) / 2;
@@ -180,9 +180,9 @@ class PeiChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.translate(size.width / 2, size.height / 2);
-    drawCircle(canvas, size);
-    drawParts(canvas, size);
-    drawInfos(canvas, size);
+    _drawCircle(canvas, size);
+    _drawParts(canvas, size);
+    _drawInfos(canvas, size);
   }
 
   @override

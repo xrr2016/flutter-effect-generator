@@ -1,110 +1,200 @@
-import 'dart:math';
+import 'dart:math' as math;
+
 import '../../exports.dart';
+import '../utils/utils.dart';
+import '../models/data_item.dart';
 
 class DonutCahrt extends StatefulWidget {
-  final List<Map<String, dynamic>> datas;
+  final Widget title;
+  final List<DataItem> data;
 
-  DonutCahrt({Key? key, required this.datas}) : super(key: key);
+  DonutCahrt({
+    Key? key,
+    required this.title,
+    required this.data,
+  }) : super(key: key);
 
   @override
   _DonutCahrtState createState() => _DonutCahrtState();
 }
 
-class _DonutCahrtState extends State<DonutCahrt> {
+class _DonutCahrtState extends State<DonutCahrt> with TickerProviderStateMixin {
+  late AnimationController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 3000),
+      vsync: this,
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return CustomPaint(
-          size: constraints.biggest,
-          painter: DonutChartPainter(widget.datas),
-        );
-      },
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: CustomPaint(
+            painter: DonutChartPainter(
+              data: widget.data,
+              animation: _controller,
+            ),
+            child: SizedBox(width: 480.0, height: 480.0),
+          ),
+        ),
+        Align(alignment: Alignment.topCenter, child: widget.title),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.data.length,
+              (index) => Container(
+                width: 50.0,
+                height: 24.0,
+                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                color: colors[index % colors.length],
+                alignment: Alignment.center,
+                child: Text(
+                  widget.data[index].name,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
 class DonutChartPainter extends CustomPainter {
-  final List<Map<String, dynamic>> datas;
+  DonutChartPainter({
+    required this.data,
+    required this.animation,
+  }) : super(repaint: animation) {
+    maxData = data.map((DataItem item) => item.value).reduce((a, b) => a + b);
+  }
 
-  DonutChartPainter(this.datas);
+  final List<DataItem> data;
+  final Animation<double> animation;
 
+  double maxData = 0.0;
   double initStartAngle = 0.0;
+  final double dountWidth = 80.0;
 
   void _drawBackgroudArc(Canvas canvas, Size size) {
+    final sw = size.width;
+    final sh = size.height;
+    final double radius = math.min(sw, sh) / 1.5;
+
     Paint paint = Paint()
       ..color = Colors.black12
-      ..strokeWidth = 40.0
-      ..style = PaintingStyle.stroke
-      ..isAntiAlias = true;
-
+      ..strokeWidth = dountWidth
+      ..style = PaintingStyle.stroke;
     Rect rect = Rect.fromCircle(
-      radius: 100.0,
-      center: Offset(size.width / 2, size.height / 2),
+      radius: radius / 2,
+      center: Offset.zero,
     );
 
-    double startAngle = 0 / pi;
-    double sweepAngle = 180 / pi;
-
+    double startAngle = 0;
+    double sweepAngle = pi * 2;
     canvas.drawArc(rect, startAngle, sweepAngle, false, paint);
   }
 
   void _drawItemArc(
-    double value,
-    total,
-    double startAngle,
-    int index,
     Canvas canvas,
     Size size,
   ) {
-    Paint paint = Paint()
-      ..color = colors[index % colors.length]
-      ..strokeWidth = 40.0
-      ..style = PaintingStyle.stroke
-      ..isAntiAlias = true;
-    Rect rect = Rect.fromCircle(
-      radius: 100.0,
-      center: Offset(size.width / 2, size.height / 2),
-    );
+    final sw = size.width;
+    final sh = size.height;
+    final double radius = math.min(sw, sh) / 1.5;
+    Rect rect = Rect.fromCircle(center: Offset.zero, radius: radius / 2);
 
-    double sweepAngle = -value / total * pi * 2;
-    initStartAngle = startAngle + sweepAngle;
+    canvas.save();
+    canvas.rotate(-pi / 2);
 
-    canvas.drawArc(rect, startAngle, sweepAngle, false, paint);
+    for (int i = 0; i < data.length; i++) {
+      Color color = colors[i % colors.length];
+      double sweepAngle = pi * 2 * (data[i].value / maxData);
+
+      canvas.drawArc(
+        rect,
+        0.0,
+        sweepAngle * animation.value,
+        false,
+        Paint()
+          ..color = color
+          ..strokeWidth = dountWidth
+          ..style = PaintingStyle.stroke,
+      );
+      canvas.rotate(sweepAngle);
+    }
+    canvas.restore();
   }
 
-  void _drawTotalText(double total, Canvas canvas, Offset center) {
-    TextPainter(
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    )
-      ..text = TextSpan(
-        text: total.toString(),
-        style: TextStyle(
-          fontSize: 32.0,
-          color: Colors.black,
-        ),
-      )
-      ..layout(
-        minWidth: 0.0,
-        maxWidth: 100.0,
-      )
-      ..paint(canvas, Offset(center.dx - 32.0, center.dy - 16.0));
+  void _drawInfos(Canvas canvas, Size size) {
+    final sw = size.width;
+    final sh = size.height;
+    final double radius = math.min(sw, sh) / 2;
+
+    canvas.save();
+    canvas.rotate(-pi / 2);
+    for (int i = 0; i < data.length; i++) {
+      Color color = colors[i % colors.length];
+      double sweepAngle = pi * 2 * (data[i].value / maxData);
+      String percent =
+          ((data[i].value / maxData * 100).toStringAsFixed(1)) + '%';
+      String val = (data[i].value * animation.value).toStringAsFixed(0);
+
+      canvas.save();
+      canvas.rotate(sweepAngle / 2);
+      drawAxisText(
+        canvas,
+        val,
+        color: color,
+        alignment: Alignment.center,
+        offset: Offset(radius / 2 + dountWidth + 30.0, 0),
+      );
+
+      drawAxisText(
+        canvas,
+        percent,
+        color: Colors.white,
+        alignment: Alignment.center,
+        offset: Offset(radius / 2 + dountWidth / 2, 0),
+      );
+      Path showPath = Path();
+      showPath.moveTo(radius / 2 + dountWidth, 0);
+      showPath.relativeLineTo(15, 0);
+      canvas.drawPath(
+        showPath,
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke,
+      );
+      canvas.restore();
+      canvas.rotate(sweepAngle);
+    }
+    canvas.restore();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
-    var total = 0.0;
-    Offset center = Offset(size.width / 2, size.height / 2);
-    datas.forEach((item) {
-      total += item['value'];
-    });
-
+    canvas.translate(size.width / 2, size.height / 2);
     _drawBackgroudArc(canvas, size);
-    _drawTotalText(total, canvas, center);
-    datas.asMap().forEach((index, item) {
-      _drawItemArc(item['value'], total, initStartAngle, index, canvas, size);
-    });
+    _drawItemArc(canvas, size);
+    _drawInfos(canvas, size);
   }
 
   @override

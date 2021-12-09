@@ -84,8 +84,6 @@ class _ChartsViewState extends State<ChartsView> {
         return TreeMap(datas: _datas);
       case ChartType.pie:
         return PieChart(
-          // datas: [60.0, 50.0, 40.0, 80.0, 90.0],
-          // legends: ['一月', '二月', '三月', '四月', '五月'],
           data: List.generate(
             _datas.length,
             (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
@@ -107,24 +105,14 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.donut:
         return DonutCahrt(
-          datas: [
-            {
-              'name': '青年',
-              'value': 90.0,
-            },
-            {
-              'name': '少年',
-              'value': 40.0,
-            },
-            {
-              'name': '老年',
-              'value': 120.0,
-            },
-            {
-              'name': '幼年',
-              'value': 200.0,
-            },
-          ],
+          data: List.generate(
+            _datas.length,
+            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
+          ),
+          title: Text(
+            '商品产量比例 - 2020年',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
         );
       case ChartType.column:
         return ColumnChart(

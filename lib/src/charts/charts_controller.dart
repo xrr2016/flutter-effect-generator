@@ -24,7 +24,7 @@ extension ChartTypeName on ChartType {
       case ChartType.column:
         return '柱状图';
       case ChartType.donut:
-        return '环形图';
+        return '环图';
       case ChartType.line:
         return '折线图';
       case ChartType.curve:
@@ -46,7 +46,7 @@ extension ChartTypeName on ChartType {
 }
 
 class ChartsController extends ChangeNotifier {
-  ChartType chartType = ChartType.pie;
+  ChartType chartType = ChartType.donut;
 
   void changeChartType(ChartType type) {
     chartType = type;
