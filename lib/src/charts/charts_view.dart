@@ -97,8 +97,6 @@ class _ChartsViewState extends State<ChartsView> {
         return RadarChart(
           datas: [
             [60.0, 70.0, 80.0, 30.0, 70.0, 80.0],
-            [80.0, 50.0, 60.0, 80.0, 40.0, 90.0],
-            [40.0, 70.0, 90.0, 50.0, 60.0, 80.0],
           ],
           scores: [60.0, 70.0, 80.0, 90.0],
           features: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
@@ -173,7 +171,14 @@ class _ChartsViewState extends State<ChartsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [],
+        actions: [
+          const SizedBox(width: 10.0),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.download),
+          ),
+          const SizedBox(width: 10.0),
+        ],
         foregroundColor: Colors.black,
         title: Text('Charts'),
         backgroundColor: Color(0xffefeeee),
@@ -195,18 +200,18 @@ class _ChartsViewState extends State<ChartsView> {
                     children: _renderChartNames(),
                   ),
                 ),
-                VerticalDivider(
-                  width: 1.0,
-                  color: Colors.grey,
-                ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.all(100.0),
+                    // padding: EdgeInsets.all(100.0),
                     color: Color(0xffefeeee),
-                    alignment: Alignment.center,
-                    transformAlignment: Alignment.center,
                     child: Container(
                       color: Color(0xffefeeee),
+                      margin: EdgeInsets.only(
+                        top: 50.0,
+                        left: 100.0,
+                        right: 100.0,
+                        bottom: 200.0,
+                      ),
                       child: Container(
                         child: Center(
                           child: SizedBox(
@@ -245,10 +250,6 @@ class _ChartsViewState extends State<ChartsView> {
                     ),
                   ),
                 ),
-                VerticalDivider(
-                  width: 1.0,
-                  color: Colors.grey,
-                ),
                 Container(
                   width: 200.0,
                   color: Color(0xffefeeee),
@@ -272,51 +273,3 @@ class _ChartsViewState extends State<ChartsView> {
     );
   }
 }
-
-
-      // Container(
-      //   width: 500.0,
-      //   height: 500.0,
-      //   color: Color(0xffefeeee),
-      //   alignment: Alignment.center,
-      //   transformAlignment: Alignment.center,
-      //   child: Container(
-      //     color: Color(0xffefeeee),
-      //     child: Container(
-      //       width: 200,
-      //       height: 200,
-      //       child: Icon(
-      //         Icons.star,
-      //         size: 67,
-      //         color: Colors.amber,
-      //       ),
-      //       decoration: BoxDecoration(
-      //         color: Color(0xffefeeee),
-      //         borderRadius: BorderRadius.circular(10),
-      //         gradient: LinearGradient(
-      //           begin: Alignment.topLeft,
-      //           end: Alignment.bottomRight,
-      //           colors: [
-      //             Color(0xffefeeee),
-      //             Color(0xffefeeee),
-      //           ],
-      //         ),
-      //         boxShadow: [
-      //           BoxShadow(
-      //             color: Color(0xffffffff),
-      //             offset: Offset(-20.0, -20.0),
-      //             blurRadius: 30,
-      //             spreadRadius: 0.0,
-      //           ),
-      //           BoxShadow(
-      //             color: Color(0xffd1d0d0),
-      //             offset: Offset(20.0, 20.0),
-      //             blurRadius: 30,
-      //             spreadRadius: 0.0,
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // )
-  

@@ -46,21 +46,6 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
             animation: _controller,
           ),
         ),
-        SizedBox(height: 48),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            color: Colors.white,
-            icon: Icon(Icons.refresh),
-            onPressed: () {
-              _controller.reset();
-              _controller.forward();
-            },
-          ),
-        ),
       ],
     );
   }
@@ -288,7 +273,5 @@ class RadarChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(RadarChartPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(RadarChartPainter oldDelegate) => true;
 }

@@ -18,7 +18,7 @@ extension ChartTypeName on ChartType {
   String get name {
     switch (this) {
       case ChartType.area:
-        return '区域图';
+        return '面积图';
       case ChartType.bar:
         return '条形图';
       case ChartType.column:
@@ -46,7 +46,7 @@ extension ChartTypeName on ChartType {
 }
 
 class ChartsController extends ChangeNotifier {
-  ChartType chartType = ChartType.bar;
+  ChartType chartType = ChartType.radar;
 
   void changeChartType(ChartType type) {
     chartType = type;

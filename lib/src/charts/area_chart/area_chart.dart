@@ -58,6 +58,13 @@ class _AreaChartState extends State<AreaChart>
   }
 }
 
+Shader gradient = LinearGradient(
+  colors: [Colors.blue, Colors.white],
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  stops: [0.0, 1.0],
+).createShader(Rect.fromLTWH(0.0, 0.0, 720, 480));
+
 class AreaChartPainter extends CustomPainter {
   AreaChartPainter({
     required this.data,
@@ -78,9 +85,12 @@ class AreaChartPainter extends CustomPainter {
     ..style = PaintingStyle.stroke
     ..color = Colors.grey
     ..strokeWidth = 0.5;
+
   final pathPaint = Paint()
     ..style = PaintingStyle.fill
-    ..color = Colors.blueAccent.withOpacity(.3);
+    ..color = Colors.blueAccent.withOpacity(.3)
+    ..shader = gradient;
+
   final linePaint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0
@@ -149,7 +159,6 @@ class AreaChartPainter extends CustomPainter {
       tension: 0.05,
     );
 
-    // canvas.drawPath(linePath, linePaint);
     canvas.drawPath(createAnimatedPath(linePath, animation.value), linePaint);
   }
 
