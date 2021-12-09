@@ -122,7 +122,7 @@ class LineChartPainter extends CustomPainter {
     List<Offset> points = [];
 
     final path = Path();
-    canvas.translate(xStep, 0.0);
+    canvas.translate(xStep / 2, 0.0);
 
     for (int i = 0; i < data.length; i++) {
       final double dx = xStep * i;
@@ -161,7 +161,7 @@ class LineChartPainter extends CustomPainter {
       if (i == 0) {
         textDy = -_scaleHeight * 2;
       } else {
-        textDy = (data[i].value > data[i - 1].value)
+        textDy = (data[i].value >= data[i - 1].value)
             ? -_scaleHeight * 2
             : _scaleHeight * 2;
       }
@@ -178,10 +178,10 @@ class LineChartPainter extends CustomPainter {
   }
 
   void _drawXAxis(Canvas canvas, Size size) {
-    xStep = (size.width - _scaleHeight) / (data.length + 1);
+    xStep = (size.width - _scaleHeight) / data.length;
 
     canvas.save();
-    canvas.translate(xStep, 0.0);
+    canvas.translate(xStep / 2, 0.0);
 
     for (int i = 0; i < data.length; i++) {
       canvas.drawLine(Offset(0.0, _scaleHeight / 2), Offset.zero, gridPaint);

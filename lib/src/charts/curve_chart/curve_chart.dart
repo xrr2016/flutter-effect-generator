@@ -160,7 +160,7 @@ class CurveChartPainter extends CustomPainter {
   void _drawLines(Canvas canvas, Size size) {
     double maxYNum = _getYMaxNum(maxData);
     List<Offset> points = [];
-    canvas.translate(xStep, 0.0);
+    canvas.translate(xStep / 2, 0.0);
     for (int i = 0; i < data.length; i++) {
       final double dx = xStep * i;
       final double dy =
@@ -196,7 +196,7 @@ class CurveChartPainter extends CustomPainter {
       if (i == 0) {
         textDy = -_scaleHeight * 2;
       } else {
-        textDy = (data[i].value > data[i - 1].value)
+        textDy = (data[i].value >= data[i - 1].value)
             ? -_scaleHeight * 2
             : _scaleHeight * 2;
       }
@@ -213,10 +213,10 @@ class CurveChartPainter extends CustomPainter {
   }
 
   void _drawXAxis(Canvas canvas, Size size) {
-    xStep = (size.width - _scaleHeight) / (data.length + 1);
+    xStep = (size.width - _scaleHeight) / (data.length);
 
     canvas.save();
-    canvas.translate(xStep, 0.0);
+    canvas.translate(xStep / 2, 0.0);
 
     for (int i = 0; i < data.length; i++) {
       canvas.drawLine(Offset(0.0, _scaleHeight / 2), Offset.zero, gridPaint);
@@ -276,29 +276,6 @@ class CurveChartPainter extends CustomPainter {
     canvas.translate(0, size.height);
     canvas.translate(_scaleHeight, -_scaleHeight);
   }
-
-  // final Paint _helpPaint = Paint()
-  //   ..color = Colors.purple
-  //   ..style = PaintingStyle.stroke
-  //   ..strokeCap = StrokeCap.round;
-
-  // void _drawHelp(Canvas canvas) {
-  //   _helpPaint..color = Colors.purple;
-  //   canvas.drawPoints(PointMode.polygon, pos, _helpPaint..strokeWidth = 1);
-  //   canvas.drawPoints(PointMode.points, pos, _helpPaint..strokeWidth = 8);
-  // }
-
-  // void _drawSelectPos(Canvas canvas, Size size) {
-  //   Offset? selectPos = repaint.selectPoint;
-  //   if (selectPos == null) return;
-  //   selectPos = selectPos.translate(-size.width / 2, -size.height / 2);
-  //   canvas.drawCircle(
-  //       selectPos,
-  //       10,
-  //       _helpPaint
-  //         ..color = Colors.green
-  //         ..strokeWidth = 2);
-  // }
 
   List<Offset> pos = [];
 

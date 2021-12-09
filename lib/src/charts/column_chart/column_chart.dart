@@ -158,10 +158,10 @@ class ColumnChartPainter extends CustomPainter {
   }
 
   void _drawXAxis(Canvas canvas, Size size) {
-    xStep = (size.width - _scaleHeight) / (data.length + 1);
+    xStep = (size.width - _scaleHeight) / (data.length);
 
     canvas.save();
-    canvas.translate(xStep, 0);
+    canvas.translate(xStep / 2, 0);
     for (int i = 0; i < data.length; i++) {
       canvas.drawLine(Offset(0.0, _scaleHeight / 2), Offset.zero, gridPaint);
       _drawAxisText(
@@ -181,7 +181,7 @@ class ColumnChartPainter extends CustomPainter {
     double aValue = animation.value;
 
     canvas.save();
-    canvas.translate(xStep, 0.0);
+    canvas.translate(xStep / 2, 0.0);
     for (int i = 0; i < data.length; i++) {
       double height =
           ((size.height - _scaleHeight - yStep) * (data[i].value) / maxYNum) *

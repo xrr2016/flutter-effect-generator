@@ -46,7 +46,7 @@ extension ChartTypeName on ChartType {
 }
 
 class ChartsController extends ChangeNotifier {
-  ChartType chartType = ChartType.donut;
+  ChartType chartType = ChartType.bar;
 
   void changeChartType(ChartType type) {
     chartType = type;

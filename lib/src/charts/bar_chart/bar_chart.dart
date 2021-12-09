@@ -45,7 +45,7 @@ class _BarChartState extends State<BarChart> with TickerProviderStateMixin {
               data: widget.data,
               animation: _controller,
             ),
-            child: SizedBox(width: 480.0, height: 480.0),
+            child: SizedBox(width: 720.0, height: 360.0),
           ),
         ),
         Align(alignment: Alignment.topCenter, child: widget.title),
@@ -152,10 +152,11 @@ class BarChartPainter extends CustomPainter {
   }
 
   void _drawYAxis(Canvas canvas, Size size) {
-    yStep = (size.height - _scaleHeight) / (data.length + 1);
+    yStep = (size.height - _scaleHeight) / (data.length);
+    final double barHeight = yStep / 2.5;
 
     canvas.save();
-    canvas.translate(-_scaleHeight * 3, yStep + _scaleHeight / 2);
+    canvas.translate(-_scaleHeight * 3, yStep / 2 + _scaleHeight / 2);
     for (var i = 0; i < data.length; i++) {
       _drawAxisText(
         canvas,
@@ -163,18 +164,18 @@ class BarChartPainter extends CustomPainter {
         alignment: Alignment.center,
         color: Colors.grey,
       );
-      canvas.translate(0.0, yStep);
+      canvas.translate(0.0, yStep - barHeight / 4);
     }
     canvas.restore();
   }
 
   void _drawBars(Canvas canvas, Size size) {
-    final double barHeight = yStep / 2;
+    final double barHeight = yStep / 2.5;
     final double aValue = animation.value;
     final double maxXNum = _getYMaxNum(maxData);
 
     canvas.save();
-    canvas.translate(0.0, yStep - _scaleHeight);
+    canvas.translate(0.0, yStep / 2 - _scaleHeight);
 
     for (var i = 0; i < data.length; i++) {
       final double barWidth = (data[i].value / maxXNum) *
@@ -199,7 +200,7 @@ class BarChartPainter extends CustomPainter {
         (data[i].value * aValue).toStringAsFixed(0),
       );
       canvas.restore();
-      canvas.translate(0.0, yStep);
+      canvas.translate(0.0, yStep - barHeight / 4);
     }
     canvas.restore();
   }
