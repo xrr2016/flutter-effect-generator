@@ -1,4 +1,5 @@
 import '../exports.dart';
+import './charts_select.dart';
 import './charts_controller.dart';
 import './tree_map/tree_map.dart';
 import './bar_chart/bar_chart.dart';
@@ -11,7 +12,6 @@ import './area_chart/area_chart.dart';
 import './time_sheet/time_sheet.dart';
 import './calender_heatmap/calendar_heatmap.dart';
 import './models/data_item.dart';
-// import '../components/grid_brackground.dart';
 import './curve_chart/curve_chart.dart';
 
 class ChartsView extends StatefulWidget {
@@ -43,24 +43,6 @@ class _ChartsViewState extends State<ChartsView> {
           color: Colors.black,
         ),
         keyboardType: TextInputType.number,
-      ),
-    );
-  }
-
-  List<Widget> _renderChartNames() {
-    return List.generate(
-      ChartType.values.length,
-      (index) => CheckboxListTile(
-        value: ChartType.values[index] == _chartsController.chartType,
-        onChanged: (checked) {
-          _chartsController.changeChartType(ChartType.values[index]);
-        },
-        title: Text(
-          ChartType.values[index].name,
-          style: TextStyle(color: Colors.black),
-        ),
-        contentPadding: EdgeInsets.all(10.0),
-        selected: ChartType.values[index] == _chartsController.chartType,
       ),
     );
   }
@@ -222,14 +204,7 @@ class _ChartsViewState extends State<ChartsView> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  width: 200.0,
-                  color: Color(0xffefeeee),
-                  child: ListView(
-                    padding: EdgeInsets.all(10.0),
-                    children: _renderChartNames(),
-                  ),
-                ),
+                ChartsSelect(controller: _chartsController),
                 Expanded(
                   child: Container(
                     color: Color(0xffefeeee),
