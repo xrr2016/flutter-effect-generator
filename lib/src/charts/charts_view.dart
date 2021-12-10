@@ -63,7 +63,16 @@ class _ChartsViewState extends State<ChartsView> {
       case ChartType.calenderHeatMap:
         return CalenderHeatMap(datas: _datas);
       case ChartType.treeMap:
-        return TreeMap(datas: _datas);
+        return TreeMap(
+          data: List.generate(
+            _datas.length,
+            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
+          ),
+          title: Text(
+            '商品产量比例 - 2020年',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        );
       case ChartType.pie:
         return PieChart(
           data: List.generate(
@@ -194,7 +203,7 @@ class _ChartsViewState extends State<ChartsView> {
         foregroundColor: Colors.black,
         title: Text('Charts'),
         backgroundColor: Color(0xffefeeee),
-        elevation: 1.0,
+        elevation: 0.0,
       ),
       body: AnimatedBuilder(
         animation: _chartsController,

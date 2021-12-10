@@ -75,7 +75,12 @@ class HomeView extends StatelessWidget {
                   runSpacing: 50.0,
                   spacing: 50.0,
                   children: [
-                    HomeCard(),
+                    HomeCard(
+                      title: 'Charts',
+                    ),
+                    HomeCard(
+                      title: 'Generative',
+                    ),
                   ],
                 ),
               ),

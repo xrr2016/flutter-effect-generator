@@ -1,8 +1,11 @@
 import '../exports.dart';
 
 class HomeCard extends StatelessWidget {
+  final String title;
+
   const HomeCard({
     Key? key,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -23,7 +26,7 @@ class HomeCard extends StatelessWidget {
           ),
           SizedBox(height: 10.0),
           Text(
-            'Charts',
+            title,
             style: TextStyle(color: Colors.white),
           ),
         ],

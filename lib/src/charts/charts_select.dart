@@ -19,7 +19,6 @@ class _ChartsSelectState extends State<ChartsSelect> {
           return Container(
             width: 160.0,
             height: 60.0,
-            margin: EdgeInsets.only(bottom: 10.0),
             color: Color(0xffefeeee),
             alignment: Alignment.center,
             transformAlignment: Alignment.center,
@@ -31,7 +30,10 @@ class _ChartsSelectState extends State<ChartsSelect> {
                 alignment: Alignment.center,
                 child: Text(
                   ChartType.values[index].name,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 decoration: BoxDecoration(
                   color: Color(0xffefeeee),
@@ -70,11 +72,12 @@ class _ChartsSelectState extends State<ChartsSelect> {
           child: Container(
             width: 160.0,
             height: 60.0,
-            margin: EdgeInsets.only(bottom: 10.0),
             alignment: Alignment.center,
             child: Text(
               ChartType.values[index].name,
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(
+                color: Colors.black54,
+              ),
             ),
           ),
         );
