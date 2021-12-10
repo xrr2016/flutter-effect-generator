@@ -36,6 +36,12 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -121,43 +127,45 @@ class RadarChartPainter extends CustomPainter {
   void _drawScores(Canvas canvas, Size size) {
     double scoreLabelFontSize = 10;
 
-    scores.asMap().forEach((index, score) {
-      double scoreRadius = _scoreDistance * (index + 1);
+    scores.asMap().forEach(
+      (index, score) {
+        double scoreRadius = _scoreDistance * (index + 1);
 
-      if (index.isEven) {
-        canvas.drawArc(
-          Rect.fromCircle(
-            center: Offset.zero,
-            radius: scoreRadius - _scoreDistance / 2,
-          ),
-          0.0,
-          pi * 2,
-          false,
-          Paint()
-            ..color = Colors.white70
-            ..strokeWidth = _scoreDistance
-            ..style = PaintingStyle.stroke,
-        );
-      } else {
-        canvas.drawCircle(Offset.zero, scoreRadius, scoresPaint);
-      }
+        if (index.isEven) {
+          canvas.drawArc(
+            Rect.fromCircle(
+              center: Offset.zero,
+              radius: scoreRadius - _scoreDistance / 2,
+            ),
+            0.0,
+            pi * 2,
+            false,
+            Paint()
+              ..color = Colors.white70
+              ..strokeWidth = _scoreDistance
+              ..style = PaintingStyle.stroke,
+          );
+        } else {
+          canvas.drawCircle(Offset.zero, scoreRadius, scoresPaint);
+        }
 
-      TextPainter(
-        text: TextSpan(
-          text: score.toString(),
-          style: TextStyle(color: Colors.grey, fontSize: scoreLabelFontSize),
-        ),
-        textDirection: TextDirection.ltr,
-      )
-        ..layout(minWidth: 0, maxWidth: size.width)
-        ..paint(
-          canvas,
-          Offset(
-            -scoreLabelFontSize,
-            -scoreRadius - scoreLabelFontSize,
+        TextPainter(
+          text: TextSpan(
+            text: score.toString(),
+            style: TextStyle(color: Colors.grey, fontSize: scoreLabelFontSize),
           ),
-        );
-    });
+          textDirection: TextDirection.ltr,
+        )
+          ..layout(minWidth: 0, maxWidth: size.width)
+          ..paint(
+            canvas,
+            Offset(
+              -scoreLabelFontSize,
+              -scoreRadius - scoreLabelFontSize,
+            ),
+          );
+      },
+    );
   }
 
   void _drawRotateText({
@@ -272,7 +280,6 @@ class RadarChartPainter extends CustomPainter {
             double y = scaledPoint * yAngle;
 
             path.lineTo(x, y);
-
             _drawRotateText(
               canvas: canvas,
               size: size,
@@ -280,7 +287,7 @@ class RadarChartPainter extends CustomPainter {
               radius: 0.0,
               fontSize: scoreSize,
               color: outLineColor,
-              offset: Offset(x - scoreSize, y - scoreSize),
+              offset: Offset(x - scoreSize, y),
             );
           },
         );
