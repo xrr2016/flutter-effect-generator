@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import './parse_array_to_bst.dart';
-import './tree_node.dart';
-import './draw_tree_rects.dart';
 import '../colors.dart';
+import './tree_node.dart';
+import './parse_array_to_bst.dart';
+import './draw_tree_rects.dart';
 import '../models/data_item.dart';
 
 class TreeMap extends StatefulWidget {
@@ -84,32 +84,28 @@ class TreeMapPainter extends CustomPainter {
   TreeMapPainter({
     required this.data,
     required this.animation,
-  }) {
-    datas = data.map((e) => e.value).toList();
+  }) : super(repaint: animation) {
+    _total = data.fold(0, (sum, item) => sum + item.value);
+    _rootNode = parseArrayToBST(data);
   }
 
   final List<DataItem> data;
   final Animation<double> animation;
 
-  List<double> datas = [];
+  double _total = 0.0;
+  late TreeNode _rootNode;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Colors.black26
-      ..style = PaintingStyle.fill;
     Rect rootRect = Rect.fromLTWH(0, 0, size.width, size.height);
-    TreeNode rootNode = parseArrayToBST(datas);
-    canvas.drawRect(rootRect, paint);
 
     drawTreeRects(
-      rootNode,
-      rootRect,
-      rootNode,
-      0,
       canvas,
-      // scale: scale.value,
-      // color: color.value,
+      _rootNode,
+      rootRect,
+      _rootNode,
+      0,
+      _total,
     );
   }
 

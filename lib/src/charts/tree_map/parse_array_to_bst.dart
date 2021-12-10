@@ -1,21 +1,19 @@
-// eg:
-//   List<int> input = [2, 10, 4, 3, 7, 5, 9, 8, 1, 6];
-//   List<int> output = [0, 2, 12, 16, 19, 26, 31, 40, 48, 49,55];
-
 import './tree_node.dart';
+import '../models/data_item.dart';
 
-TreeNode parseArrayToBST(List<double> array) {
+TreeNode parseArrayToBST(List<DataItem> array) {
   int n = array.length;
   double sum = 0.0;
   List<double> sums = List.filled(n + 1, 0);
   sums[0] = 0.0;
 
   for (int i = 0; i < n; i++) {
-    sum += array[i];
+    sum += array[i].value;
     sums[i + 1] = sum;
   }
 
-  final TreeNode root = TreeNode(sums.last, null, null);
+  final TreeNode root =
+      TreeNode(DataItem(name: 'root', value: sums.last), null, null);
 
   void partition(int start, int end, TreeNode node) {
     if (start >= end - 1) {
@@ -23,7 +21,7 @@ TreeNode parseArrayToBST(List<double> array) {
     }
 
     double valueOffset = sums[start];
-    double valueTarget = (node.value / 2) + valueOffset;
+    double valueTarget = (node.item.value / 2) + valueOffset;
     int left = start + 1;
     int right = end - 1;
 
@@ -43,9 +41,11 @@ TreeNode parseArrayToBST(List<double> array) {
     }
 
     double valueLeft = sums[left] - valueOffset;
-    double valueRight = node.value - valueLeft;
-    TreeNode nodeLeft = TreeNode(valueLeft, null, null);
-    TreeNode nodeRight = TreeNode(valueRight, null, null);
+    double valueRight = node.item.value - valueLeft;
+    TreeNode nodeLeft =
+        TreeNode(DataItem(name: node.item.name, value: valueLeft), null, null);
+    TreeNode nodeRight =
+        TreeNode(DataItem(name: node.item.name, value: valueRight), null, null);
 
     node.left = nodeLeft;
     node.right = nodeRight;
