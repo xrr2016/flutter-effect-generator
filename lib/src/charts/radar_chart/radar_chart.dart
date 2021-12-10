@@ -2,15 +2,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../colors.dart';
+import '../models/data_item.dart';
 import '../utils/create_animated_path.dart';
 
 class RadarChart extends StatefulWidget {
+  final Widget title;
   final List<double> scores;
   final List<String> features;
-  final List<List<double>> datas;
+  final List<List<DataItem>> datas;
 
   RadarChart({
     Key? key,
+    required this.title,
     required this.datas,
     required this.scores,
     required this.features,
@@ -34,16 +37,42 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        CustomPaint(
-          size: Size(300, 300),
-          painter: RadarChartPainter(
-            datas: widget.datas,
-            scores: widget.scores,
-            features: widget.features,
-            animation: _controller,
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: CustomPaint(
+            painter: RadarChartPainter(
+              datas: widget.datas,
+              scores: widget.scores,
+              features: widget.features,
+              animation: _controller,
+            ),
+            child: SizedBox(width: 480.0, height: 480.0),
+          ),
+        ),
+        Align(alignment: Alignment.topCenter, child: widget.title),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.datas.length,
+              (index) => Container(
+                width: 50.0,
+                height: 24.0,
+                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                color: colors[index % colors.length],
+                alignment: Alignment.center,
+                child: Text(
+                  widget.datas[index].first.name,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ],
@@ -54,7 +83,7 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
 class RadarChartPainter extends CustomPainter {
   final List<String> features;
   final List<double> scores;
-  final List<List<double>> datas;
+  final List<List<DataItem>> datas;
   final Animation<double> animation;
 
   RadarChartPainter({
@@ -64,6 +93,15 @@ class RadarChartPainter extends CustomPainter {
     required this.animation,
   }) : super(repaint: animation);
 
+  double _radius = 0.0;
+  double _scoreDistance = 0.0;
+
+  void _initChart(Canvas canvas, Size size) {
+    _radius = min(size.width, size.height) / 2;
+    _scoreDistance = _radius / scores.length;
+    canvas.translate(size.width / 2, size.height / 2);
+  }
+
   void _drawOutline(Canvas canvas, Size size) {
     Paint outlinePaint = Paint()
       ..color = Colors.black
@@ -71,32 +109,39 @@ class RadarChartPainter extends CustomPainter {
       ..strokeWidth = 1.0
       ..isAntiAlias = true;
 
-    double centerX = size.width / 2.0;
-    double centerY = size.height / 2.0;
-    Offset centerOffset = Offset(centerX, centerY);
-    double radius = centerX * 0.8;
-
-    canvas.drawCircle(centerOffset, radius, outlinePaint);
+    canvas.drawCircle(Offset.zero, _radius, outlinePaint);
   }
 
+  Paint scoresPaint = Paint()
+    ..color = Colors.grey
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.0
+    ..isAntiAlias = true;
+
   void _drawScores(Canvas canvas, Size size) {
-    double centerX = size.width / 2.0;
-    double centerY = size.height / 2.0;
-    Offset centerOffset = Offset(centerX, centerY);
-    double radius = centerX * 0.8;
-
-    double scoreDistance = radius / (scores.length + 1);
-    const double scoreLabelFontSize = 10;
-
-    Paint scoresPaint = Paint()
-      ..color = Colors.grey
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0
-      ..isAntiAlias = true;
+    double scoreLabelFontSize = 10;
 
     scores.asMap().forEach((index, score) {
-      double scoreRadius = scoreDistance * (index + 1);
-      canvas.drawCircle(centerOffset, scoreRadius, scoresPaint);
+      double scoreRadius = _scoreDistance * (index + 1);
+
+      if (index.isEven) {
+        canvas.drawArc(
+          Rect.fromCircle(
+            center: Offset.zero,
+            radius: scoreRadius - _scoreDistance / 2,
+          ),
+          0.0,
+          pi * 2,
+          false,
+          Paint()
+            ..color = Colors.white70
+            ..strokeWidth = _scoreDistance
+            ..style = PaintingStyle.stroke,
+        );
+      } else {
+        canvas.drawCircle(Offset.zero, scoreRadius, scoresPaint);
+      }
+
       TextPainter(
         text: TextSpan(
           text: score.toString(),
@@ -108,8 +153,8 @@ class RadarChartPainter extends CustomPainter {
         ..paint(
           canvas,
           Offset(
-            centerX - scoreLabelFontSize,
-            centerY - scoreRadius - scoreLabelFontSize,
+            -scoreLabelFontSize,
+            -scoreRadius - scoreLabelFontSize,
           ),
         );
     });
@@ -144,11 +189,6 @@ class RadarChartPainter extends CustomPainter {
   }
 
   void _drawFetures(Canvas canvas, Size size) {
-    double centerX = size.width / 2.0;
-    double centerY = size.height / 2.0;
-    Offset centerOffset = Offset(centerX, centerY);
-    double radius = centerX * 0.8;
-
     double angle = (2 * pi) / features.length;
     const double featureLabelFontSize = 14;
     const double featureLabelFontWidth = 12;
@@ -159,8 +199,8 @@ class RadarChartPainter extends CustomPainter {
         double yAngle = sin(angle * index - pi / 2);
 
         Offset featureOffset = Offset(
-          centerX + radius * xAngle,
-          centerY + radius * yAngle,
+          _radius * xAngle,
+          _radius * yAngle,
         );
 
         Paint linePaint = Paint()
@@ -169,7 +209,7 @@ class RadarChartPainter extends CustomPainter {
           ..strokeWidth = 1.0
           ..isAntiAlias = true;
 
-        canvas.drawLine(centerOffset, featureOffset, linePaint);
+        canvas.drawLine(Offset.zero, featureOffset, linePaint);
 
         double labelYOffset =
             yAngle < 0 ? -featureLabelFontSize * 2.5 : featureLabelFontSize * 2;
@@ -193,21 +233,15 @@ class RadarChartPainter extends CustomPainter {
   }
 
   void _drawDatas(Canvas canvas, Size size) {
-    double centerX = size.width / 2.0;
-    double centerY = size.height / 2.0;
-    double radius = centerX * 0.8;
-
-    var angle = (2 * pi) / features.length;
-    var scale = radius / scores.last;
+    double angle = (2 * pi) / features.length;
+    double scale = _radius / scores.last;
 
     datas.asMap().forEach(
       (index, graph) {
         Paint graphPaint = Paint()
           ..color = colors[index % colors.length].withOpacity(0.2)
           ..style = PaintingStyle.fill;
-
         Color outLineColor = colors[index % colors.length];
-
         Paint graphOutlinePaint = Paint()
           ..color = outLineColor
           ..style = PaintingStyle.stroke
@@ -216,37 +250,37 @@ class RadarChartPainter extends CustomPainter {
 
         Path path = Path();
         double scoreSize = 12.0;
-        double scaledPoint = scale * graph[0];
-        path.moveTo(centerX, centerY - scaledPoint);
+        double scaledPoint = -scale * graph[0].value;
+        path.moveTo(0.0, scaledPoint);
 
         _drawRotateText(
           canvas: canvas,
           size: size,
-          text: graph[0].toStringAsFixed(1),
+          text: graph[0].value.toString(),
           radius: 0.0,
           fontSize: scoreSize,
           color: outLineColor,
-          offset: Offset(centerX, centerY - scaledPoint),
+          offset: Offset(0.0, scaledPoint),
         );
 
         graph.sublist(1).asMap().forEach(
           (index, point) {
-            double scaledPoint = scale * point;
+            double scaledPoint = scale * point.value;
             double xAngle = cos(angle * (index + 1) - pi / 2);
             double yAngle = sin(angle * (index + 1) - pi / 2);
-            double x = centerX + scaledPoint * xAngle;
-            double y = centerY + scaledPoint * yAngle;
+            double x = scaledPoint * xAngle;
+            double y = scaledPoint * yAngle;
 
             path.lineTo(x, y);
 
             _drawRotateText(
               canvas: canvas,
               size: size,
-              text: point.toStringAsFixed(1),
+              text: point.value.toString(),
               radius: 0.0,
               fontSize: scoreSize,
               color: outLineColor,
-              offset: Offset(x - scoreSize, y),
+              offset: Offset(x - scoreSize, y - scoreSize),
             );
           },
         );
@@ -266,6 +300,7 @@ class RadarChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    _initChart(canvas, size);
     _drawOutline(canvas, size);
     _drawScores(canvas, size);
     _drawFetures(canvas, size);

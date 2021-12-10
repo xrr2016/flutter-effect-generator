@@ -96,10 +96,40 @@ class _ChartsViewState extends State<ChartsView> {
       case ChartType.radar:
         return RadarChart(
           datas: [
-            [60.0, 70.0, 80.0, 30.0, 70.0, 80.0],
+            [
+              DataItem(name: '小明', value: 80.0),
+              DataItem(name: '小明', value: 70.0),
+              DataItem(name: '小明', value: 60.0),
+              DataItem(name: '小明', value: 50.0),
+              DataItem(name: '小明', value: 90.0),
+              DataItem(name: '小明', value: 80.0),
+            ],
+            [
+              DataItem(name: '小林', value: 50.0),
+              DataItem(name: '小林', value: 90.0),
+              DataItem(name: '小林', value: 30.0),
+              DataItem(name: '小林', value: 70.0),
+              DataItem(name: '小林', value: 60.0),
+              DataItem(name: '小林', value: 40.0),
+            ],
           ],
-          scores: [60.0, 70.0, 80.0, 90.0],
+          scores: [
+            10.0,
+            20.0,
+            30.0,
+            40.0,
+            50.0,
+            60.0,
+            70.0,
+            80.0,
+            90.0,
+            100.0,
+          ],
           features: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
+          title: Text(
+            '个人能力雷达图',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
         );
       case ChartType.donut:
         return DonutCahrt(
@@ -202,7 +232,6 @@ class _ChartsViewState extends State<ChartsView> {
                 ),
                 Expanded(
                   child: Container(
-                    // padding: EdgeInsets.all(100.0),
                     color: Color(0xffefeeee),
                     child: Container(
                       color: Color(0xffefeeee),
