@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../colors.dart';
 import './tree_node.dart';
+import '../models/data_item.dart';
 
 TextPainter textPainter = TextPainter(
   text: TextSpan(),
@@ -43,19 +44,18 @@ Paint paint = Paint()
 
 void _drawPartRect(
   Canvas canvas,
-  double left,
-  double top,
-  double width,
-  double height,
+  Rect rect,
+  Color color,
   String text,
 ) {
-  Rect rect = Rect.fromLTWH(left, top, width, height);
+  paint.color = color;
   canvas.drawRect(rect, paint);
   canvas.drawRect(rect, linePaint);
   _drawText(
     text,
     canvas,
-    Offset(left + width / 2 - 12.0, top + height / 2 - 12.0),
+    Offset(
+        rect.left + rect.width / 2 - 12.0, rect.top + rect.height / 2 - 12.0),
   );
 }
 
@@ -65,7 +65,7 @@ void drawTreeRects(
   Rect rootRectLeft,
   TreeNode? rootNodeLeft,
   int level,
-  double total,
+  List<DataItem> data,
 ) {
   if (node == null) {
     return;
@@ -76,27 +76,23 @@ void drawTreeRects(
 
   Rect rectLeft;
   Rect rectRight;
+  double left;
+  double top;
+  double width;
+  double height;
 
   if (level.isEven) {
-    double left;
-    double top;
-    double width;
-    double height;
-
     top = rootRectLeft.top;
     left = rootRectLeft.left;
     width = rootRectLeft.width;
     height = (node.left!.item.value / rootNodeLeft!.item.value) *
         rootRectLeft.height;
-
     rectLeft = Rect.fromLTWH(left, top, width, height);
 
     _drawPartRect(
       canvas,
-      left,
-      top,
-      width,
-      height,
+      rectLeft,
+      node.left?.color ?? colors[0],
       node.left!.item.value.toString(),
     );
 
@@ -105,73 +101,47 @@ void drawTreeRects(
     width = rootRectLeft.width;
     height = (node.right!.item.value / rootNodeLeft.item.value) *
         rootRectLeft.height;
+    rectRight = Rect.fromLTWH(left, top, width, height);
 
     _drawPartRect(
       canvas,
-      left,
-      top,
-      width,
-      height,
+      rectRight,
+      node.right?.color ?? colors[0],
       node.right!.item.value.toString(),
     );
-    rectRight = Rect.fromLTWH(left, top, width, height);
   } else {
-    double left;
-    double width;
-    double top = rootRectLeft.top;
-    double height = rootRectLeft.height;
-
-    // left node
+    top = rootRectLeft.top;
+    height = rootRectLeft.height;
     left = rootRectLeft.left;
     width =
         (node.left!.item.value / rootNodeLeft!.item.value) * rootRectLeft.width;
+    rectLeft = Rect.fromLTWH(left, top, width, height);
 
     _drawPartRect(
       canvas,
-      left,
-      top,
-      width,
-      height,
+      rectLeft,
+      node.left?.color ?? colors[0],
       node.left!.item.value.toString(),
     );
-    rectLeft = Rect.fromLTWH(left, top, width, height);
 
     top = rootRectLeft.top;
     height = rootRectLeft.height;
     left = rootRectLeft.left + width;
     width =
         (node.right!.item.value / rootNodeLeft.item.value) * rootRectLeft.width;
+    rectRight = Rect.fromLTWH(left, top, width, height);
 
     _drawPartRect(
       canvas,
-      left,
-      top,
-      width,
-      height,
+      rectRight,
+      node.right?.color ?? colors[0],
       node.right!.item.value.toString(),
     );
-
-    rectRight = Rect.fromLTWH(left, top, width, height);
   }
 
   level++;
-
   // 递归绘制左节点
-  drawTreeRects(
-    canvas,
-    node.left,
-    rectLeft,
-    node.left,
-    level,
-    total,
-  );
+  drawTreeRects(canvas, node.left, rectLeft, node.left, level, data);
   // 递归绘制右节点
-  drawTreeRects(
-    canvas,
-    node.right,
-    rectRight,
-    node.right,
-    level,
-    total,
-  );
+  drawTreeRects(canvas, node.right, rectRight, node.right, level, data);
 }

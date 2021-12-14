@@ -39,43 +39,58 @@ class _TreeMapState extends State<TreeMap> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: CustomPaint(
-            painter: TreeMapPainter(
-              data: widget.data,
-              animation: _controller,
-            ),
-            child: SizedBox(width: 480.0, height: 480.0),
-          ),
-        ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              widget.data.length,
-              (index) => Container(
-                width: 50.0,
-                height: 24.0,
-                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                color: colors[index % colors.length],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double _size =
+            constraints.maxWidth > 720.0 ? 480.0 : constraints.maxWidth;
+
+        return Container(
+          padding: EdgeInsets.all(26.0),
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          child: Stack(
+            children: [
+              Align(
                 alignment: Alignment.center,
-                child: Text(
-                  widget.data[index].name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
+                child: CustomPaint(
+                  painter: TreeMapPainter(
+                    data: widget.data,
+                    animation: _controller,
+                  ),
+                  child: SizedBox(
+                    width: _size,
+                    height: _size,
                   ),
                 ),
               ),
-            ),
+              Align(alignment: Alignment.topCenter, child: widget.title),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    widget.data.length,
+                    (index) => Container(
+                      width: 50.0,
+                      height: 24.0,
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      color: colors[index % colors.length],
+                      alignment: Alignment.center,
+                      child: Text(
+                        widget.data[index].name,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -105,7 +120,7 @@ class TreeMapPainter extends CustomPainter {
       rootRect,
       _rootNode,
       0,
-      _total,
+      data,
     );
   }
 

@@ -1,3 +1,4 @@
+import '../colors.dart';
 import './tree_node.dart';
 import '../models/data_item.dart';
 
@@ -17,6 +18,8 @@ TreeNode parseArrayToBST(List<DataItem> array) {
 
   void partition(int start, int end, TreeNode node) {
     if (start >= end - 1) {
+      node.item.name = array[start].name;
+      node.color = colors[start];
       return;
     }
 

@@ -227,11 +227,7 @@ class _ChartsViewState extends State<ChartsView> {
                       ),
                       child: Container(
                         child: Center(
-                          child: SizedBox(
-                            width: 720,
-                            height: 640,
-                            child: _renderChart(),
-                          ),
+                          child: _renderChart(),
                         ),
                         decoration: BoxDecoration(
                           color: Color(0xffefeeee),

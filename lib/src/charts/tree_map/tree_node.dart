@@ -5,12 +5,14 @@ class TreeNode {
   DataItem item;
   TreeNode? left;
   TreeNode? right;
+  Color? color;
 
   TreeNode(
     this.item,
     this.left,
-    this.right,
-  );
+    this.right, {
+    this.color,
+  });
 
   @override
   String toString() {
