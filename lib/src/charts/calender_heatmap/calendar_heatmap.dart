@@ -4,7 +4,34 @@ import 'package:flutter/material.dart';
 import '../models/data_item.dart';
 import './utils.dart';
 
-class CalenderHeatMap extends StatelessWidget {
+Color _generateBlockColor({double opacity = 1}) {
+  if (opacity == 0) {
+    return Colors.black12;
+  }
+
+  return Color.fromRGBO(45, 181, 93, opacity);
+}
+
+double _getOpacity(double val, double maxVal) {
+  double percent = val / maxVal;
+  double opacity;
+
+  if (percent > .7) {
+    opacity = 1;
+  } else if (percent > .5) {
+    opacity = 0.8;
+  } else if (percent > .3) {
+    opacity = 0.6;
+  } else if (percent > 0) {
+    opacity = 0.4;
+  } else {
+    opacity = 0.0;
+  }
+
+  return opacity;
+}
+
+class CalenderHeatMap extends StatefulWidget {
   final Widget title;
   final List<DataItem> data;
 
@@ -15,26 +42,103 @@ class CalenderHeatMap extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<CalenderHeatMap> createState() => _CalenderHeatMapState();
+}
+
+class _CalenderHeatMapState extends State<CalenderHeatMap>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 3000),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Align(
           alignment: Alignment.center,
           child: CustomPaint(
-            painter: CalenderHeatMapPainter(data: data),
-            child: SizedBox(width: 1200.0, height: 360.0),
+            painter: CalenderHeatMapPainter(
+              data: widget.data,
+              animation: _controller,
+            ),
+            child: SizedBox(width: 1040.0, height: 160.0),
           ),
         ),
-        Align(alignment: Alignment.topCenter, child: title),
+        Align(alignment: Alignment.topCenter, child: widget.title),
         Align(
-          alignment: Alignment.topCenter,
+          alignment: Alignment.bottomCenter,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('0'),
-              Text('1'),
-              Text('2'),
-              Text('3'),
-              Text('4'),
+              Row(
+                children: [
+                  Container(
+                    width: 20.0,
+                    height: 12.0,
+                    margin: EdgeInsets.only(right: 2.0),
+                    color: _generateBlockColor(
+                      opacity: _getOpacity(5, 25),
+                    ),
+                  ),
+                  Text('0-5'),
+                ],
+              ),
+              SizedBox(width: 10.0),
+              Row(
+                children: [
+                  Container(
+                    width: 20.0,
+                    height: 12.0,
+                    margin: EdgeInsets.only(right: 2.0),
+                    color: _generateBlockColor(
+                      opacity: _getOpacity(10, 25),
+                    ),
+                  ),
+                  Text('6-10'),
+                ],
+              ),
+              SizedBox(width: 10.0),
+              Row(
+                children: [
+                  Container(
+                    width: 20.0,
+                    height: 12.0,
+                    margin: EdgeInsets.only(right: 2.0),
+                    color: _generateBlockColor(
+                      opacity: _getOpacity(15, 25),
+                    ),
+                  ),
+                  Text('11-20'),
+                ],
+              ),
+              SizedBox(width: 10.0),
+              Row(
+                children: [
+                  Container(
+                    width: 20.0,
+                    height: 12.0,
+                    margin: EdgeInsets.only(right: 2.0),
+                    color: _generateBlockColor(
+                      opacity: _getOpacity(25, 25),
+                    ),
+                  ),
+                  Text('20-25'),
+                ],
+              ),
             ],
           ),
         ),
@@ -45,10 +149,12 @@ class CalenderHeatMap extends StatelessWidget {
 
 class CalenderHeatMapPainter extends CustomPainter {
   final List<DataItem> data;
+  final Animation<double> animation;
 
   CalenderHeatMapPainter({
     required this.data,
-  }) {
+    required this.animation,
+  }) : super(repaint: animation) {
     if (data.isNotEmpty) {
       maxVal = data.map((d) => d.value).reduce(max);
     }
@@ -65,14 +171,6 @@ class CalenderHeatMapPainter extends CustomPainter {
   double dx = 0.0;
   double dy = 0.0;
 
-  Color _generateBlockColor({double opacity = 1}) {
-    if (opacity == 0) {
-      return Colors.black12;
-    }
-
-    return Color.fromRGBO(45, 181, 93, opacity);
-  }
-
   void _drawBlock(Canvas canvas, Color color) {
     final Rect rect = Rect.fromLTWH(0.0, 0.0, _blockSize, _blockSize);
     final Radius radius = Radius.circular(blockRadius);
@@ -80,24 +178,6 @@ class CalenderHeatMapPainter extends CustomPainter {
 
     blockPaint.color = color;
     canvas.drawRRect(rrect, blockPaint);
-  }
-
-  double _getOpacity(double val) {
-    double percent = val / maxVal;
-    double opacity;
-
-    if (percent > .7) {
-      opacity = 1;
-    } else if (percent > .5) {
-      opacity = 0.8;
-    } else if (percent > .3) {
-      opacity = 0.6;
-    } else if (percent > 0) {
-      opacity = 0.4;
-    } else {
-      opacity = 0.0;
-    }
-    return opacity;
   }
 
   void _drawMonthDays(Canvas canvas, Size size, int year, int month) {
@@ -120,7 +200,7 @@ class CalenderHeatMapPainter extends CustomPainter {
           _drawBlock(
             canvas,
             _generateBlockColor(
-              opacity: _getOpacity(datas[j - weekDays + 1].value),
+              opacity: _getOpacity(datas[j - weekDays + 1].value, maxVal),
             ),
           );
         } else {
@@ -130,12 +210,10 @@ class CalenderHeatMapPainter extends CustomPainter {
         canvas.translate(0.0, gap + _blockSize);
 
         if (datas.isNotEmpty) {
-          debugPrint(
-              '$month $monthDays ${j - weekDays + 1} ${datas[j - weekDays + 1].value}');
           _drawBlock(
             canvas,
             _generateBlockColor(
-              opacity: _getOpacity(datas[j - weekDays + 1].value),
+              opacity: _getOpacity(datas[j - weekDays + 1].value, maxVal),
             ),
           );
         } else {
@@ -168,7 +246,7 @@ class CalenderHeatMapPainter extends CustomPainter {
       _drawMonthDays(canvas, size, firstDayDate.year, i);
 
       double _dx =
-          monthDays > 28 ? (gap + _blockSize) * 7 : (gap + _blockSize) * 6;
+          monthDays > 29 ? (gap + _blockSize) * 6 : (gap + _blockSize) * 5;
       canvas.translate(_dx, 0.0);
 
       String text = monthTextEn[i - 1];
@@ -199,6 +277,12 @@ class CalenderHeatMapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // canvas.drawRect(
+    //   Rect.fromLTWH(0.0, 0.0, size.width, size.height),
+    //   Paint()..color = Colors.amber,
+    // );
+
+    canvas.translate(_blockSize, 0.0);
     _drawBackground(canvas, size);
     _drawWeekDayTexts(canvas, size);
   }

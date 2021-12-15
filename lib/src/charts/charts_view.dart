@@ -61,13 +61,17 @@ class _ChartsViewState extends State<ChartsView> {
           ),
         );
       case ChartType.calenderHeatMap:
-        return CalenderHeatMap(
-          data: _chartsController.commits.isEmpty
-              ? []
-              : _chartsController.commits,
-          title: Text(
-            '提交记录 - 2020年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        return SizedBox(
+          width: 1200.0,
+          height: 300.0,
+          child: CalenderHeatMap(
+            data: _chartsController.commits.isEmpty
+                ? []
+                : _chartsController.commits,
+            title: Text(
+              '提交记录 - 2020年',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
           ),
         );
       case ChartType.treeMap:
@@ -241,11 +245,7 @@ class _ChartsViewState extends State<ChartsView> {
                       ),
                       child: Container(
                         child: Center(
-                          child: SizedBox(
-                            child: _renderChart(),
-                            width: 1200.0,
-                            height: 480.0,
-                          ),
+                          child: _renderChart(),
                         ),
                         decoration: BoxDecoration(
                           color: Color(0xffefeeee),
