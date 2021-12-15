@@ -1,4 +1,5 @@
 import '../exports.dart';
+import './models/data_item.dart';
 
 enum ChartType {
   area,
@@ -46,10 +47,30 @@ extension ChartTypeName on ChartType {
 }
 
 class ChartsController extends ChangeNotifier {
-  ChartType chartType = ChartType.treeMap;
+  ChartsController() {
+    loadJson();
+  }
 
+  ChartType chartType = ChartType.calenderHeatMap;
   void changeChartType(ChartType type) {
     chartType = type;
     notifyListeners();
+  }
+
+  List<DataItem> commits = [];
+
+  List<DataItem> _parseGradients(String data) {
+    final jsonResult = json.decode(data) as List;
+    return jsonResult.map((json) => DataItem.fromJson(json)).toList();
+  }
+
+  loadJson() async {
+    try {
+      String data = await rootBundle.loadString('assets/data/commits.json');
+      commits = await compute(_parseGradients, data);
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

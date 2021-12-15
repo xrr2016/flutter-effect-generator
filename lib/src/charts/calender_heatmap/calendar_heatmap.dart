@@ -1,41 +1,69 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
-// import '../../utils/draw_grid.dart';
+import '../models/data_item.dart';
 import './utils.dart';
 
 class CalenderHeatMap extends StatelessWidget {
-  final List<double> datas;
+  final Widget title;
+  final List<DataItem> data;
 
-  const CalenderHeatMap({
-    required this.datas,
-  });
+  CalenderHeatMap({
+    Key? key,
+    required this.title,
+    required this.data,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return CustomPaint(
-          painter: CalenderHeatMapPainter(datas: datas),
-          size: constraints.biggest,
-        );
-      },
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: CustomPaint(
+            painter: CalenderHeatMapPainter(data: data),
+            child: SizedBox(width: 1200.0, height: 360.0),
+          ),
+        ),
+        Align(alignment: Alignment.topCenter, child: title),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Row(
+            children: [
+              Text('0'),
+              Text('1'),
+              Text('2'),
+              Text('3'),
+              Text('4'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
 
 class CalenderHeatMapPainter extends CustomPainter {
-  final List<double> datas;
+  final List<DataItem> data;
 
   CalenderHeatMapPainter({
-    required this.datas,
-  });
+    required this.data,
+  }) {
+    if (data.isNotEmpty) {
+      maxVal = data.map((d) => d.value).reduce(max);
+    }
+  }
 
-  final double gap = 5.0;
-  final double blockWidth = 25.0;
-  final double blockHeight = 25.0;
-  final double blockRadius = 5.0;
+  final double gap = 2.0;
+  final double _blockSize = 12.0;
+  final double blockRadius = 2.0;
+  final Paint blockPaint = Paint()
+    ..isAntiAlias = true
+    ..style = PaintingStyle.fill;
+
+  double maxVal = 0.0;
+  double dx = 0.0;
+  double dy = 0.0;
 
   Color _generateBlockColor({double opacity = 1}) {
     if (opacity == 0) {
@@ -45,95 +73,138 @@ class CalenderHeatMapPainter extends CustomPainter {
     return Color.fromRGBO(45, 181, 93, opacity);
   }
 
-  void _drawBlock(Canvas canvas, Offset offset, Color color) {
-    final Paint paint = Paint()
-      ..color = color
-      ..isAntiAlias = true
-      ..style = PaintingStyle.fill;
-    final Rect rect =
-        Rect.fromLTWH(offset.dx, offset.dy, blockWidth, blockHeight);
+  void _drawBlock(Canvas canvas, Color color) {
+    final Rect rect = Rect.fromLTWH(0.0, 0.0, _blockSize, _blockSize);
     final Radius radius = Radius.circular(blockRadius);
     final rrect = RRect.fromRectAndRadius(rect, radius);
 
-    canvas.drawRRect(rrect, paint);
+    blockPaint.color = color;
+    canvas.drawRRect(rrect, blockPaint);
+  }
+
+  double _getOpacity(double val) {
+    double percent = val / maxVal;
+    double opacity;
+
+    if (percent > .7) {
+      opacity = 1;
+    } else if (percent > .5) {
+      opacity = 0.8;
+    } else if (percent > .3) {
+      opacity = 0.6;
+    } else if (percent > 0) {
+      opacity = 0.4;
+    } else {
+      opacity = 0.0;
+    }
+    return opacity;
+  }
+
+  void _drawMonthDays(Canvas canvas, Size size, int year, int month) {
+    if (data.isEmpty) {
+      return;
+    }
+    int monthDays = daysInMonth(year, month);
+    int weekDays = DateTime(year, month, 1).weekday;
+
+    canvas.save();
+    canvas.translate(_blockSize * 3, 0.0);
+    List<DataItem> datas = data.where((d) => d.date!.month == month).toList();
+
+    for (int j = 0; j < monthDays + weekDays - 1; j++) {
+      if (j < weekDays - 1) {
+        canvas.translate(0.0, gap + _blockSize);
+      } else if (j % 7 == 0 && j != 0) {
+        canvas.translate(gap + _blockSize, -(_blockSize + gap) * 6);
+        if (datas.isNotEmpty) {
+          _drawBlock(
+            canvas,
+            _generateBlockColor(
+              opacity: _getOpacity(datas[j - weekDays + 1].value),
+            ),
+          );
+        } else {
+          _drawBlock(canvas, _generateBlockColor(opacity: 0.0));
+        }
+      } else {
+        canvas.translate(0.0, gap + _blockSize);
+
+        if (datas.isNotEmpty) {
+          debugPrint(
+              '$month $monthDays ${j - weekDays + 1} ${datas[j - weekDays + 1].value}');
+          _drawBlock(
+            canvas,
+            _generateBlockColor(
+              opacity: _getOpacity(datas[j - weekDays + 1].value),
+            ),
+          );
+        } else {
+          _drawBlock(canvas, _generateBlockColor(opacity: 0.0));
+        }
+      }
+    }
+
+    canvas.restore();
+  }
+
+  void _drawBackground(Canvas canvas, Size size) {
+    if (data.isEmpty) {
+      return;
+    }
+
+    DataItem firstDay = data.first;
+    DateTime? firstDayDate = firstDay.date;
+    dx = size.width / 12;
+    TextPainter tp = TextPainter(
+      textDirection: TextDirection.ltr,
+    );
+
+    canvas.save();
+    canvas.translate(0.0, _blockSize * 2);
+
+    for (int i = 1; i <= 12; i++) {
+      int monthDays = daysInMonth(firstDayDate!.year, i);
+
+      _drawMonthDays(canvas, size, firstDayDate.year, i);
+
+      double _dx =
+          monthDays > 28 ? (gap + _blockSize) * 7 : (gap + _blockSize) * 6;
+      canvas.translate(_dx, 0.0);
+
+      String text = monthTextEn[i - 1];
+      tp.text = TextSpan(text: text);
+      tp.layout();
+      tp.paint(canvas, Offset(-_dx / 2, -_blockSize));
+    }
+
+    canvas.restore();
   }
 
   void _drawWeekDayTexts(Canvas canvas, Size size) {
+    dy = size.height / weekDayTextEn.length;
+    TextPainter tp = TextPainter(
+      textDirection: TextDirection.ltr,
+    );
+
     canvas.save();
-    canvas.translate(0, size.height / 4);
-    Offset start = Offset(30.0, 0.0);
-
+    canvas.translate(0, _blockSize * 3);
     weekDayTextEn.asMap().forEach((index, text) {
-      TextPainter(
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      )
-        ..text = TextSpan(
-          text: text,
-          style: TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        )
-        ..layout(
-          minWidth: 0.0,
-          maxWidth: 100.0,
-        )
-        ..paint(canvas, start);
-
-      start += Offset(0, gap + blockHeight);
+      tp.text = TextSpan(text: text);
+      tp.layout();
+      tp.paint(canvas, Offset.zero);
+      canvas.translate(0, _blockSize + gap);
     });
     canvas.restore();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
-    // drawGrid(canvas, size);
+    _drawBackground(canvas, size);
     _drawWeekDayTexts(canvas, size);
-
-    canvas.save();
-    canvas.translate(0, size.height / 4);
-    Offset start = Offset(100.0, 0.0);
-
-    for (int i = 0; i < datas.length; i++) {
-      Offset move;
-
-      if (i == 0) {
-        move = Offset.zero;
-      } else {
-        if (i % 7 == 0) {
-          move = Offset(gap + blockWidth, -start.dy);
-        } else {
-          move = Offset(0, gap + blockHeight);
-        }
-      }
-      start += move;
-
-      final double val = datas[i];
-      final double maxVal = datas.reduce(max);
-      final percent = val / maxVal;
-      double opacity;
-
-      if (percent > .8) {
-        opacity = 1;
-      } else if (percent > .6) {
-        opacity = 0.8;
-      } else if (percent > .4) {
-        opacity = 0.6;
-      } else if (percent < .2) {
-        opacity = 0.4;
-      } else {
-        opacity = 0.0;
-      }
-
-      _drawBlock(canvas, start, _generateBlockColor(opacity: opacity));
-    }
-    canvas.restore();
   }
 
   @override
-  bool shouldRepaint(CalenderHeatMapPainter oldDelegate) => false;
+  bool shouldRepaint(CalenderHeatMapPainter oldDelegate) => true;
 
   @override
   bool shouldRebuildSemantics(CalenderHeatMapPainter oldDelegate) => false;

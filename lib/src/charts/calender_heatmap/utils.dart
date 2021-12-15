@@ -40,12 +40,14 @@ yearLength(int year) {
 
   for (int counter = 1; counter < year; counter++) {
     if (counter >= 4) {
-      if (leapYear(counter) == true)
-        yearLength += 366;
-      else
-        yearLength += 365;
-    } else
-      yearLength += 365;
+      if (leapYear(counter)) {
+        yearLength = 366;
+      } else {
+        yearLength = 365;
+      }
+    } else {
+      yearLength = 365;
+    }
   }
   return yearLength;
 }
