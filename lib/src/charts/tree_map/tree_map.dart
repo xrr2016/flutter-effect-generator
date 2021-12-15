@@ -27,7 +27,7 @@ class _TreeMapState extends State<TreeMap> with SingleTickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: Duration(milliseconds: 300),
     )..forward();
   }
 
@@ -121,6 +121,7 @@ class TreeMapPainter extends CustomPainter {
       _rootNode,
       0,
       data,
+      animation.value,
     );
   }
 

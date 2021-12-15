@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import '../../exports.dart';
 
 import 'dart:math';
@@ -45,26 +47,45 @@ final List<EventItem> _events = [
       title: 'loream adsfkha fakdshfkh'),
 ];
 
-class TimeSheet extends StatelessWidget {
+class TimeSheet extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
   final List events;
 
+  final Widget title;
+
   const TimeSheet({
     Key? key,
+    required this.title,
     required this.startDate,
     required this.endDate,
     required this.events,
   }) : super(key: key);
 
   @override
+  State<TimeSheet> createState() => _TimeSheetState();
+}
+
+class _TimeSheetState extends State<TimeSheet> {
+  @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: TimeSheetPainter(
-        range: DateTimeRange(start: DateTime(1991), end: DateTime(2002)),
-        events: _events,
-      ),
-      child: Container(),
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: CustomPaint(
+            painter: TimeSheetPainter(
+              range: DateTimeRange(start: DateTime(1991), end: DateTime(2002)),
+              events: _events,
+            ),
+            child: SizedBox(
+              width: 1000.0,
+              height: 500.0,
+            ),
+          ),
+        ),
+        Align(alignment: Alignment.topCenter, child: widget.title),
+      ],
     );
   }
 }
@@ -77,18 +98,6 @@ class TimeSheetPainter extends CustomPainter {
     required this.range,
     required this.events,
   });
-
-  void drawTextVertical(
-    Canvas canvas,
-    String s,
-    Offset pos,
-  ) {
-    canvas.save();
-    canvas.translate(10.0, 0.0);
-    canvas.rotate(-90 * pi / 180);
-    drawText(canvas, s);
-    canvas.restore();
-  }
 
   void drawText(
     Canvas canvas,
@@ -119,7 +128,13 @@ class TimeSheetPainter extends CustomPainter {
     canvas.save();
     canvas.translate(padding / 4, 10.0);
     for (int year in years) {
-      drawText(canvas, year.toString());
+      drawText(
+        canvas,
+        year.toString(),
+        style: TextStyle(
+          color: Colors.black87,
+        ),
+      );
       canvas.translate(padding, 0);
     }
     canvas.restore();
@@ -130,11 +145,9 @@ class TimeSheetPainter extends CustomPainter {
     canvas.drawLine(
       Offset(0.0, 1.0),
       Offset(size.width, 1.0),
-      Paint()
-        ..color = Colors.white
-        ..strokeWidth = 2.0,
+      Paint()..strokeWidth = 2.0,
     );
-    Paint linePaint = Paint()..color = Colors.white24;
+    Paint linePaint = Paint()..color = Colors.black12;
     double padding = size.width / years.length;
 
     canvas.save();
@@ -153,30 +166,26 @@ class TimeSheetPainter extends CustomPainter {
     double barTop = 80.0;
     double padding = size.width / totalYears;
 
-    for (EventItem event in events) {
+    for (var i = 0; i < events.length; i++) {
+      EventItem event = events[i];
       int years = 1;
       if (event.end != null) {
         years = event.end!.year - event.start.year;
       }
+      Color color = colors[i % colors.length];
       double barWidth = size.width * (years / totalYears);
       double barLeft = padding * (event.start.year - range.start.year);
 
-      debugPrint((range.end.year - event.start.year).toString());
-      drawEventItem(canvas, size, event, barLeft, barTop, barWidth, barHeight);
+      drawEventItem(
+          canvas, size, event, barLeft, barTop, barWidth, barHeight, color);
       barTop += barHeight * 2;
     }
   }
 
-  void drawEventItem(
-    Canvas canvas,
-    Size size,
-    EventItem event,
-    double barLeft,
-    double barTop,
-    double barWidth,
-    double barHeight,
-  ) {
-    Paint paint = Paint()..color = colors[Random().nextInt(colors.length)];
+  void drawEventItem(Canvas canvas, Size size, EventItem event, double barLeft,
+      double barTop, double barWidth, double barHeight, Color color) {
+    Paint paint = Paint()..color = color;
+
     Rect rect = Rect.fromLTWH(barLeft, barTop, barWidth, barHeight);
     RRect rrect = RRect.fromRectAndRadius(rect, Radius.circular(barHeight / 2));
     canvas.drawRRect(rrect, paint);
@@ -185,12 +194,12 @@ class TimeSheetPainter extends CustomPainter {
     TextPainter(
       text: TextSpan(
         text: '${event.start.year}',
-        style: TextStyle(color: Colors.white, fontSize: fontSize),
+        style: TextStyle(color: color, fontSize: fontSize),
         children: [
-          // TextSpan(
-          //   text: '-',
-          //   style: TextStyle(color: Colors.white, fontSize: fontSize),
-          // ),
+          TextSpan(
+            text: '-',
+            style: TextStyle(color: color, fontSize: fontSize),
+          ),
           // TextSpan(
           //   text: '${event.end!.year}',
           //   style: TextStyle(color: Colors.white, fontSize: fontSize),
@@ -200,7 +209,7 @@ class TimeSheetPainter extends CustomPainter {
           ),
           TextSpan(
             text: event.title,
-            style: TextStyle(color: Colors.white54, fontSize: fontSize),
+            style: TextStyle(color: color, fontSize: fontSize),
           )
         ],
       ),
@@ -213,10 +222,6 @@ class TimeSheetPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(
-      Rect.fromLTWH(0.0, 0.0, size.width, size.height),
-      Paint()..color = Colors.black54,
-    );
     drawYears(canvas, size);
     drawEvents(canvas, size);
   }

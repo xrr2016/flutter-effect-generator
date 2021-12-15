@@ -66,6 +66,7 @@ void drawTreeRects(
   TreeNode? rootNodeLeft,
   int level,
   List<DataItem> data,
+  double animationValue,
 ) {
   if (node == null) {
     return;
@@ -93,7 +94,7 @@ void drawTreeRects(
       canvas,
       rectLeft,
       node.left?.color ?? colors[0],
-      node.left!.item.value.toString(),
+      (node.left!.item.value * animationValue).toStringAsFixed(0),
     );
 
     left = rootRectLeft.left;
@@ -107,7 +108,7 @@ void drawTreeRects(
       canvas,
       rectRight,
       node.right?.color ?? colors[0],
-      node.right!.item.value.toString(),
+      (node.right!.item.value * animationValue).toStringAsFixed(0),
     );
   } else {
     top = rootRectLeft.top;
@@ -121,7 +122,7 @@ void drawTreeRects(
       canvas,
       rectLeft,
       node.left?.color ?? colors[0],
-      node.left!.item.value.toString(),
+      (node.left!.item.value * animationValue).toStringAsFixed(0),
     );
 
     top = rootRectLeft.top;
@@ -135,13 +136,15 @@ void drawTreeRects(
       canvas,
       rectRight,
       node.right?.color ?? colors[0],
-      node.right!.item.value.toString(),
+      (node.right!.item.value * animationValue).toStringAsFixed(0),
     );
   }
 
   level++;
   // 递归绘制左节点
-  drawTreeRects(canvas, node.left, rectLeft, node.left, level, data);
+  drawTreeRects(
+      canvas, node.left, rectLeft, node.left, level, data, animationValue);
   // 递归绘制右节点
-  drawTreeRects(canvas, node.right, rectRight, node.right, level, data);
+  drawTreeRects(
+      canvas, node.right, rectRight, node.right, level, data, animationValue);
 }

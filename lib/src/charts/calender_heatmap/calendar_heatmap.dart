@@ -54,7 +54,7 @@ class _CalenderHeatMapState extends State<CalenderHeatMap>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 3000),
+      duration: Duration(milliseconds: 1000),
     )..forward();
   }
 
@@ -200,7 +200,10 @@ class CalenderHeatMapPainter extends CustomPainter {
           _drawBlock(
             canvas,
             _generateBlockColor(
-              opacity: _getOpacity(datas[j - weekDays + 1].value, maxVal),
+              opacity: _getOpacity(
+                datas[j - weekDays + 1].value * animation.value,
+                maxVal,
+              ),
             ),
           );
         } else {
@@ -213,7 +216,10 @@ class CalenderHeatMapPainter extends CustomPainter {
           _drawBlock(
             canvas,
             _generateBlockColor(
-              opacity: _getOpacity(datas[j - weekDays + 1].value, maxVal),
+              opacity: _getOpacity(
+                datas[j - weekDays + 1].value * animation.value,
+                maxVal,
+              ),
             ),
           );
         } else {

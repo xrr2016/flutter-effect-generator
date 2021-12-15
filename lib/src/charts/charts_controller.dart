@@ -51,7 +51,7 @@ class ChartsController extends ChangeNotifier {
     loadJson();
   }
 
-  ChartType chartType = ChartType.calenderHeatMap;
+  ChartType chartType = ChartType.timeSheet;
   void changeChartType(ChartType type) {
     chartType = type;
     notifyListeners();

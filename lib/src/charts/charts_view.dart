@@ -69,7 +69,7 @@ class _ChartsViewState extends State<ChartsView> {
                 ? []
                 : _chartsController.commits,
             title: Text(
-              '提交记录 - 2020年',
+              '提交记录 - 2021年',
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
           ),
@@ -161,6 +161,10 @@ class _ChartsViewState extends State<ChartsView> {
           startDate: DateTime(1949),
           endDate: DateTime(2021),
           events: [],
+          title: Text(
+            '1999-2020 大事记',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
         );
       case ChartType.line:
         return LineChart(
@@ -203,7 +207,6 @@ class _ChartsViewState extends State<ChartsView> {
   @override
   void initState() {
     super.initState();
-    // loadJson();
   }
 
   @override
@@ -218,10 +221,11 @@ class _ChartsViewState extends State<ChartsView> {
           ),
           const SizedBox(width: 10.0),
         ],
+        backgroundColor: Color(0xffefeeee),
+        centerTitle: true,
+        elevation: 0.0,
         foregroundColor: Colors.black,
         title: Text('Charts'),
-        backgroundColor: Color(0xffefeeee),
-        elevation: 0.0,
       ),
       body: AnimatedBuilder(
         animation: _chartsController,
