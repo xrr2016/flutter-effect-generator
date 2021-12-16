@@ -13,6 +13,8 @@ enum ChartType {
   pie,
   treeMap,
   timeSheet,
+  gauge,
+  wave,
 }
 
 extension ChartTypeName on ChartType {
@@ -40,6 +42,10 @@ extension ChartTypeName on ChartType {
         return '矩形树图';
       case ChartType.timeSheet:
         return '时序图';
+      case ChartType.gauge:
+        return '仪表盘';
+      case ChartType.wave:
+        return '波浪图';
       default:
         return '';
     }

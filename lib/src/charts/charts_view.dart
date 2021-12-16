@@ -2,17 +2,17 @@ import '../exports.dart';
 import './charts_select.dart';
 import './charts_controller.dart';
 import './tree_map/tree_map.dart';
-import './bar_chart/bar_chart.dart';
-import './column_chart/column_chart.dart';
-import './line_chart/line_chart.dart';
-import './donut_chart/donut_chart.dart';
-import './radar_chart/radar_chart.dart';
-import './pie_chart/pie_chart.dart';
-import './area_chart/area_chart.dart';
+import './bar/bar_chart.dart';
+import './column/column_chart.dart';
+import './line/line_chart.dart';
+import './donut/donut_chart.dart';
+import './radar/radar_chart.dart';
+import './pie/pie_chart.dart';
+import './area/area_chart.dart';
 import './time_sheet/time_sheet.dart';
 import './calender_heatmap/calendar_heatmap.dart';
 import './models/data_item.dart';
-import './curve_chart/curve_chart.dart';
+import './curve/curve_chart.dart';
 
 class ChartsView extends StatefulWidget {
   static const routeName = '/charts';

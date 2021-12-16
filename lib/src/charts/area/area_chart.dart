@@ -1,8 +1,6 @@
-import 'dart:ui';
-
 import '../../exports.dart';
 import '../utils/create_animated_path.dart';
-import '../curve_chart/draw_cruve.dart';
+import '../curve/draw_cruve.dart';
 import '../models/data_item.dart';
 
 class AreaChart extends StatefulWidget {
