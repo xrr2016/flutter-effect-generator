@@ -1,57 +1,12 @@
 import 'dart:ui';
 
 import '../../exports.dart';
-
-import 'dart:math';
-
-class EventItem {
-  DateTime start;
-  DateTime? end;
-  String title;
-
-  EventItem({
-    required this.start,
-    required this.title,
-    this.end,
-  });
-}
-
-final List<EventItem> _events = [
-  EventItem(
-      start: DateTime(1991),
-      end: DateTime(1994),
-      title: 'loream adsfkha fakdshfkh'),
-  EventItem(
-      start: DateTime(1992),
-      end: DateTime(1994),
-      title: 'loream adsfkha fakdshfkh'),
-  EventItem(
-      start: DateTime(1993),
-      end: DateTime(1994),
-      title: 'loream adsfkha fakdshfkh'),
-  EventItem(
-      start: DateTime(1994),
-      end: DateTime(1995),
-      title: 'loream adsfkha fakdshfkh'),
-  EventItem(start: DateTime(1995), title: 'loream adsfkha fakdshfkh'),
-  EventItem(start: DateTime(1995), title: 'loream adsfkha fakdshfkh'),
-  EventItem(
-      start: DateTime(1996),
-      end: DateTime(1998),
-      title: 'loream adsfkha fakdshfkh'),
-  EventItem(start: DateTime(1998), title: 'loream adsfkha fakdshfkh'),
-  EventItem(start: DateTime(1999), title: 'loream adsfkha fakdshfkh'),
-  EventItem(
-      start: DateTime(1995),
-      end: DateTime(2000),
-      title: 'loream adsfkha fakdshfkh'),
-];
+import '../models/event_item.dart';
 
 class TimeSheet extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
-  final List events;
-
+  final List<EventItem> events;
   final Widget title;
 
   const TimeSheet({
@@ -66,164 +21,223 @@ class TimeSheet extends StatefulWidget {
   State<TimeSheet> createState() => _TimeSheetState();
 }
 
-class _TimeSheetState extends State<TimeSheet> {
+class _TimeSheetState extends State<TimeSheet> with TickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 3000),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  final double _height = 25.0;
+
+  double _calcChartHeight() {
+    double totalHeight = widget.events.length * _height + 80.0;
+
+    return totalHeight < 320 ? 320 : totalHeight;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Align(
-          alignment: Alignment.center,
-          child: CustomPaint(
-            painter: TimeSheetPainter(
-              range: DateTimeRange(start: DateTime(1991), end: DateTime(2002)),
-              events: _events,
-            ),
-            child: SizedBox(
-              width: 1000.0,
-              height: 500.0,
-            ),
+        widget.title,
+        SizedBox(height: 30.0),
+        CustomPaint(
+          painter: TimeSheetPainter(
+            startDate: widget.startDate,
+            endDate: widget.endDate,
+            events: widget.events,
+            animation: _controller,
+          ),
+          child: SizedBox(
+            width: 1000.0,
+            height: _calcChartHeight(),
           ),
         ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
       ],
     );
   }
 }
 
 class TimeSheetPainter extends CustomPainter {
-  final DateTimeRange range;
+  final DateTime startDate;
+  final DateTime endDate;
   final List<EventItem> events;
+  final Animation<double> animation;
 
   TimeSheetPainter({
-    required this.range,
+    required this.startDate,
+    required this.endDate,
     required this.events,
-  });
+    required this.animation,
+  }) {
+    _yearsLen = endDate.year - startDate.year;
+  }
 
-  void drawText(
+  final double _barHeight = 12.0;
+  final double _paddingTop = 30.0;
+  final Paint linePaint = Paint()..color = Colors.black12;
+
+  double _yearWidth = 0.0;
+  double _oneYearWidth = 0.0;
+  int _yearsLen = 0;
+
+  void _drawText(
     Canvas canvas,
     String text, {
     TextStyle style = const TextStyle(color: Colors.white, fontSize: 14.0),
+    Offset offset = Offset.zero,
   }) {
     TextPainter(
       text: TextSpan(
         text: text,
         style: style,
       ),
-      textAlign: TextAlign.left,
+      textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     )
       ..layout(minWidth: 0.0, maxWidth: double.infinity)
-      ..paint(canvas, Offset.zero);
+      ..paint(canvas, offset);
   }
 
-  void drawYears(Canvas canvas, Size size) {
-    DateTime start = range.start;
-    DateTime end = range.end;
+  void _drawLine(Canvas canvas, Size size) {
+    Offset p1 = Offset(0.0, _paddingTop);
+    Offset p2 = Offset(0.0, size.height - _paddingTop / 4);
+    canvas.drawLine(p1, p2, linePaint);
+  }
+
+  void _drawYears(Canvas canvas, Size size) {
+    DateTime start = startDate;
+    DateTime end = endDate;
     List<int> years = [];
-    for (int i = start.year; i <= end.year; i++) {
-      years.add(i);
+
+    if (_yearsLen > 10) {
+      int addYear = end.year.isEven ? 3 : 4;
+
+      for (int i = start.year; i <= end.year; i += addYear) {
+        years.add(i);
+      }
+      if (!years.contains(end.year)) {
+        years.add(end.year);
+      }
+    } else {
+      for (int i = start.year; i <= end.year; i++) {
+        years.add(i);
+      }
     }
-    double padding = size.width / years.length;
+    _yearWidth = size.width / years.length;
+    _oneYearWidth = size.width / _yearsLen;
 
     canvas.save();
-    canvas.translate(padding / 4, 10.0);
-    for (int year in years) {
-      drawText(
-        canvas,
-        year.toString(),
-        style: TextStyle(
-          color: Colors.black87,
-        ),
-      );
-      canvas.translate(padding, 0);
-    }
-    canvas.restore();
-    drawYearLines(canvas, size, years);
-  }
-
-  void drawYearLines(Canvas canvas, Size size, List<int> years) {
+    canvas.translate(0.0, _paddingTop / 4);
     canvas.drawLine(
-      Offset(0.0, 1.0),
-      Offset(size.width, 1.0),
-      Paint()..strokeWidth = 2.0,
+      Offset(0.0, _paddingTop),
+      Offset(size.width, _paddingTop),
+      Paint()
+        ..strokeWidth = 1.0
+        ..color = Colors.black12,
     );
-    Paint linePaint = Paint()..color = Colors.black12;
-    double padding = size.width / years.length;
 
-    canvas.save();
-    for (var _ in years) {
-      Offset p1 = Offset.zero;
-      Offset p2 = Offset(0.0, size.height);
-      canvas.drawLine(p1, p2, linePaint);
-      canvas.translate(padding, 0);
+    for (int i = 0; i < years.length; i++) {
+      int year = years[i];
+
+      if (i == 0) {
+        _drawText(
+          canvas,
+          year.toString(),
+          style: TextStyle(color: Colors.black54),
+          offset: Offset(-14.0, 0.0),
+        );
+        _drawLine(canvas, size);
+      } else {
+        double dx = (years[i] - years[i - 1]) * _oneYearWidth;
+        canvas.translate(dx, 0);
+
+        _drawText(
+          canvas,
+          year.toString(),
+          style: TextStyle(
+            color: Colors.black54,
+          ),
+          offset: Offset(-14.0, 0.0),
+        );
+        _drawLine(canvas, size);
+      }
     }
+
     canvas.restore();
   }
 
-  void drawEvents(Canvas canvas, Size size) {
-    final int totalYears = range.end.year - range.start.year;
-    const double barHeight = 10.0;
-    double barTop = 80.0;
-    double padding = size.width / totalYears;
+  void _drawEvents(Canvas canvas, Size size) {
+    double barTop = 60.0;
 
+    canvas.save();
     for (var i = 0; i < events.length; i++) {
       EventItem event = events[i];
-      int years = 1;
-      if (event.end != null) {
-        years = event.end!.year - event.start.year;
-      }
       Color color = colors[i % colors.length];
-      double barWidth = size.width * (years / totalYears);
-      double barLeft = padding * (event.start.year - range.start.year);
+      int years = event.end.year - event.start.year;
+      double barLeft = _oneYearWidth * (event.start.year - startDate.year);
+      double barWidth = years * _oneYearWidth;
 
-      drawEventItem(
-          canvas, size, event, barLeft, barTop, barWidth, barHeight, color);
-      barTop += barHeight * 2;
+      _drawEventItem(
+        canvas,
+        size,
+        event,
+        barLeft,
+        barTop,
+        barWidth,
+        _barHeight,
+        color,
+      );
+      canvas.translate(0.0, _barHeight * 2);
     }
+    canvas.restore();
   }
 
-  void drawEventItem(Canvas canvas, Size size, EventItem event, double barLeft,
-      double barTop, double barWidth, double barHeight, Color color) {
+  void _drawEventItem(
+    Canvas canvas,
+    Size size,
+    EventItem event,
+    double barLeft,
+    double barTop,
+    double barWidth,
+    double barHeight,
+    Color color,
+  ) {
+    double fontSize = 12.0;
     Paint paint = Paint()..color = color;
-
     Rect rect = Rect.fromLTWH(barLeft, barTop, barWidth, barHeight);
     RRect rrect = RRect.fromRectAndRadius(rect, Radius.circular(barHeight / 2));
-    canvas.drawRRect(rrect, paint);
-    double fontSize = 12.0;
 
-    TextPainter(
-      text: TextSpan(
-        text: '${event.start.year}',
-        style: TextStyle(color: color, fontSize: fontSize),
-        children: [
-          TextSpan(
-            text: '-',
-            style: TextStyle(color: color, fontSize: fontSize),
-          ),
-          // TextSpan(
-          //   text: '${event.end!.year}',
-          //   style: TextStyle(color: Colors.white, fontSize: fontSize),
-          // ),
-          TextSpan(
-            text: ' ',
-          ),
-          TextSpan(
-            text: event.title,
-            style: TextStyle(color: color, fontSize: fontSize),
-          )
-        ],
-      ),
-      textAlign: TextAlign.left,
-      textDirection: TextDirection.ltr,
-    )
-      ..layout(minWidth: 0.0, maxWidth: double.infinity)
-      ..paint(canvas, Offset(barLeft + barWidth + 10, barTop - (fontSize / 3)));
+    canvas.drawRRect(rrect, paint);
+    _drawText(
+      canvas,
+      '${event.start.year}-${event.end.year} ${event.title}',
+      style: TextStyle(fontSize: fontSize, color: color),
+      offset: Offset(barLeft + barWidth + 4, barTop - fontSize / 2),
+    );
   }
 
   @override
   void paint(Canvas canvas, Size size) {
-    drawYears(canvas, size);
-    drawEvents(canvas, size);
+    // canvas.drawRect(
+    //   Rect.fromLTWH(0.0, 0.0, size.width, size.height),
+    //   Paint()..color = Colors.amberAccent,
+    // );
+    _drawYears(canvas, size);
+    _drawEvents(canvas, size);
   }
 
   @override

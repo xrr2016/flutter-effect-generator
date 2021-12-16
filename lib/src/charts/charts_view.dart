@@ -160,9 +160,9 @@ class _ChartsViewState extends State<ChartsView> {
         return TimeSheet(
           startDate: DateTime(1949),
           endDate: DateTime(2021),
-          events: [],
+          events: _chartsController.events,
           title: Text(
-            '1999-2020 大事记',
+            '1949-2021 大事记',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         );

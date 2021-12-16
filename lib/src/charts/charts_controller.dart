@@ -1,5 +1,6 @@
 import '../exports.dart';
 import './models/data_item.dart';
+import './models/event_item.dart';
 
 enum ChartType {
   area,
@@ -52,6 +53,74 @@ extension ChartTypeName on ChartType {
   }
 }
 
+final List<EventItem> _events = [
+  EventItem(
+    start: DateTime(1949),
+    end: DateTime(1950),
+    title: '新中国成立',
+  ),
+  EventItem(
+    start: DateTime(1959),
+    end: DateTime(1980),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(1978),
+    end: DateTime(1982),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(1985),
+    end: DateTime(1990),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(1955),
+    end: DateTime(1993),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(1981),
+    end: DateTime(1993),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(1986),
+    end: DateTime(1999),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(1996),
+    end: DateTime(2000),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(1958),
+    end: DateTime(2004),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(2000),
+    end: DateTime(2014),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(2002),
+    end: DateTime(2014),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(1976),
+    end: DateTime(2016),
+    title: '啦啦啦啦啦',
+  ),
+  EventItem(
+    start: DateTime(2019),
+    end: DateTime(2021),
+    title: '新冠疫情',
+  ),
+];
+
 class ChartsController extends ChangeNotifier {
   ChartsController() {
     loadJson();
@@ -79,4 +148,6 @@ class ChartsController extends ChangeNotifier {
       debugPrint(e.toString());
     }
   }
+
+  List<EventItem> get events => _events;
 }
