@@ -88,7 +88,10 @@ class TimeSheetPainter extends CustomPainter {
 
   final double _barHeight = 12.0;
   final double _paddingTop = 30.0;
-  final Paint linePaint = Paint()..color = Colors.black12;
+  final Paint linePaint = Paint()
+    ..strokeWidth = 1.0
+    ..color = Colors.black26
+    ..style = PaintingStyle.stroke;
 
   double _yearWidth = 0.0;
   double _oneYearWidth = 0.0;
@@ -113,9 +116,26 @@ class TimeSheetPainter extends CustomPainter {
   }
 
   void _drawLine(Canvas canvas, Size size) {
-    Offset p1 = Offset(0.0, _paddingTop);
-    Offset p2 = Offset(0.0, size.height - _paddingTop / 4);
-    canvas.drawLine(p1, p2, linePaint);
+    double step = 6.0;
+    double span = 4.0;
+    double partLength = step + span;
+    Path path = Path()
+      ..moveTo(0.0, _paddingTop)
+      ..lineTo(0.0, size.height - _paddingTop / 4)
+      ..fillType = PathFillType.evenOdd;
+    PathMetrics pms = path.computeMetrics();
+
+    for (PathMetric pm in pms) {
+      int count = pm.length ~/ partLength;
+      for (int i = 0; i < count; i++) {
+        canvas.drawPath(
+          pm.extractPath(partLength * i, partLength * i + step),
+          linePaint,
+        );
+      }
+      double tail = pm.length % partLength;
+      canvas.drawPath(pm.extractPath(pm.length - tail, pm.length), linePaint);
+    }
   }
 
   void _drawYears(Canvas canvas, Size size) {

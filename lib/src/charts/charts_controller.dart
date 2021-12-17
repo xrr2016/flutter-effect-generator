@@ -90,7 +90,7 @@ final List<EventItem> _events = [
     title: '啦啦啦啦啦',
   ),
   EventItem(
-    start: DateTime(1996),
+    start: DateTime(1966),
     end: DateTime(2000),
     title: '啦啦啦啦啦',
   ),
