@@ -40,11 +40,19 @@ class _TimeSheetState extends State<TimeSheet> with TickerProviderStateMixin {
   }
 
   final double _height = 25.0;
+  final double _width = 50.0;
 
   double _calcChartHeight() {
     double totalHeight = widget.events.length * _height + 80.0;
 
     return totalHeight < 320 ? 320 : totalHeight;
+  }
+
+  double _calcChartWidth() {
+    int years = widget.endDate.year - widget.startDate.year;
+    double totalWidth = years * _width + 80.0;
+    debugPrint(totalWidth.toString());
+    return totalWidth < 1000 ? 1000 : totalWidth;
   }
 
   @override
@@ -62,7 +70,7 @@ class _TimeSheetState extends State<TimeSheet> with TickerProviderStateMixin {
             animation: _controller,
           ),
           child: SizedBox(
-            width: 1000.0,
+            width: double.infinity,
             height: _calcChartHeight(),
           ),
         ),
@@ -93,9 +101,8 @@ class TimeSheetPainter extends CustomPainter {
     ..color = Colors.black26
     ..style = PaintingStyle.stroke;
 
-  double _yearWidth = 0.0;
-  double _oneYearWidth = 0.0;
   int _yearsLen = 0;
+  double _oneYearWidth = 0.0;
 
   void _drawText(
     Canvas canvas,
@@ -144,7 +151,7 @@ class TimeSheetPainter extends CustomPainter {
     List<int> years = [];
 
     if (_yearsLen > 10) {
-      int addYear = end.year.isEven ? 3 : 4;
+      int addYear = end.year.isEven ? 4 : 3;
 
       for (int i = start.year; i <= end.year; i += addYear) {
         years.add(i);
@@ -157,14 +164,13 @@ class TimeSheetPainter extends CustomPainter {
         years.add(i);
       }
     }
-    _yearWidth = size.width / years.length;
     _oneYearWidth = size.width / _yearsLen;
 
     canvas.save();
     canvas.translate(0.0, _paddingTop / 4);
     canvas.drawLine(
-      Offset(0.0, _paddingTop),
-      Offset(size.width, _paddingTop),
+      Offset(-_oneYearWidth, _paddingTop),
+      Offset(size.width + _oneYearWidth, _paddingTop),
       Paint()
         ..strokeWidth = 1.0
         ..color = Colors.black12,

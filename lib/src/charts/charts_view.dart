@@ -157,13 +157,16 @@ class _ChartsViewState extends State<ChartsView> {
           ),
         );
       case ChartType.timeSheet:
-        return TimeSheet(
-          startDate: DateTime(1949),
-          endDate: DateTime(2021),
-          events: _chartsController.events,
-          title: Text(
-            '1949-2021 大事记',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 120.0),
+          child: TimeSheet(
+            startDate: DateTime(1949),
+            endDate: DateTime(2021),
+            events: _chartsController.events,
+            title: Text(
+              '1949-2021 大事记',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
           ),
         );
       case ChartType.line:
