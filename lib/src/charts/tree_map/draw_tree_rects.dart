@@ -4,7 +4,7 @@ import '../colors.dart';
 import './tree_node.dart';
 import '../models/data_item.dart';
 
-TextPainter textPainter = TextPainter(
+TextPainter _textPainter = TextPainter(
   text: TextSpan(),
   textAlign: TextAlign.center,
   textDirection: TextDirection.ltr,
@@ -22,7 +22,7 @@ void _drawText(String text, Canvas canvas, Offset offset) {
     ),
   );
 
-  textPainter
+  _textPainter
     ..text = textSpan
     ..layout(
       minWidth: 0.0,

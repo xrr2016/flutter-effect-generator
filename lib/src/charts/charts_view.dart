@@ -13,6 +13,8 @@ import './time_sheet/time_sheet.dart';
 import './calender_heatmap/calendar_heatmap.dart';
 import './models/data_item.dart';
 import './curve/curve_chart.dart';
+import './guage/guage_chart.dart';
+import './wave/wave_chart.dart';
 
 class ChartsView extends StatefulWidget {
   static const routeName = '/charts';
@@ -57,6 +59,28 @@ class _ChartsViewState extends State<ChartsView> {
           ),
           title: Text(
             '游客访问量 - 2040年',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        );
+      case ChartType.gauge:
+        return GuageChart(
+          data: List.generate(
+            _datas.length,
+            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
+          ),
+          title: Text(
+            '制作进度 - 2040年',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        );
+      case ChartType.wave:
+        return WaveChart(
+          data: List.generate(
+            _datas.length,
+            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
+          ),
+          title: Text(
+            '制作进度 - 2040年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         );

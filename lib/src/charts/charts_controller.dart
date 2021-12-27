@@ -126,7 +126,7 @@ class ChartsController extends ChangeNotifier {
     loadJson();
   }
 
-  ChartType chartType = ChartType.timeSheet;
+  ChartType chartType = ChartType.area;
   void changeChartType(ChartType type) {
     chartType = type;
     notifyListeners();

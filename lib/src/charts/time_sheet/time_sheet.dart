@@ -29,7 +29,7 @@ class _TimeSheetState extends State<TimeSheet> with TickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 3000),
+      duration: Duration(seconds: 3),
     )..forward();
   }
 
@@ -40,19 +40,11 @@ class _TimeSheetState extends State<TimeSheet> with TickerProviderStateMixin {
   }
 
   final double _height = 25.0;
-  final double _width = 50.0;
 
   double _calcChartHeight() {
     double totalHeight = widget.events.length * _height + 80.0;
 
     return totalHeight < 320 ? 320 : totalHeight;
-  }
-
-  double _calcChartWidth() {
-    int years = widget.endDate.year - widget.startDate.year;
-    double totalWidth = years * _width + 80.0;
-    debugPrint(totalWidth.toString());
-    return totalWidth < 1000 ? 1000 : totalWidth;
   }
 
   @override
@@ -90,7 +82,7 @@ class TimeSheetPainter extends CustomPainter {
     required this.endDate,
     required this.events,
     required this.animation,
-  }) {
+  }) : super(repaint: animation) {
     _yearsLen = endDate.year - startDate.year;
   }
 
@@ -215,7 +207,7 @@ class TimeSheetPainter extends CustomPainter {
       Color color = colors[i % colors.length];
       int years = event.end.year - event.start.year;
       double barLeft = _oneYearWidth * (event.start.year - startDate.year);
-      double barWidth = years * _oneYearWidth;
+      double barWidth = years * _oneYearWidth * animation.value;
 
       _drawEventItem(
         canvas,
@@ -252,7 +244,7 @@ class TimeSheetPainter extends CustomPainter {
       canvas,
       '${event.start.year}-${event.end.year} ${event.title}',
       style: TextStyle(fontSize: fontSize, color: color),
-      offset: Offset(barLeft + barWidth + 4, barTop - fontSize / 2),
+      offset: Offset(barLeft + barWidth + 4, barTop - fontSize / 3),
     );
   }
 
