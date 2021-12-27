@@ -122,31 +122,53 @@ final List<EventItem> _events = [
 ];
 
 class ChartsController extends ChangeNotifier {
-  ChartsController() {
-    loadJson();
-  }
+  // ChartsController() {
+  // }
 
   ChartType chartType = ChartType.area;
+
   void changeChartType(ChartType type) {
     chartType = type;
+    if (chartType == ChartType.calenderHeatMap) {
+      loadJson();
+    }
     notifyListeners();
   }
 
-  List<DataItem> commits = [];
+  List<DataItem> datas = [
+    DataItem(name: '1月', value: 300.0),
+    DataItem(name: '2月', value: 220.0),
+    DataItem(name: '3月', value: 240.0),
+    DataItem(name: '4月', value: 320.0),
+    DataItem(name: '5月', value: 389.0),
+    DataItem(name: '6月', value: 280.0),
+    DataItem(name: '7月', value: 356.0),
+    DataItem(name: '8月', value: 378.0),
+  ];
 
-  List<DataItem> _parseGradients(String data) {
-    final jsonResult = json.decode(data) as List;
-    return jsonResult.map((json) => DataItem.fromJson(json)).toList();
+  changeItemValue(int index, double val) {
+    datas[index].value = val;
+    notifyListeners();
+  }
+
+  addDataItem() {
+    datas.add(DataItem(name: '${datas.length + 1} 月', value: 100.0));
+    notifyListeners();
   }
 
   loadJson() async {
     try {
       String data = await rootBundle.loadString('assets/data/commits.json');
-      commits = await compute(_parseGradients, data);
+      datas = await compute(_parseGradients, data);
       notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  List<DataItem> _parseGradients(String data) {
+    final jsonResult = json.decode(data) as List;
+    return jsonResult.map((json) => DataItem.fromJson(json)).toList();
   }
 
   List<EventItem> get events => _events;

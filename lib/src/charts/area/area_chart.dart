@@ -38,19 +38,19 @@ class _AreaChartState extends State<AreaChart>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        Align(
-          alignment: Alignment.center,
-          child: CustomPaint(
-            painter: AreaChartPainter(
-              data: widget.data,
-              animation: _controller,
-            ),
-            child: SizedBox(width: 720.0, height: 480.0),
-          ),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: widget.title,
         ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
+        CustomPaint(
+          painter: AreaChartPainter(
+            data: widget.data,
+            animation: _controller,
+          ),
+          child: SizedBox(width: 720.0, height: 480.0),
+        ),
       ],
     );
   }
@@ -73,7 +73,6 @@ class AreaChartPainter extends CustomPainter {
 
   final List<DataItem> data;
   final Animation<double> animation;
-
   final double _scaleHeight = 10;
   final TextPainter _textPainter = TextPainter(
     textDirection: TextDirection.ltr,
@@ -201,15 +200,21 @@ class AreaChartPainter extends CustomPainter {
   }
 
   double _getYMaxNum(double num) {
-    int len = num.toString().length;
+    int len = num.toStringAsFixed(0).length;
     double n = pow(10, len).toDouble();
     double h = n / 2;
+
+    debugPrint('num: ' + num.toString());
+    debugPrint('h: ' + h.toString());
+    debugPrint('n: ' + n.toString());
 
     return num > h ? n : h;
   }
 
   double _getYStepNum(double num) {
-    int len = num.toString().length;
+    int len = num.toStringAsFixed(0).length;
+
+    debugPrint('len: ' + len.toString());
 
     return pow(10, len - 1).toDouble();
   }
@@ -224,6 +229,8 @@ class AreaChartPainter extends CustomPainter {
       steps++;
       c += numStep;
     }
+
+    debugPrint('steps: ' + steps.toString());
 
     yStep = (size.height - _scaleHeight) / (steps + 1);
     canvas.save();

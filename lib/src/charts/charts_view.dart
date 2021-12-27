@@ -1,6 +1,9 @@
 import '../exports.dart';
 import './charts_select.dart';
+import './charts_input.dart';
 import './charts_controller.dart';
+
+/// charts
 import './tree_map/tree_map.dart';
 import './bar/bar_chart.dart';
 import './column/column_chart.dart';
@@ -29,34 +32,11 @@ class _ChartsViewState extends State<ChartsView> {
   final ChartsController _chartsController = ChartsController();
   final List<double> _datas = [30.0, 200.0, 100.0, 300.0, 350.0, 350.0];
 
-  List<Widget> _renderDatas() {
-    return List.generate(
-      _datas.length,
-      (index) => TextField(
-        maxLength: 3,
-        controller: TextEditingController(
-          text: _datas[index].toString(),
-        ),
-        onChanged: (val) {
-          _datas[index] = double.tryParse(val) ?? 0.0;
-          setState(() {});
-        },
-        style: TextStyle(
-          color: Colors.black,
-        ),
-        keyboardType: TextInputType.number,
-      ),
-    );
-  }
-
   Widget _renderChart() {
     switch (_chartsController.chartType) {
       case ChartType.area:
         return AreaChart(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '游客访问量 - 2040年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -89,9 +69,8 @@ class _ChartsViewState extends State<ChartsView> {
           width: 1200.0,
           height: 300.0,
           child: CalenderHeatMap(
-            data: _chartsController.commits.isEmpty
-                ? []
-                : _chartsController.commits,
+            data:
+                _chartsController.datas.isEmpty ? [] : _chartsController.datas,
             title: Text(
               '提交记录 - 2021年',
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -308,21 +287,7 @@ class _ChartsViewState extends State<ChartsView> {
                     ),
                   ),
                 ),
-                Container(
-                  width: 200.0,
-                  color: Color(0xffefeeee),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.all(10.0),
-                          children: _renderDatas(),
-                        ),
-                      ),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.add))
-                    ],
-                  ),
-                ),
+                ChartsInput(controller: _chartsController),
               ],
             ),
           );

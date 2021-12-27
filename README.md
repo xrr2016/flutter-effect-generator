@@ -1,30 +1,13 @@
-# flutter_effect_generator
+# Generator
 
-A new Flutter project.
+An app for generate fun things, build with flutter.
 
-## Getting Started
+<!-- ![screenshot](./screenshot.jpg) -->
 
-This project is a starting point for a Flutter application that follows the
-[simple app state management
-tutorial](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple).
+<!-- ## Producthunt
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<a href="https://www.producthunt.com/posts/neumorphism?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-neumorphism" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=312516&theme=light" alt="Neumorphism - A web app to generate soft ui  code build with flutter | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
-## Assets
+## Stargazers
 
-The `assets` directory houses images, fonts, and any other files you want to
-include with your application.
-
-The `assets/images` directory contains [resolution-aware
-images](https://flutter.dev/docs/development/ui/assets-and-images#resolution-aware).
-
-## Localization
-
-This project generates localized messages based on arb files found in
-the `lib/src/localization` directory.
-
-To support additional languages, please visit the tutorial on
-[Internationalizing Flutter
-apps](https://flutter.dev/docs/development/accessibility-and-localization/internationalization)
+[![Stargazers over time](https://starchart.cc/xrr2016/neumorphism.svg)](https://starchart.cc/xrr2016/neumorphism) -->
