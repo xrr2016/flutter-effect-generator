@@ -193,6 +193,7 @@ class AreaChartPainter extends CustomPainter {
         data[i].name,
         alignment: Alignment.center,
         offset: Offset(0, _scaleHeight + 8),
+        color: Colors.black54,
       );
       canvas.translate(xStep, 0);
     }
@@ -204,18 +205,11 @@ class AreaChartPainter extends CustomPainter {
     double n = pow(10, len).toDouble();
     double h = n / 2;
 
-    debugPrint('num: ' + num.toString());
-    debugPrint('h: ' + h.toString());
-    debugPrint('n: ' + n.toString());
-
     return num > h ? n : h;
   }
 
   double _getYStepNum(double num) {
     int len = num.toStringAsFixed(0).length;
-
-    debugPrint('len: ' + len.toString());
-
     return pow(10, len - 1).toDouble();
   }
 
@@ -229,9 +223,6 @@ class AreaChartPainter extends CustomPainter {
       steps++;
       c += numStep;
     }
-
-    debugPrint('steps: ' + steps.toString());
-
     yStep = (size.height - _scaleHeight) / (steps + 1);
     canvas.save();
     for (int i = 0; i <= steps; i++) {
@@ -241,7 +232,12 @@ class AreaChartPainter extends CustomPainter {
         gridPaint,
       );
       final String str = (numStep * i).toStringAsFixed(0);
-      _drawAxisText(canvas, str, offset: Offset(-_scaleHeight - 4, 0));
+      _drawAxisText(
+        canvas,
+        str,
+        offset: Offset(-_scaleHeight - 4, 0),
+        color: Colors.black54,
+      );
       canvas.translate(0, -yStep);
     }
     canvas.restore();

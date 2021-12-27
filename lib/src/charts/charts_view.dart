@@ -44,10 +44,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.gauge:
         return GuageChart(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '制作进度 - 2040年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -55,10 +52,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.wave:
         return WaveChart(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '制作进度 - 2040年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -79,10 +73,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.treeMap:
         return TreeMap(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '商品产量比例 - 2020年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -90,10 +81,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.pie:
         return PieChart(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '商品产量比例 - 2020年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -139,10 +127,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.donut:
         return DonutCahrt(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '商品产量比例 - 2020年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -150,10 +135,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.column:
         return ColumnChart(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '游客访问量 - 2040年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -174,10 +156,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.line:
         return LineChart(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '产品销售量-2022年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -185,10 +164,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.curve:
         return CurveChart(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '${index + 1} 月', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '产品销售量-2022年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -196,10 +172,7 @@ class _ChartsViewState extends State<ChartsView> {
         );
       case ChartType.bar:
         return BarChart(
-          data: List.generate(
-            _datas.length,
-            (index) => DataItem(name: '产品 ${index + 1}', value: _datas[index]),
-          ),
+          data: _chartsController.datas,
           title: Text(
             '产品销售量 - 2020年',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

@@ -121,6 +121,17 @@ final List<EventItem> _events = [
   ),
 ];
 
+final _datas = [
+  DataItem(name: '1月', value: 300.0),
+  DataItem(name: '2月', value: 220.0),
+  DataItem(name: '3月', value: 240.0),
+  DataItem(name: '4月', value: 320.0),
+  DataItem(name: '5月', value: 389.0),
+  DataItem(name: '6月', value: 280.0),
+  DataItem(name: '7月', value: 356.0),
+  DataItem(name: '8月', value: 378.0),
+];
+
 class ChartsController extends ChangeNotifier {
   // ChartsController() {
   // }
@@ -131,20 +142,13 @@ class ChartsController extends ChangeNotifier {
     chartType = type;
     if (chartType == ChartType.calenderHeatMap) {
       loadJson();
+    } else {
+      datas = _datas;
     }
     notifyListeners();
   }
 
-  List<DataItem> datas = [
-    DataItem(name: '1月', value: 300.0),
-    DataItem(name: '2月', value: 220.0),
-    DataItem(name: '3月', value: 240.0),
-    DataItem(name: '4月', value: 320.0),
-    DataItem(name: '5月', value: 389.0),
-    DataItem(name: '6月', value: 280.0),
-    DataItem(name: '7月', value: 356.0),
-    DataItem(name: '8月', value: 378.0),
-  ];
+  List<DataItem> datas = _datas;
 
   changeItemValue(int index, double val) {
     datas[index].value = val;
