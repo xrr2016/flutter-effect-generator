@@ -155,8 +155,18 @@ class ChartsController extends ChangeNotifier {
     notifyListeners();
   }
 
+  changeItemName(int index, String val) {
+    datas[index].name = val;
+    notifyListeners();
+  }
+
   addDataItem() {
     datas.add(DataItem(name: '${datas.length + 1} 月', value: 100.0));
+    notifyListeners();
+  }
+
+  removeDataItem(int index) {
+    datas.removeAt(index);
     notifyListeners();
   }
 

@@ -17,16 +17,13 @@ class _ChartsSelectState extends State<ChartsSelect> {
       (index) {
         if (ChartType.values[index] == widget.controller.chartType) {
           return Container(
-            width: 160.0,
             height: 60.0,
             color: Color(0xffefeeee),
             alignment: Alignment.center,
-            transformAlignment: Alignment.center,
             child: Container(
               color: Color(0xffefeeee),
               child: Container(
-                width: 200.0,
-                height: 80.0,
+                height: 60.0,
                 alignment: Alignment.center,
                 child: Text(
                   ChartType.values[index].name,
@@ -37,7 +34,10 @@ class _ChartsSelectState extends State<ChartsSelect> {
                 ),
                 decoration: BoxDecoration(
                   color: Color(0xffefeeee),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(5.0),
+                    bottomRight: Radius.circular(5.0),
+                  ),
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -70,14 +70,11 @@ class _ChartsSelectState extends State<ChartsSelect> {
             widget.controller.changeChartType(ChartType.values[index]);
           },
           child: Container(
-            width: 160.0,
             height: 60.0,
             alignment: Alignment.center,
             child: Text(
               ChartType.values[index].name,
-              style: TextStyle(
-                color: Colors.black54,
-              ),
+              style: TextStyle(color: Colors.black54),
             ),
           ),
         );
@@ -87,13 +84,17 @@ class _ChartsSelectState extends State<ChartsSelect> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 240.0,
-      color: Color(0xffefeeee),
-      child: ListView(
-        padding: EdgeInsets.all(10.0),
-        children: _renderChartNames(),
-      ),
+    return AnimatedBuilder(
+      animation: widget.controller,
+      builder: (context, Widget? child) {
+        return SizedBox(
+          width: 320.0,
+          child: ListView(
+            padding: EdgeInsets.only(top: 20.0, bottom: 20.0, right: 20.0),
+            children: _renderChartNames(),
+          ),
+        );
+      },
     );
   }
 }

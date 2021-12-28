@@ -180,42 +180,47 @@ class _ChartsRenderState extends State<ChartsRender> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.only(top: 80.0),
-        alignment: Alignment.topCenter,
-        child: Container(
-          width: 960.0,
-          height: 640.0,
-          child: _renderChart(),
-          decoration: BoxDecoration(
-            color: Color(0xffefeeee),
-            borderRadius: BorderRadius.circular(5),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xffefeeee),
-                Color(0xffefeeee),
-              ],
+    return AnimatedBuilder(
+      animation: widget.controller,
+      builder: (context, Widget? child) {
+        return Expanded(
+          child: Container(
+            padding: EdgeInsets.only(top: 80.0),
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: 960.0,
+              height: 640.0,
+              child: _renderChart(),
+              decoration: BoxDecoration(
+                color: Color(0xffefeeee),
+                borderRadius: BorderRadius.circular(5),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xffefeeee),
+                    Color(0xffefeeee),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xffffffff),
+                    offset: Offset(-20.0, -20.0),
+                    blurRadius: 30,
+                    spreadRadius: 0.0,
+                  ),
+                  BoxShadow(
+                    color: Color(0xffd1d0d0),
+                    offset: Offset(20.0, 20.0),
+                    blurRadius: 30,
+                    spreadRadius: 0.0,
+                  ),
+                ],
+              ),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Color(0xffffffff),
-                offset: Offset(-20.0, -20.0),
-                blurRadius: 30,
-                spreadRadius: 0.0,
-              ),
-              BoxShadow(
-                color: Color(0xffd1d0d0),
-                offset: Offset(20.0, 20.0),
-                blurRadius: 30,
-                spreadRadius: 0.0,
-              ),
-            ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

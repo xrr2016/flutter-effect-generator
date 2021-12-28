@@ -45,16 +45,16 @@ class _ChartsInputState extends State<ChartsInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 360.0,
-      color: Color(0xffefeeee),
+      width: 320.0,
+      // color: Colors.amber,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ElevatedButton.icon(
-            onPressed: widget.controller.addDataItem,
-            icon: Icon(Icons.add),
-            label: Text('添加'),
-          ),
+          // ElevatedButton.icon(
+          //   onPressed: widget.controller.addDataItem,
+          //   icon: Icon(Icons.add),
+          //   label: Text('添加'),
+          // ),
           Expanded(
             child: ListView(
               padding: EdgeInsets.all(10.0),
@@ -62,25 +62,66 @@ class _ChartsInputState extends State<ChartsInput> {
                 widget.controller.datas.length,
                 (index) {
                   DataItem dataItem = widget.controller.datas[index];
+                  TextEditingController nameCon = TextEditingController(
+                    text: dataItem.name,
+                  );
 
-                  return ListTile(
-                    leading: Text(
-                      dataItem.name,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    title: Slider(
-                      min: 0.0,
-                      max: 1000.0,
-                      value: dataItem.value,
-                      activeColor: Colors.blueAccent,
-                      inactiveColor: Colors.white70,
-                      onChanged: (double val) {
-                        widget.controller.changeItemValue(index, val);
-                      },
-                    ),
-                    trailing: Text(
-                      dataItem.value.toStringAsFixed(0),
-                      style: const TextStyle(color: Colors.black),
+                  return Container(
+                    // color: Colors.amber,
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: nameCon,
+                            onChanged: (val) {
+                              widget.controller.changeItemName(index, val);
+                            },
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.text,
+                            // textAlign: TextAlign.center,
+                            textDirection: TextDirection.ltr,
+
+                            maxLines: 1,
+                            maxLength: 5,
+                            decoration: InputDecoration(counter: Container()),
+                          ),
+                        ),
+                        SizedBox(width: 12.0),
+                        Expanded(
+                          child: TextField(
+                            controller: TextEditingController(
+                              text: dataItem.value.toString(),
+                            ),
+                            onChanged: (val) {
+                              // widget.controller.changeItemValue(
+                              //   index,
+                              //   double.parse(val),
+                              // );
+                            },
+                            maxLines: 1,
+                            maxLength: 5,
+                            // textAlign: TextAlign.center,
+                            textDirection: TextDirection.ltr,
+                            textInputAction: TextInputAction.next,
+                            // keyboardType: TextInputType.numberWithOptions(
+                            //   signed: true,
+                            //   decimal: false,
+                            // ),
+                            decoration: InputDecoration(counter: Container()),
+                          ),
+                        ),
+                        SizedBox(width: 12.0),
+                        SizedBox(
+                          width: 60.0,
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.delete_outline_rounded),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
