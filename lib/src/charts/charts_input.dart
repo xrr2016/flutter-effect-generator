@@ -45,7 +45,7 @@ class _ChartsInputState extends State<ChartsInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 400.0,
+      width: 360.0,
       color: Color(0xffefeeee),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

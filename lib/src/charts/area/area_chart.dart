@@ -205,7 +205,9 @@ class AreaChartPainter extends CustomPainter {
     double n = pow(10, len).toDouble();
     double h = n / 2;
 
-    return num > h ? n : h;
+    debugPrint('num: ' + num.toString());
+
+    return num > h ? (num + (n / 10)) : h;
   }
 
   double _getYStepNum(double num) {

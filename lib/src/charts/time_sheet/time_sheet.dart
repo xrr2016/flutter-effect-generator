@@ -143,7 +143,7 @@ class TimeSheetPainter extends CustomPainter {
     List<int> years = [];
 
     if (_yearsLen > 10) {
-      int addYear = end.year.isEven ? 4 : 3;
+      int addYear = end.year.isEven ? 5 : 4;
 
       for (int i = start.year; i <= end.year; i += addYear) {
         years.add(i);
