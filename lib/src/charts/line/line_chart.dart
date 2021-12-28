@@ -1,5 +1,5 @@
-import 'dart:ui';
 import '../../exports.dart';
+import '../utils/utils.dart';
 import '../chart_container.dart';
 import '../utils/create_animated_path.dart';
 import '../models/data_item.dart';
@@ -111,7 +111,7 @@ class LineChartPainter extends CustomPainter {
   }
 
   void _drawLines(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
+    double maxYNum = getYMaxNum(maxData);
     List<Offset> points = [];
 
     final path = Path();
@@ -134,7 +134,7 @@ class LineChartPainter extends CustomPainter {
   }
 
   void _drawPoints(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
+    double maxYNum = getYMaxNum(maxData);
     double aValue = animation.value;
 
     final paint = Paint()
@@ -190,23 +190,9 @@ class LineChartPainter extends CustomPainter {
     canvas.restore();
   }
 
-  double _getYMaxNum(double num) {
-    int len = num.toString().length;
-    double n = pow(10, len).toDouble();
-    double h = n / 2;
-
-    return num > h ? n : h;
-  }
-
-  double _getYStepNum(double num) {
-    int len = num.toString().length;
-
-    return pow(10, len - 1).toDouble();
-  }
-
   void _drawYAxis(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
-    double numStep = _getYStepNum(maxData);
+    double maxYNum = getYMaxNum(maxData);
+    double numStep = getYStepNum(maxData);
     int steps = 0;
     double c = 0.0;
 

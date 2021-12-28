@@ -30,3 +30,16 @@ void drawAxisText(
   );
   _textPainter.paint(canvas, offsetPos);
 }
+
+double getYMaxNum(double num) {
+  int len = num.toStringAsFixed(0).length;
+  double n = pow(10, len).toDouble();
+  double h = n / 2;
+
+  return num > h ? (num + (n / 10)) : h;
+}
+
+double getYStepNum(double num) {
+  int len = num.toStringAsFixed(0).length;
+  return pow(10, len - 1).toDouble();
+}

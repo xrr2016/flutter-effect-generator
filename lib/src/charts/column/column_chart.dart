@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../utils/utils.dart';
 import '../chart_container.dart';
 import '../models/data_item.dart';
 
@@ -110,23 +111,9 @@ class ColumnChartPainter extends CustomPainter {
     _textPainter.paint(canvas, offsetPos);
   }
 
-  double _getYMaxNum(double num) {
-    int len = num.toString().length;
-    double n = pow(10, len).toDouble();
-    double h = n / 2;
-
-    return num > h ? n : h;
-  }
-
-  double _getYStepNum(double num) {
-    int len = num.toString().length;
-
-    return pow(10, len - 1).toDouble();
-  }
-
   void _drawYAxis(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
-    double numStep = _getYStepNum(maxData);
+    double maxYNum = getYMaxNum(maxData);
+    double numStep = getYStepNum(maxData);
     int steps = 0;
     double c = 0.0;
 
@@ -170,7 +157,7 @@ class ColumnChartPainter extends CustomPainter {
 
   void _drawBars(Canvas canvas, Size size) {
     double barWidth = xStep / 2;
-    double maxYNum = _getYMaxNum(maxData);
+    double maxYNum = getYMaxNum(maxData);
     double aValue = animation.value;
 
     canvas.save();

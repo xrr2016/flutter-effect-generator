@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../utils/utils.dart';
 import '../utils/create_animated_path.dart';
 import '../curve/draw_cruve.dart';
 import '../models/data_item.dart';
@@ -119,7 +120,7 @@ class AreaChartPainter extends CustomPainter {
   }
 
   void _drawLines(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
+    double maxYNum = getYMaxNum(maxData);
     List<Offset> points = [];
 
     final Path path = Path();
@@ -153,7 +154,7 @@ class AreaChartPainter extends CustomPainter {
   }
 
   void _drawPoints(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
+    double maxYNum = getYMaxNum(maxData);
     double aValue = animation.value;
 
     canvas.save();
@@ -193,24 +194,9 @@ class AreaChartPainter extends CustomPainter {
     canvas.restore();
   }
 
-  double _getYMaxNum(double num) {
-    int len = num.toStringAsFixed(0).length;
-    double n = pow(10, len).toDouble();
-    double h = n / 2;
-
-    // debugPrint('num: ' + num.toString());
-
-    return num > h ? (num + (n / 10)) : h;
-  }
-
-  double _getYStepNum(double num) {
-    int len = num.toStringAsFixed(0).length;
-    return pow(10, len - 1).toDouble();
-  }
-
   void _drawYAxis(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
-    double numStep = _getYStepNum(maxData);
+    double maxYNum = getYMaxNum(maxData);
+    double numStep = getYStepNum(maxData);
     int steps = 0;
     double c = 0.0;
 

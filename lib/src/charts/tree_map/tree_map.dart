@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../chart_container.dart';
+import '../charts_controller.dart';
 import '../colors.dart';
 import './tree_node.dart';
 import './parse_array_to_bst.dart';
@@ -46,6 +47,7 @@ class _TreeMapState extends State<TreeMap> with SingleTickerProviderStateMixin {
         data: widget.data,
         animation: _controller,
       ),
+      type: ChartType.treeMap,
       legend: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
@@ -66,60 +68,6 @@ class _TreeMapState extends State<TreeMap> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-    );
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        double _size =
-            constraints.maxWidth > 720.0 ? 480.0 : constraints.maxWidth;
-
-        return Container(
-          padding: EdgeInsets.all(26.0),
-          width: constraints.maxWidth,
-          height: constraints.maxHeight,
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: CustomPaint(
-                  painter: TreeMapPainter(
-                    data: widget.data,
-                    animation: _controller,
-                  ),
-                  child: SizedBox(
-                    width: _size,
-                    height: _size,
-                  ),
-                ),
-              ),
-              Align(alignment: Alignment.topCenter, child: widget.title),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    widget.data.length,
-                    (index) => Container(
-                      width: 50.0,
-                      height: 24.0,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
-                      color: colors[index % colors.length],
-                      alignment: Alignment.center,
-                      child: Text(
-                        widget.data[index].name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

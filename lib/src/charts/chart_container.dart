@@ -32,7 +32,21 @@ class ChartContainer extends StatelessWidget {
         debugPrint(covariant.maxWidth.toString());
         debugPrint(covariant.maxHeight.toString());
 
-        double width = type == ChartType.calenderHeatMap
+        double width = 0.0;
+
+        switch (type) {
+          case ChartType.calenderHeatMap:
+            width = covariant.maxWidth;
+            break;
+          case ChartType.treeMap:
+            width = covariant.maxWidth - 400.0;
+            break;
+          default:
+            width = covariant.maxWidth - 200.0;
+            break;
+        }
+
+        type == ChartType.calenderHeatMap
             ? covariant.maxWidth
             : covariant.maxWidth - 200.0;
 

@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../utils/utils.dart';
 import '../chart_container.dart';
 import '../models/data_item.dart';
 
@@ -99,23 +100,12 @@ class BarChartPainter extends CustomPainter {
     _textPainter.paint(canvas, offsetPos);
   }
 
-  double _getYMaxNum(double num) {
-    int len = num.toString().length;
-    double n = pow(10, len).toDouble();
-    double h = n / 2;
-
-    return num > h ? n : h;
-  }
-
-  double _getYStepNum(double num) {
-    int len = num.toString().length;
-
-    return pow(10, len - 1).toDouble();
-  }
-
   void _drawXAxis(Canvas canvas, Size size) {
-    double maxYNum = _getYMaxNum(maxData);
-    double numStep = _getYStepNum(maxData);
+    double maxYNum = getYMaxNum(maxData);
+    double numStep = getYStepNum(maxData);
+
+    debugPrint('maxYNum: ' + maxYNum.toString());
+    debugPrint('numStep: ' + numStep.toString());
     int steps = 0;
     double c = 0.0;
 
@@ -124,7 +114,7 @@ class BarChartPainter extends CustomPainter {
       c += numStep;
     }
 
-    xStep = (size.width - _scaleHeight) / data.length;
+    xStep = (size.width - _scaleHeight) / (steps + 1);
 
     canvas.save();
     for (int i = 0; i <= steps; i++) {
@@ -164,7 +154,7 @@ class BarChartPainter extends CustomPainter {
   void _drawBars(Canvas canvas, Size size) {
     final double barHeight = yStep / 2.5;
     final double aValue = animation.value;
-    final double maxXNum = _getYMaxNum(maxData);
+    final double maxXNum = getYMaxNum(maxData);
 
     canvas.save();
     canvas.translate(0.0, yStep / 2 - _scaleHeight);
