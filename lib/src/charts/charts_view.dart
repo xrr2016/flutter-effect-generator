@@ -23,7 +23,7 @@ class _ChartsViewState extends State<ChartsView> {
         actions: [
           const SizedBox(width: 10.0),
           IconButton(
-            onPressed: () {},
+            onPressed: _chartsController.downloadImage,
             icon: const Icon(Icons.download),
           ),
           const SizedBox(width: 10.0),

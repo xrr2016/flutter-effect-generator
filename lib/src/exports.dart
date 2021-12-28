@@ -10,6 +10,7 @@ export 'package:flutter_highlight/flutter_highlight.dart';
 export 'package:flutter_highlight/themes/atom-one-dark.dart';
 export 'package:google_fonts/google_fonts.dart';
 export 'package:from_css_color/from_css_color.dart';
+export 'package:screenshot/screenshot.dart';
 
 export './app.dart';
 export './routes.dart';

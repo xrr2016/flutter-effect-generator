@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+import 'package:universal_html/html.dart' as html;
+
 import '../exports.dart';
 import './models/data_item.dart';
 import './models/event_item.dart';
@@ -183,4 +186,32 @@ class ChartsController extends ChangeNotifier {
   }
 
   List<EventItem> get events => _events;
+
+  void _capturedImage(Uint8List image) async {
+    final base64data = base64Encode(image);
+    final a = html.AnchorElement(href: 'data:image/jpeg;base64,$base64data');
+    a.download = 'Chart.jpg';
+    a.click();
+    a.remove();
+  }
+
+  void _catchError(e) {
+    debugPrint(e.toString());
+  }
+
+  final ScreenshotController screenshotController = ScreenshotController();
+  Widget image = SizedBox.shrink();
+
+  void downloadImage() async {
+    try {
+      // final double pixelRatio = MediaQuery.of(context).devicePixelRatio;
+
+      screenshotController
+          .captureFromWidget(image)
+          .then(_capturedImage)
+          .catchError(_catchError);
+    } catch (e) {
+      _catchError(e);
+    }
+  }
 }
