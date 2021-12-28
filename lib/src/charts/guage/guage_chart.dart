@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import '../../exports.dart';
+import '../chart_container.dart';
 import '../models/data_item.dart';
 
 class GuageChart extends StatefulWidget {
@@ -38,12 +39,12 @@ class _GuageChartState extends State<GuageChart>
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
+    return ChartContainer(
+      title: widget.title,
       painter: GuageChartPainter(
         data: widget.data,
         animation: _controller,
       ),
-      child: SizedBox(width: 720.0, height: 480.0),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import '../chart_container.dart';
 import '../utils/utils.dart';
 import '../../exports.dart';
 import '../models/data_item.dart';
@@ -38,43 +39,32 @@ class _PieChartState extends State<PieChart> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: CustomPaint(
-            painter: PeiChartPainter(
-              data: widget.data,
-              animation: _controller,
-            ),
-            child: SizedBox(width: 480.0, height: 480.0),
-          ),
-        ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              widget.data.length,
-              (index) => Container(
-                width: 50.0,
-                height: 24.0,
-                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                color: colors[index % colors.length],
-                alignment: Alignment.center,
-                child: Text(
-                  widget.data[index].name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                  ),
-                ),
+    return ChartContainer(
+      title: widget.title,
+      painter: PeiChartPainter(
+        data: widget.data,
+        animation: _controller,
+      ),
+      legend: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          widget.data.length,
+          (index) => Container(
+            width: 50.0,
+            height: 22.0,
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            color: colors[index % colors.length],
+            alignment: Alignment.center,
+            child: Text(
+              widget.data[index].name,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.0,
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

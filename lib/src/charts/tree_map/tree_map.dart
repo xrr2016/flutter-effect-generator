@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../chart_container.dart';
 import '../colors.dart';
 import './tree_node.dart';
 import './parse_array_to_bst.dart';
@@ -39,6 +40,34 @@ class _TreeMapState extends State<TreeMap> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    return ChartContainer(
+      title: widget.title,
+      painter: TreeMapPainter(
+        data: widget.data,
+        animation: _controller,
+      ),
+      legend: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          widget.data.length,
+          (index) => Container(
+            width: 50.0,
+            height: 22.0,
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            color: colors[index % colors.length],
+            alignment: Alignment.center,
+            child: Text(
+              widget.data[index].name,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) {
         double _size =

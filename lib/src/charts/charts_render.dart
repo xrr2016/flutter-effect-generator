@@ -54,16 +54,11 @@ class _ChartsRenderState extends State<ChartsRender> {
           ),
         );
       case ChartType.calenderHeatMap:
-        return SizedBox(
-          width: 1200.0,
-          height: 300.0,
-          child: CalenderHeatMap(
-            data:
-                widget.controller.datas.isEmpty ? [] : widget.controller.datas,
-            title: Text(
-              '提交记录 - 2021年',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-            ),
+        return CalenderHeatMap(
+          data: widget.controller.datas.isEmpty ? [] : widget.controller.datas,
+          title: Text(
+            '提交记录 - 2021年',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         );
       case ChartType.treeMap:
@@ -137,16 +132,13 @@ class _ChartsRenderState extends State<ChartsRender> {
           ),
         );
       case ChartType.timeSheet:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 120.0),
-          child: TimeSheet(
-            startDate: DateTime(1949),
-            endDate: DateTime(2021),
-            events: widget.controller.events,
-            title: Text(
-              '1949-2021 大事记',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-            ),
+        return TimeSheet(
+          startDate: DateTime(1949),
+          endDate: DateTime(2021),
+          events: widget.controller.events,
+          title: Text(
+            '1949-2021 大事记',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         );
       case ChartType.line:

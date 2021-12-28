@@ -1,5 +1,5 @@
-import 'dart:ui';
 import '../../exports.dart';
+import '../chart_container.dart';
 import '../models/data_item.dart';
 
 class BarChart extends StatefulWidget {
@@ -36,20 +36,12 @@ class _BarChartState extends State<BarChart> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: CustomPaint(
-            painter: BarChartPainter(
-              data: widget.data,
-              animation: _controller,
-            ),
-            child: SizedBox(width: 720.0, height: 360.0),
-          ),
-        ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
-      ],
+    return ChartContainer(
+      title: widget.title,
+      painter: BarChartPainter(
+        data: widget.data,
+        animation: _controller,
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+import '../chart_container.dart';
 import '../models/data_item.dart';
 import './utils.dart';
 
@@ -66,83 +67,72 @@ class _CalenderHeatMapState extends State<CalenderHeatMap>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: CustomPaint(
-            painter: CalenderHeatMapPainter(
-              data: widget.data,
-              animation: _controller,
-            ),
-            child: SizedBox(width: 1040.0, height: 160.0),
-          ),
-        ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return ChartContainer(
+      title: widget.title,
+      painter: CalenderHeatMapPainter(
+        data: widget.data,
+        animation: _controller,
+      ),
+      legend: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 20.0,
-                    height: 12.0,
-                    margin: EdgeInsets.only(right: 2.0),
-                    color: _generateBlockColor(
-                      opacity: _getOpacity(5, 25),
-                    ),
-                  ),
-                  Text('0-5'),
-                ],
+              Container(
+                width: 20.0,
+                height: 12.0,
+                margin: EdgeInsets.only(right: 2.0),
+                color: _generateBlockColor(
+                  opacity: _getOpacity(5, 25),
+                ),
               ),
-              SizedBox(width: 10.0),
-              Row(
-                children: [
-                  Container(
-                    width: 20.0,
-                    height: 12.0,
-                    margin: EdgeInsets.only(right: 2.0),
-                    color: _generateBlockColor(
-                      opacity: _getOpacity(10, 25),
-                    ),
-                  ),
-                  Text('6-10'),
-                ],
-              ),
-              SizedBox(width: 10.0),
-              Row(
-                children: [
-                  Container(
-                    width: 20.0,
-                    height: 12.0,
-                    margin: EdgeInsets.only(right: 2.0),
-                    color: _generateBlockColor(
-                      opacity: _getOpacity(15, 25),
-                    ),
-                  ),
-                  Text('11-20'),
-                ],
-              ),
-              SizedBox(width: 10.0),
-              Row(
-                children: [
-                  Container(
-                    width: 20.0,
-                    height: 12.0,
-                    margin: EdgeInsets.only(right: 2.0),
-                    color: _generateBlockColor(
-                      opacity: _getOpacity(25, 25),
-                    ),
-                  ),
-                  Text('20-25'),
-                ],
-              ),
+              Text('0-5'),
             ],
           ),
-        ),
-      ],
+          SizedBox(width: 10.0),
+          Row(
+            children: [
+              Container(
+                width: 20.0,
+                height: 12.0,
+                margin: EdgeInsets.only(right: 2.0),
+                color: _generateBlockColor(
+                  opacity: _getOpacity(10, 25),
+                ),
+              ),
+              Text('6-10'),
+            ],
+          ),
+          SizedBox(width: 10.0),
+          Row(
+            children: [
+              Container(
+                width: 20.0,
+                height: 12.0,
+                margin: EdgeInsets.only(right: 2.0),
+                color: _generateBlockColor(
+                  opacity: _getOpacity(15, 25),
+                ),
+              ),
+              Text('11-20'),
+            ],
+          ),
+          SizedBox(width: 10.0),
+          Row(
+            children: [
+              Container(
+                width: 20.0,
+                height: 12.0,
+                margin: EdgeInsets.only(right: 2.0),
+                color: _generateBlockColor(
+                  opacity: _getOpacity(25, 25),
+                ),
+              ),
+              Text('20-25'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

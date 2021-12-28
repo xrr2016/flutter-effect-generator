@@ -1,5 +1,6 @@
 import 'dart:ui';
 import '../../exports.dart';
+import '../chart_container.dart';
 import '../utils/create_animated_path.dart';
 import '../models/data_item.dart';
 
@@ -39,20 +40,12 @@ class _LineChartState extends State<LineChart>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: CustomPaint(
-            painter: LineChartPainter(
-              data: widget.data,
-              animation: _controller,
-            ),
-            child: SizedBox(width: 720.0, height: 480.0),
-          ),
-        ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
-      ],
+    return ChartContainer(
+      title: widget.title,
+      painter: LineChartPainter(
+        data: widget.data,
+        animation: _controller,
+      ),
     );
   }
 }

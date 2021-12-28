@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+import '../chart_container.dart';
 import '../colors.dart';
 import '../models/data_item.dart';
 import '../utils/create_animated_path.dart';
@@ -43,45 +44,34 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: CustomPaint(
-            painter: RadarChartPainter(
-              datas: widget.datas,
-              scores: widget.scores,
-              features: widget.features,
-              animation: _controller,
-            ),
-            child: SizedBox(width: 480.0, height: 480.0),
-          ),
-        ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              widget.datas.length,
-              (index) => Container(
-                width: 50.0,
-                height: 24.0,
-                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                color: colors[index % colors.length],
-                alignment: Alignment.center,
-                child: Text(
-                  widget.datas[index].first.name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                  ),
-                ),
+    return ChartContainer(
+      title: widget.title,
+      painter: RadarChartPainter(
+        datas: widget.datas,
+        scores: widget.scores,
+        features: widget.features,
+        animation: _controller,
+      ),
+      legend: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          widget.datas.length,
+          (index) => Container(
+            width: 50.0,
+            height: 22.0,
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            color: colors[index % colors.length],
+            alignment: Alignment.center,
+            child: Text(
+              widget.datas[index].first.name,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.0,
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -103,7 +93,7 @@ class RadarChartPainter extends CustomPainter {
   double _scoreDistance = 0.0;
 
   void _initChart(Canvas canvas, Size size) {
-    _radius = min(size.width, size.height) / 2;
+    _radius = min(size.width, size.height) / 2 - 40.0;
     _scoreDistance = _radius / scores.length;
     canvas.translate(size.width / 2, size.height / 2);
   }

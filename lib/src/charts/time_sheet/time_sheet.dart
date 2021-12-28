@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import '../../exports.dart';
+import '../chart_container.dart';
 import '../models/event_item.dart';
 
 class TimeSheet extends StatefulWidget {
@@ -49,6 +50,15 @@ class _TimeSheetState extends State<TimeSheet> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    return ChartContainer(
+      title: widget.title,
+      painter: TimeSheetPainter(
+        startDate: widget.startDate,
+        endDate: widget.endDate,
+        events: widget.events,
+        animation: _controller,
+      ),
+    );
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -143,7 +153,7 @@ class TimeSheetPainter extends CustomPainter {
     List<int> years = [];
 
     if (_yearsLen > 10) {
-      int addYear = end.year.isEven ? 5 : 4;
+      int addYear = end.year.isEven ? 9 : 8;
 
       for (int i = start.year; i <= end.year; i += addYear) {
         years.add(i);

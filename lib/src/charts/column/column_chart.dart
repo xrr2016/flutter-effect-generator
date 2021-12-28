@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../chart_container.dart';
 import '../models/data_item.dart';
 
 class ColumnChart extends StatefulWidget {
@@ -36,20 +37,12 @@ class _ColumnChartState extends State<ColumnChart>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: CustomPaint(
-            painter: ColumnChartPainter(
-              data: widget.data,
-              animation: _controller,
-            ),
-            child: SizedBox(width: 480.0, height: 480.0),
-          ),
-        ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
-      ],
+    return ChartContainer(
+      title: widget.title,
+      painter: ColumnChartPainter(
+        data: widget.data,
+        animation: _controller,
+      ),
     );
   }
 }

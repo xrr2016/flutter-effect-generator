@@ -2,10 +2,25 @@ import '../exports.dart';
 
 class ChartContainer extends StatelessWidget {
   final Widget title;
+  final Widget? legend;
   final CustomPainter painter;
 
-  const ChartContainer({Key? key, required this.title, required this.painter})
-      : super(key: key);
+  const ChartContainer({
+    Key? key,
+    required this.title,
+    required this.painter,
+    this.legend,
+  }) : super(key: key);
+
+  Widget _renderLegend() {
+    if (legend != null) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+        child: legend,
+      );
+    }
+    return SizedBox.shrink();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +43,7 @@ class ChartContainer extends StatelessWidget {
                 // color: Colors.red,
               ),
             ),
+            _renderLegend(),
           ],
         );
       },

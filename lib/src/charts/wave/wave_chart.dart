@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../chart_container.dart';
 import '../models/data_item.dart';
 
 class WaveChart extends StatefulWidget {
@@ -36,21 +37,29 @@ class _WaveChartState extends State<WaveChart>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        widget.title,
-        SizedBox(height: 20.0),
-        CustomPaint(
-          painter: WaveChartPainter(
-            data: widget.data,
-            animation: _controller,
-          ),
-          child: SizedBox(width: 480.0, height: 480.0),
-        ),
-      ],
+    return ChartContainer(
+      title: widget.title,
+      painter: WaveChartPainter(
+        data: widget.data,
+        animation: _controller,
+      ),
     );
   }
+  // return Column(
+  //   mainAxisAlignment: MainAxisAlignment.center,
+  //   children: [
+  //     widget.title,
+  //     SizedBox(height: 20.0),
+  //     CustomPaint(
+  //       painter: WaveChartPainter(
+  //         data: widget.data,
+  //         animation: _controller,
+  //       ),
+  //       child: SizedBox(width: 480.0, height: 480.0),
+  //     ),
+  //   ],
+  // );
+  // }
 }
 
 class WaveChartPainter extends CustomPainter {

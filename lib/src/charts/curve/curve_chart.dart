@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import '../../exports.dart';
+import '../chart_container.dart';
 import '../utils/create_animated_path.dart';
 import './draw_cruve.dart';
 import '../models/data_item.dart';
@@ -40,57 +41,14 @@ class _CurveChartState extends State<CurveChart>
     super.dispose();
   }
 
-  // final TouchInfo touchInfo = TouchInfo();
-
-  // void _onPanDown(DragDownDetails details) {
-  //   if (touchInfo.points.length < 8) {
-  //     touchInfo.addPoint(details.localPosition);
-  //   } else {
-  //     judgeZone(details.localPosition);
-  //   }
-  // }
-
-  // void _onPanUpdate(DragUpdateDetails details) {
-  //   judgeZone(details.localPosition, update: true);
-  // }
-
-  // ///判断出是否在某点的半径为r圆范围内
-  // bool judgeCircleArea(Offset src, Offset dst, double r) =>
-  //     (src - dst).distance <= r;
-
-  // //判断哪个点被选中
-  // void judgeZone(Offset src, {bool update = false}) {
-  //   for (int i = 0; i < touchInfo.points.length; i++) {
-  //     if (judgeCircleArea(src, touchInfo.points[i], 15)) {
-  //       touchInfo.selectIndex = i;
-  //       if (update) {
-  //         touchInfo.updatePoint(i, src);
-  //       }
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: GestureDetector(
-            // onPanDown: _onPanDown,
-            // onPanUpdate: _onPanUpdate,
-            child: CustomPaint(
-              painter: CurveChartPainter(
-                data: widget.data,
-                animation: _controller,
-                // repaint: touchInfo,
-              ),
-              child: SizedBox(width: 720.0, height: 480.0),
-            ),
-          ),
-        ),
-        Align(alignment: Alignment.topCenter, child: widget.title),
-      ],
+    return ChartContainer(
+      title: widget.title,
+      painter: CurveChartPainter(
+        data: widget.data,
+        animation: _controller,
+      ),
     );
   }
 }
