@@ -37,10 +37,12 @@ class _ChartsViewState extends State<ChartsView> {
       backgroundColor: Color(0xffefeeee),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
+        backgroundColor: Color(0xffefeeee),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ChartsSelect(controller: _chartsController),
           ChartsRender(controller: _chartsController),

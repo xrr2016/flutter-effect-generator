@@ -13,119 +13,163 @@ class ChartsInput extends StatefulWidget {
 }
 
 class _ChartsInputState extends State<ChartsInput> {
-  Widget _buildListTile(
-    String leading,
-    double min,
-    double max,
-    double value,
-    String trailing,
-    Function(double) onChanged,
-  ) {
-    return ListTile(
-      leading: Text(
-        leading,
-        style: const TextStyle(color: Colors.black),
+  List<DataItem> _datas = [];
+
+  @override
+  void initState() {
+    _datas = widget.controller.datas;
+    super.initState();
+  }
+
+  List<Widget> _buildInputs() {
+    return List.generate(
+      _datas.length,
+      (index) {
+        DataItem dataItem = widget.controller.datas[index];
+        TextEditingController nameCon = TextEditingController(
+          text: dataItem.name,
+        );
+        TextEditingController valCon = TextEditingController(
+          text: dataItem.value.toString(),
+        );
+
+        return Container(
+          margin: EdgeInsets.only(bottom: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                flex: 4,
+                child: TextField(
+                  controller: nameCon,
+                  onChanged: (val) {
+                    widget.controller.changeItemName(index, val);
+                  },
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
+                  textAlign: TextAlign.center,
+                  textDirection: TextDirection.ltr,
+                  maxLines: 1,
+                  maxLength: 5,
+                  decoration: InputDecoration(counter: Container()),
+                ),
+              ),
+              SizedBox(width: 12.0),
+              Expanded(
+                flex: 6,
+                child: TextField(
+                  controller: valCon,
+                  onChanged: (val) {
+                    widget.controller.changeItemValue(
+                      index,
+                      double.parse(val),
+                    );
+                  },
+                  maxLines: 1,
+                  maxLength: 5,
+                  textAlign: TextAlign.center,
+                  textDirection: TextDirection.ltr,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.numberWithOptions(
+                    signed: true,
+                    decimal: false,
+                  ),
+                  decoration: InputDecoration(counter: Container()),
+                ),
+              ),
+              SizedBox(width: 12.0),
+              _removeDataButton(index),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _addDataButton() {
+    return InkWell(
+      onTap: () {
+        DataItem item = DataItem(name: 'text', value: 100.0);
+        widget.controller.addDataItem(item);
+        setState(() {});
+      },
+      child: Container(
+        height: 50.0,
+        color: Color(0xffefeeee),
+        alignment: Alignment.center,
+        child: Container(
+          color: Color(0xffefeeee),
+          child: Container(
+            height: 60.0,
+            alignment: Alignment.center,
+            child: Text(
+              '添加',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Color(0xffefeeee),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(5.0),
+                bottomRight: Radius.circular(5.0),
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xffefeeee),
+                  Color(0xffefeeee),
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xffffffff),
+                  offset: Offset(-5.0, -5.0),
+                  blurRadius: 12,
+                  spreadRadius: 0.0,
+                ),
+                BoxShadow(
+                  color: Color(0xffd1d0d0),
+                  offset: Offset(5.0, 5.0),
+                  blurRadius: 12,
+                  spreadRadius: 0.0,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-      title: Slider(
-        min: min,
-        max: max,
-        value: value,
-        label: value.toString(),
-        activeColor: Colors.amber,
-        inactiveColor: Colors.white70,
-        onChanged: onChanged,
-      ),
-      trailing: Text(
-        trailing,
-        style: const TextStyle(color: Colors.black),
+    );
+  }
+
+  Widget _removeDataButton(int index) {
+    return SizedBox(
+      width: 60.0,
+      child: IconButton(
+        onPressed: () {
+          widget.controller.removeDataItem(index);
+          setState(() {});
+        },
+        icon: Icon(Icons.delete_outline_rounded),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 320.0,
-      // color: Colors.amber,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // ElevatedButton.icon(
-          //   onPressed: widget.controller.addDataItem,
-          //   icon: Icon(Icons.add),
-          //   label: Text('添加'),
-          // ),
           Expanded(
             child: ListView(
               padding: EdgeInsets.all(10.0),
-              children: List.generate(
-                widget.controller.datas.length,
-                (index) {
-                  DataItem dataItem = widget.controller.datas[index];
-                  TextEditingController nameCon = TextEditingController(
-                    text: dataItem.name,
-                  );
-
-                  return Container(
-                    // color: Colors.amber,
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      // crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: nameCon,
-                            onChanged: (val) {
-                              widget.controller.changeItemName(index, val);
-                            },
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.text,
-                            // textAlign: TextAlign.center,
-                            textDirection: TextDirection.ltr,
-
-                            maxLines: 1,
-                            maxLength: 5,
-                            decoration: InputDecoration(counter: Container()),
-                          ),
-                        ),
-                        SizedBox(width: 12.0),
-                        Expanded(
-                          child: TextField(
-                            controller: TextEditingController(
-                              text: dataItem.value.toString(),
-                            ),
-                            onChanged: (val) {
-                              // widget.controller.changeItemValue(
-                              //   index,
-                              //   double.parse(val),
-                              // );
-                            },
-                            maxLines: 1,
-                            maxLength: 5,
-                            // textAlign: TextAlign.center,
-                            textDirection: TextDirection.ltr,
-                            textInputAction: TextInputAction.next,
-                            // keyboardType: TextInputType.numberWithOptions(
-                            //   signed: true,
-                            //   decimal: false,
-                            // ),
-                            decoration: InputDecoration(counter: Container()),
-                          ),
-                        ),
-                        SizedBox(width: 12.0),
-                        SizedBox(
-                          width: 60.0,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.delete_outline_rounded),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+              children: [
+                ..._buildInputs(),
+                _addDataButton(),
+              ],
             ),
           ),
         ],

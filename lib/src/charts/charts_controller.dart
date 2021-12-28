@@ -133,9 +133,6 @@ final _datas = [
 ];
 
 class ChartsController extends ChangeNotifier {
-  // ChartsController() {
-  // }
-
   ChartType chartType = ChartType.area;
 
   void changeChartType(ChartType type) {
@@ -160,8 +157,8 @@ class ChartsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  addDataItem() {
-    datas.add(DataItem(name: '${datas.length + 1} 月', value: 100.0));
+  addDataItem(DataItem item) {
+    datas.add(item);
     notifyListeners();
   }
 
