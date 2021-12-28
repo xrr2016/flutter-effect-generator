@@ -21,12 +21,12 @@ class _ChartsViewState extends State<ChartsView> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          // const SizedBox(width: 10.0),
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: const Icon(Icons.download),
-          // ),
-          // const SizedBox(width: 10.0),
+          const SizedBox(width: 10.0),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.download),
+          ),
+          const SizedBox(width: 10.0),
         ],
         backgroundColor: Color(0xffefeeee),
         centerTitle: true,
@@ -35,11 +35,6 @@ class _ChartsViewState extends State<ChartsView> {
         title: Text('Charts'),
       ),
       backgroundColor: Color(0xffefeeee),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Color(0xffefeeee),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

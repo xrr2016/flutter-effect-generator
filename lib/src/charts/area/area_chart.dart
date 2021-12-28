@@ -2,6 +2,7 @@ import '../../exports.dart';
 import '../utils/create_animated_path.dart';
 import '../curve/draw_cruve.dart';
 import '../models/data_item.dart';
+import '../chart_container.dart';
 
 class AreaChart extends StatefulWidget {
   final Widget title;
@@ -38,20 +39,12 @@ class _AreaChartState extends State<AreaChart>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: widget.title,
-        ),
-        CustomPaint(
-          painter: AreaChartPainter(
-            data: widget.data,
-            animation: _controller,
-          ),
-          child: SizedBox(width: 720.0, height: 480.0),
-        ),
-      ],
+    return ChartContainer(
+      title: widget.title,
+      painter: AreaChartPainter(
+        data: widget.data,
+        animation: _controller,
+      ),
     );
   }
 }
@@ -205,7 +198,7 @@ class AreaChartPainter extends CustomPainter {
     double n = pow(10, len).toDouble();
     double h = n / 2;
 
-    debugPrint('num: ' + num.toString());
+    // debugPrint('num: ' + num.toString());
 
     return num > h ? (num + (n / 10)) : h;
   }

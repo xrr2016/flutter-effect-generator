@@ -34,7 +34,7 @@ class _ChartsRenderState extends State<ChartsRender> {
           data: widget.controller.datas,
           title: Text(
             '游客访问量 - 2040年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
         );
       case ChartType.gauge:
@@ -185,38 +185,38 @@ class _ChartsRenderState extends State<ChartsRender> {
       builder: (context, Widget? child) {
         return Container(
           width: 960.0,
-          height: 640.0,
-          margin: EdgeInsets.only(top: 80.0),
+          margin: EdgeInsets.only(top: 60.0),
           alignment: Alignment.topCenter,
-          child: Container(
-            width: 960.0,
-            height: 640.0,
-            child: _renderChart(),
-            decoration: BoxDecoration(
-              color: Color(0xffefeeee),
-              borderRadius: BorderRadius.circular(5),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xffefeeee),
-                  Color(0xffefeeee),
+          child: AspectRatio(
+            aspectRatio: 16.0 / 9.0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0xffefeeee),
+                borderRadius: BorderRadius.circular(5),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xffefeeee),
+                    Color(0xffefeeee),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xffffffff),
+                    offset: Offset(-20.0, -20.0),
+                    blurRadius: 30,
+                    spreadRadius: 0.0,
+                  ),
+                  BoxShadow(
+                    color: Color(0xffd1d0d0),
+                    offset: Offset(20.0, 20.0),
+                    blurRadius: 30,
+                    spreadRadius: 0.0,
+                  ),
                 ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xffffffff),
-                  offset: Offset(-20.0, -20.0),
-                  blurRadius: 30,
-                  spreadRadius: 0.0,
-                ),
-                BoxShadow(
-                  color: Color(0xffd1d0d0),
-                  offset: Offset(20.0, 20.0),
-                  blurRadius: 30,
-                  spreadRadius: 0.0,
-                ),
-              ],
+              child: _renderChart(),
             ),
           ),
         );

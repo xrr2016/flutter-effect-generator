@@ -51,7 +51,15 @@ class _ChartsInputState extends State<ChartsInput> {
                   textDirection: TextDirection.ltr,
                   maxLines: 1,
                   maxLength: 5,
-                  decoration: InputDecoration(counter: Container()),
+                  decoration: InputDecoration(
+                    counter: Container(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black12,
+                        width: 0.5,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(width: 12.0),
@@ -74,7 +82,15 @@ class _ChartsInputState extends State<ChartsInput> {
                     signed: true,
                     decimal: false,
                   ),
-                  decoration: InputDecoration(counter: Container()),
+                  decoration: InputDecoration(
+                    counter: Container(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black12,
+                        width: 0.5,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(width: 12.0),
@@ -159,8 +175,9 @@ class _ChartsInputState extends State<ChartsInput> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: 320.0,
+      margin: EdgeInsets.only(top: 40.0),
       child: Column(
         children: [
           Expanded(
