@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../chart_container.dart';
+import '../charts_controller.dart';
 import '../models/data_item.dart';
 import './utils.dart';
 
@@ -73,6 +74,7 @@ class _CalenderHeatMapState extends State<CalenderHeatMap>
         data: widget.data,
         animation: _controller,
       ),
+      type: ChartType.calenderHeatMap,
       legend: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -150,8 +152,8 @@ class CalenderHeatMapPainter extends CustomPainter {
     }
   }
 
-  final double gap = 2.0;
-  final double _blockSize = 12.0;
+  final double gap = 1.5;
+  final double _blockSize = 11.0;
   final double blockRadius = 2.0;
   final Paint blockPaint = Paint()
     ..isAntiAlias = true
@@ -278,7 +280,7 @@ class CalenderHeatMapPainter extends CustomPainter {
     //   Paint()..color = Colors.amber,
     // );
 
-    canvas.translate(_blockSize, 0.0);
+    canvas.translate(_blockSize * 2, 0.0);
     _drawBackground(canvas, size);
     _drawWeekDayTexts(canvas, size);
   }

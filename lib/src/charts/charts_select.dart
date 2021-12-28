@@ -17,7 +17,7 @@ class _ChartsSelectState extends State<ChartsSelect> {
       (index) {
         if (ChartType.values[index] == widget.controller.chartType) {
           return Container(
-            height: 60.0,
+            height: 50.0,
             color: Color(0xffefeeee),
             alignment: Alignment.center,
             child: Container(
@@ -70,7 +70,7 @@ class _ChartsSelectState extends State<ChartsSelect> {
             widget.controller.changeChartType(ChartType.values[index]);
           },
           child: Container(
-            height: 60.0,
+            height: 50.0,
             alignment: Alignment.center,
             child: Text(
               ChartType.values[index].name,
