@@ -170,6 +170,13 @@ class ChartsController extends ChangeNotifier {
     notifyListeners();
   }
 
+  String title = '游客访问量 - 2040年';
+
+  changeChartTitle(String val) {
+    title = val;
+    notifyListeners();
+  }
+
   loadJson() async {
     try {
       String data = await rootBundle.loadString('assets/data/commits.json');

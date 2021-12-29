@@ -14,10 +14,12 @@ class ChartsInput extends StatefulWidget {
 
 class _ChartsInputState extends State<ChartsInput> {
   List<DataItem> _datas = [];
+  String _title = '';
 
   @override
   void initState() {
     _datas = widget.controller.datas;
+    _title = widget.controller.title;
     super.initState();
   }
 
@@ -180,6 +182,17 @@ class _ChartsInputState extends State<ChartsInput> {
       margin: EdgeInsets.only(top: 40.0),
       child: Column(
         children: [
+          Container(
+            padding: EdgeInsets.all(10.0),
+            child: TextField(
+              controller: TextEditingController(
+                text: _title,
+              ),
+              onChanged: (val) {
+                widget.controller.changeChartTitle(val);
+              },
+            ),
+          ),
           Expanded(
             child: ListView(
               padding: EdgeInsets.all(10.0),

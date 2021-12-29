@@ -27,58 +27,48 @@ class ChartsRender extends StatefulWidget {
 }
 
 class _ChartsRenderState extends State<ChartsRender> {
+  Widget _chartTitle() {
+    return Text(
+      widget.controller.title,
+      style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+    );
+  }
+
   Widget _renderChart() {
     switch (widget.controller.chartType) {
       case ChartType.area:
         return AreaChart(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '游客访问量 - 2040年',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.gauge:
         return GuageChart(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '制作进度 - 2040年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.wave:
         return WaveChart(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '制作进度 - 2040年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.calenderHeatMap:
         return CalenderHeatMap(
+          title: _chartTitle(),
           data: widget.controller.datas.isEmpty ? [] : widget.controller.datas,
-          title: Text(
-            '提交记录 - 2021年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.treeMap:
         return TreeMap(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '商品产量比例 - 2020年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.pie:
         return PieChart(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '商品产量比例 - 2020年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.radar:
         return RadarChart(
+          title: _chartTitle(),
           datas: [
             [
               DataItem(name: '小明', value: 80.0),
@@ -110,63 +100,41 @@ class _ChartsRenderState extends State<ChartsRender> {
             100.0,
           ],
           features: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
-          title: Text(
-            '个人能力雷达图',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.donut:
         return DonutCahrt(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '商品产量比例 - 2020年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.column:
         return ColumnChart(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '游客访问量 - 2040年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.timeSheet:
         return TimeSheet(
+          title: _chartTitle(),
           startDate: DateTime(1949),
           endDate: DateTime(2021),
           events: widget.controller.events,
-          title: Text(
-            '1949-2021 大事记',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.line:
         return LineChart(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '产品销售量-2022年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.curve:
         return CurveChart(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '产品销售量-2022年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       case ChartType.bar:
         return BarChart(
+          title: _chartTitle(),
           data: widget.controller.datas,
-          title: Text(
-            '产品销售量 - 2020年',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
         );
       default:
-        return Container();
+        return SizedBox.shrink();
     }
   }
 
