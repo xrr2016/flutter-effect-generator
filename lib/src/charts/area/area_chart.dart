@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import '../../exports.dart';
-import '../colors.dart';
 import '../utils/utils.dart';
 import '../utils/create_animated_path.dart';
 import '../curve/draw_cruve.dart';
@@ -10,12 +9,14 @@ import '../chart_container.dart';
 
 class AreaChart extends StatefulWidget {
   final Widget title;
+  final List<Color> theme;
   final List<List<DataItem>> data;
 
   AreaChart({
     Key? key,
     required this.title,
     required this.data,
+    required this.theme,
   }) : super(key: key);
 
   @override
@@ -48,6 +49,7 @@ class _AreaChartState extends State<AreaChart>
       painter: AreaChartPainter(
         data: widget.data,
         animation: _controller,
+        theme: widget.theme,
       ),
     );
   }
@@ -55,6 +57,7 @@ class _AreaChartState extends State<AreaChart>
 
 class AreaChartPainter extends CustomPainter {
   final List<List<DataItem>> data;
+  final List<Color> theme;
   final Animation<double> animation;
   final double _scaleHeight = 10;
   final TextPainter _textPainter = TextPainter(
@@ -63,6 +66,7 @@ class AreaChartPainter extends CustomPainter {
 
   AreaChartPainter({
     required this.data,
+    required this.theme,
     required this.animation,
   }) : super(repaint: animation) {
     List<double> _datas = [];
@@ -261,8 +265,7 @@ class AreaChartPainter extends CustomPainter {
     final _datas = data.reversed.toList();
 
     _datas.asMap().forEach((int index, List<DataItem> list) {
-      Color color = colors1[index];
-
+      Color color = theme[index];
       _drawLines(list, color, canvas, size);
       _drawPoints(list, canvas, size);
     });

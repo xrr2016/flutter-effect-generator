@@ -5,6 +5,7 @@ import '../exports.dart';
 import './models/data_item.dart';
 import './models/event_item.dart';
 import './chart_type.dart';
+import './colors.dart';
 
 final List<EventItem> _events = [
   EventItem(
@@ -117,6 +118,13 @@ class ChartsController extends ChangeNotifier {
     // } else {
     datas = [_datas1, _datas2, _datas3];
     // }
+    notifyListeners();
+  }
+
+  List<Color> theme = themes[0];
+
+  void changeChartTheme(int index) {
+    theme = themes[index];
     notifyListeners();
   }
 

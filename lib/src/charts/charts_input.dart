@@ -1,4 +1,5 @@
 import '../exports.dart';
+import './colors.dart';
 import './charts_controller.dart';
 import './models/data_item.dart';
 
@@ -37,12 +38,16 @@ class _ChartsInputState extends State<ChartsInput> {
   }
 
   List<Item> _generateItems(int numberOfItems) {
-    return List<Item>.generate(numberOfItems, (int index) {
-      return Item(
-        list: _datas[index],
-        headerValue: '类别 ${index + 1}',
-      );
-    });
+    return List<Item>.generate(
+      numberOfItems,
+      (int index) {
+        return Item(
+          list: _datas[index],
+          headerValue: '类别 ${index + 1}',
+          isExpanded: index == 0,
+        );
+      },
+    );
   }
 
   List<Widget> _buildInputs(int arrIndex, List<DataItem> list) {
@@ -128,13 +133,13 @@ class _ChartsInputState extends State<ChartsInput> {
   }
 
   Widget _addDataButton(int index) {
-    return InkWell(
-      onTap: () {
+    return OutlinedButton(
+      onPressed: () {
         widget.controller.addDataItem('text', 100.0);
         setState(() {});
       },
       child: Container(
-        height: 50.0,
+        height: 40.0,
         color: Color(0xffefeeee),
         alignment: Alignment.center,
         child: Container(
@@ -155,28 +160,6 @@ class _ChartsInputState extends State<ChartsInput> {
                 topRight: Radius.circular(5.0),
                 bottomRight: Radius.circular(5.0),
               ),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xffefeeee),
-                  Color(0xffefeeee),
-                ],
-              ),
-              boxShadow: [
-                // BoxShadow(
-                //   color: Color(0xffffffff),
-                //   offset: Offset(-5.0, -5.0),
-                //   blurRadius: 12,
-                //   spreadRadius: 0.0,
-                // ),
-                // BoxShadow(
-                //   color: Color(0xffd1d0d0),
-                //   offset: Offset(5.0, 5.0),
-                //   blurRadius: 12,
-                //   spreadRadius: 0.0,
-                // ),
-              ],
             ),
           ),
         ),
@@ -184,9 +167,28 @@ class _ChartsInputState extends State<ChartsInput> {
     );
   }
 
+  Widget _addDataListButton() {
+    return Container(
+      height: 40.0,
+      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+      child: OutlinedButton(
+        style: ButtonStyle(),
+        onPressed: () {
+          widget.controller.addDataList();
+          _data = _generateItems(_datas.length);
+          setState(() {});
+        },
+        child: Text(
+          '添加',
+          style: TextStyle(color: Colors.black54),
+        ),
+      ),
+    );
+  }
+
   Widget _removeDataButton(int addIndex, int dataIndex) {
     return SizedBox(
-      width: 60.0,
+      width: 40.0,
       child: IconButton(
         onPressed: () {
           widget.controller.removeDataItem(addIndex, dataIndex);
@@ -231,6 +233,46 @@ class _ChartsInputState extends State<ChartsInput> {
     );
   }
 
+  TextField _editTitleInput() {
+    return TextField(
+      controller: TextEditingController(
+        text: _title,
+      ),
+      onChanged: (val) {
+        widget.controller.changeChartTitle(val);
+      },
+    );
+  }
+
+  List<InkWell> _buildThemeList() {
+    return List.generate(
+      themes.length,
+      (int index) {
+        List<Color> theme = themes[index];
+
+        return InkWell(
+          onTap: () {
+            widget.controller.changeChartTheme(index);
+          },
+          child: Container(
+            height: 22.0,
+            margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
+            child: Row(
+              children: List.generate(
+                theme.length,
+                (index) {
+                  return Expanded(
+                    child: Container(color: theme[index]),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    ).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -239,36 +281,19 @@ class _ChartsInputState extends State<ChartsInput> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextField(
-            controller: TextEditingController(
-              text: _title,
-            ),
-            onChanged: (val) {
-              widget.controller.changeChartTitle(val);
-            },
-          ),
-          Container(
-            height: 40.0,
-            margin: EdgeInsets.symmetric(vertical: 10.0),
-            child: OutlinedButton(
-              style: ButtonStyle(),
-              onPressed: () {
-                widget.controller.addDataList();
-                _data = _generateItems(_datas.length);
-                setState(() {});
-              },
-              child: Text(
-                '添加',
-                style: TextStyle(color: Colors.black54),
-              ),
-            ),
-          ),
+          _editTitleInput(),
+          SizedBox(height: 10.0),
+          ..._buildThemeList(),
+          _addDataListButton(),
           Expanded(
             child: ListView(
               controller: ScrollController(
                 keepScrollOffset: true,
               ),
-              children: [_buildSections()],
+              children: [
+                _buildSections(),
+                SizedBox(height: 80.0),
+              ],
             ),
           ),
         ],
