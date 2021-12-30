@@ -57,7 +57,7 @@ class _TreeMapState extends State<TreeMap> with SingleTickerProviderStateMixin {
             width: 50.0,
             height: 22.0,
             margin: EdgeInsets.symmetric(horizontal: 5.0),
-            color: colors[index % colors.length],
+            color: colors1[index % colors1.length],
             alignment: Alignment.center,
             child: Text(
               widget.data[index].name,

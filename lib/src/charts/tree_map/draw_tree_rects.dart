@@ -40,7 +40,7 @@ Paint linePaint = Paint()
 Paint paint = Paint()
   ..style = PaintingStyle.fill
   ..isAntiAlias = true
-  ..color = colors[0];
+  ..color = colors1[0];
 
 void _drawPartRect(
   Canvas canvas,
@@ -93,7 +93,7 @@ void drawTreeRects(
     _drawPartRect(
       canvas,
       rectLeft,
-      node.left?.color ?? colors[0],
+      node.left?.color ?? colors1[0],
       (node.left!.item.value * animationValue).toStringAsFixed(0),
     );
 
@@ -107,7 +107,7 @@ void drawTreeRects(
     _drawPartRect(
       canvas,
       rectRight,
-      node.right?.color ?? colors[0],
+      node.right?.color ?? colors1[0],
       (node.right!.item.value * animationValue).toStringAsFixed(0),
     );
   } else {
@@ -121,7 +121,7 @@ void drawTreeRects(
     _drawPartRect(
       canvas,
       rectLeft,
-      node.left?.color ?? colors[0],
+      node.left?.color ?? colors1[0],
       (node.left!.item.value * animationValue).toStringAsFixed(0),
     );
 
@@ -135,7 +135,7 @@ void drawTreeRects(
     _drawPartRect(
       canvas,
       rectRight,
-      node.right?.color ?? colors[0],
+      node.right?.color ?? colors1[0],
       (node.right!.item.value * animationValue).toStringAsFixed(0),
     );
   }

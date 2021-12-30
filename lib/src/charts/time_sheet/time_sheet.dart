@@ -59,25 +59,6 @@ class _TimeSheetState extends State<TimeSheet> with TickerProviderStateMixin {
         animation: _controller,
       ),
     );
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        widget.title,
-        SizedBox(height: 30.0),
-        CustomPaint(
-          painter: TimeSheetPainter(
-            startDate: widget.startDate,
-            endDate: widget.endDate,
-            events: widget.events,
-            animation: _controller,
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            height: _calcChartHeight(),
-          ),
-        ),
-      ],
-    );
   }
 }
 

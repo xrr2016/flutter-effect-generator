@@ -1,15 +1,27 @@
-import 'dart:ui';
+import '../exports.dart';
 
-List<Color> colors = [
-  Color(0xff8e43e7),
-  Color(0xffff4f81),
-  Color(0xff1cc7d0),
-  Color(0xff00aeff),
-  Color(0xff3369e7),
-  Color(0xffb84592),
-  Color(0xff2dde98),
-  Color(0xffff6c5f),
-  Color(0xff003666),
-  Color(0xffffc168),
-  Color(0xff050f2c),
+List<Color> colors1 = [
+  Color(0xff5B8FF9),
+  Color(0xff61DDAA),
+  Color(0xff65789B),
+  Color(0xffF6BD16),
+  Color(0xff7262FD),
+  Color(0xff78D3F8),
+  Color(0xff9661BC),
+  Color(0xffF6903D),
+  Color(0xff008685),
+  Color(0xffF08BB4),
+];
+
+List<Color> colors2 = [
+  Color(0xff025DF4),
+  Color(0xffDB6BCF),
+  Color(0xff2498D1),
+  Color(0xffBBBDE6),
+  Color(0xff4045B2),
+  Color(0xff21A97A),
+  Color(0xffFF745A),
+  Color(0xff007E99),
+  Color(0xffFFA8A8),
+  Color(0xff2391FF),
 ];

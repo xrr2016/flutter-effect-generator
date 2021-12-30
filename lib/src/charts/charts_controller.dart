@@ -76,23 +76,23 @@ final List<EventItem> _events = [
 
 final _datas1 = [
   DataItem(name: '1月', value: 300.0),
-  DataItem(name: '2月', value: 220.0),
+  DataItem(name: '2月', value: 260.0),
   DataItem(name: '3月', value: 240.0),
-  DataItem(name: '4月', value: 320.0),
-  DataItem(name: '5月', value: 389.0),
+  DataItem(name: '4月', value: 390.0),
+  DataItem(name: '5月', value: 439.0),
   DataItem(name: '6月', value: 280.0),
   DataItem(name: '7月', value: 356.0),
   DataItem(name: '8月', value: 378.0),
 ];
 
 final _datas2 = [
-  DataItem(name: '1月', value: 320.0),
-  DataItem(name: '2月', value: 240.0),
+  DataItem(name: '1月', value: 220.0),
+  DataItem(name: '2月', value: 200.0),
   DataItem(name: '3月', value: 280.0),
   DataItem(name: '4月', value: 310.0),
-  DataItem(name: '5月', value: 380.0),
-  DataItem(name: '6月', value: 240.0),
-  DataItem(name: '7月', value: 350.0),
+  DataItem(name: '5月', value: 520.0),
+  DataItem(name: '6月', value: 480.0),
+  DataItem(name: '7月', value: 300.0),
   DataItem(name: '8月', value: 208.0),
 ];
 

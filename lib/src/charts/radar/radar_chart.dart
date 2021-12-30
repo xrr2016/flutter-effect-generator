@@ -60,7 +60,7 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
             width: 50.0,
             height: 22.0,
             margin: EdgeInsets.symmetric(horizontal: 5.0),
-            color: colors[index % colors.length],
+            color: colors1[index % colors1.length],
             alignment: Alignment.center,
             child: Text(
               widget.datas[index].first.name,
@@ -237,9 +237,9 @@ class RadarChartPainter extends CustomPainter {
     datas.asMap().forEach(
       (index, graph) {
         Paint graphPaint = Paint()
-          ..color = colors[index % colors.length].withOpacity(0.2)
+          ..color = colors1[index % colors1.length].withOpacity(0.2)
           ..style = PaintingStyle.fill;
-        Color outLineColor = colors[index % colors.length];
+        Color outLineColor = colors1[index % colors1.length];
         Paint graphOutlinePaint = Paint()
           ..color = outLineColor
           ..style = PaintingStyle.stroke

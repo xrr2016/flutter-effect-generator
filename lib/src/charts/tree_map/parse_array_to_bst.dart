@@ -19,7 +19,7 @@ TreeNode parseArrayToBST(List<DataItem> array) {
   void partition(int start, int end, TreeNode node) {
     if (start >= end - 1) {
       node.item.name = array[start].name;
-      node.color = colors[start];
+      node.color = colors1[start];
       return;
     }
 

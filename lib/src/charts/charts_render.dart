@@ -40,7 +40,7 @@ class _ChartsRenderState extends State<ChartsRender> {
       case ChartType.area:
         return AreaChart(
           title: _chartTitle(),
-          data: widget.controller.datas[0],
+          data: widget.controller.datas,
         );
       // case ChartType.gauge:
       //   return GuageChart(
