@@ -40,7 +40,7 @@ class _ChartsInputState extends State<ChartsInput> {
     return List<Item>.generate(numberOfItems, (int index) {
       return Item(
         list: _datas[index],
-        headerValue: '类别 $index',
+        headerValue: '类别 ${index + 1}',
       );
     });
   }
@@ -67,7 +67,7 @@ class _ChartsInputState extends State<ChartsInput> {
                 child: TextField(
                   controller: nameCon,
                   onChanged: (val) {
-                    widget.controller.changeItemName(arrIndex, index, val);
+                    widget.controller.changeItemName(index, val);
                   },
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
@@ -130,8 +130,7 @@ class _ChartsInputState extends State<ChartsInput> {
   Widget _addDataButton(int index) {
     return InkWell(
       onTap: () {
-        DataItem item = DataItem(name: 'text', value: 100.0);
-        widget.controller.addDataItem(index, item);
+        widget.controller.addDataItem('text', 100.0);
         setState(() {});
       },
       child: Container(

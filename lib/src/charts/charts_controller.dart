@@ -128,17 +128,23 @@ class ChartsController extends ChangeNotifier {
   }
 
   changeItemValue(int arrIndex, int dataIndex, double val) {
+    debugPrint('arrIndex: ' + arrIndex.toString());
+    debugPrint('dataIndex: ' + dataIndex.toString());
     datas[arrIndex][dataIndex].value = val;
     notifyListeners();
   }
 
-  changeItemName(int arrIndex, int dataIndex, String val) {
-    datas[arrIndex][dataIndex].name = val;
+  changeItemName(int dataIndex, String val) {
+    for (List<DataItem> list in datas) {
+      list[dataIndex].name = val;
+    }
     notifyListeners();
   }
 
-  addDataItem(int arrIndex, DataItem item) {
-    datas[arrIndex].add(item);
+  addDataItem(String name, double value) {
+    for (List<DataItem> list in datas) {
+      list.add(DataItem(name: name, value: value));
+    }
     notifyListeners();
   }
 
