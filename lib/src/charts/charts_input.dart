@@ -237,20 +237,17 @@ class _ChartsInputState extends State<ChartsInput> {
       width: 320.0,
       margin: EdgeInsets.only(top: 40.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: EdgeInsets.all(10.0),
-            child: TextField(
-              controller: TextEditingController(
-                text: _title,
-              ),
-              onChanged: (val) {
-                widget.controller.changeChartTitle(val);
-              },
+          TextField(
+            controller: TextEditingController(
+              text: _title,
             ),
+            onChanged: (val) {
+              widget.controller.changeChartTitle(val);
+            },
           ),
           Container(
-            width: double.infinity,
             height: 40.0,
             margin: EdgeInsets.symmetric(vertical: 10.0),
             child: OutlinedButton(
