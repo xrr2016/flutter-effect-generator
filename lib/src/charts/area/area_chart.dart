@@ -89,6 +89,7 @@ class AreaChartPainter extends CustomPainter {
 
   double xStep = 0; // x 间隔
   double yStep = 0; // y 间隔
+  double yStepsHeight = 0.0;
   double maxData = 0.0;
 
   void _drawAxisText(
@@ -196,6 +197,7 @@ class AreaChartPainter extends CustomPainter {
     double numStep = getYStepNum(maxData);
     int steps = 0;
     double c = 0.0;
+    yStepsHeight = 0.0;
 
     while (c < maxYNum) {
       steps++;
@@ -204,6 +206,7 @@ class AreaChartPainter extends CustomPainter {
     yStep = (size.height - _scaleHeight) / (steps + 1);
     canvas.save();
     for (int i = 0; i <= steps; i++) {
+      yStepsHeight += -yStep;
       canvas.drawLine(
         Offset.zero,
         Offset(size.width - _scaleHeight, 0.0),
@@ -232,7 +235,7 @@ class AreaChartPainter extends CustomPainter {
     double partLength = step + span;
     Path path = Path()
       ..moveTo(0.0, 0.0)
-      ..lineTo(0.0, -size.height + yStep + _scaleHeight)
+      ..lineTo(0.0, yStepsHeight + yStep)
       ..fillType = PathFillType.evenOdd;
     PathMetrics pms = path.computeMetrics();
 
@@ -255,15 +258,14 @@ class AreaChartPainter extends CustomPainter {
     _drawXAxis(canvas, size);
     _drawYAxis(canvas, size);
 
-    for (int i = 0; i < data.length; i++) {
-      List<DataItem> list = data[i];
-      Color color = colors1[i];
+    final _datas = data.reversed.toList();
 
-      canvas.save();
+    _datas.asMap().forEach((int index, List<DataItem> list) {
+      Color color = colors1[index];
+
       _drawLines(list, color, canvas, size);
       _drawPoints(list, canvas, size);
-      canvas.restore();
-    }
+    });
   }
 
   @override

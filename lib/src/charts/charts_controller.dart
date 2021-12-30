@@ -96,6 +96,17 @@ final _datas2 = [
   DataItem(name: '8月', value: 208.0),
 ];
 
+final _datas3 = [
+  DataItem(name: '1月', value: 120.0),
+  DataItem(name: '2月', value: 500.0),
+  DataItem(name: '3月', value: 320.0),
+  DataItem(name: '4月', value: 420.0),
+  DataItem(name: '5月', value: 120.0),
+  DataItem(name: '6月', value: 340.0),
+  DataItem(name: '7月', value: 220.0),
+  DataItem(name: '8月', value: 108.0),
+];
+
 class ChartsController extends ChangeNotifier {
   ChartType chartType = ChartType.area;
 
@@ -104,12 +115,17 @@ class ChartsController extends ChangeNotifier {
     // if (chartType == ChartType.calenderHeatMap) {
     //   loadJson();
     // } else {
-    datas = [_datas1, _datas2];
+    datas = [_datas1, _datas2, _datas3];
     // }
     notifyListeners();
   }
 
-  List<List<DataItem>> datas = [_datas1, _datas2];
+  List<List<DataItem>> datas = [_datas1, _datas2, _datas3];
+
+  addDataList() {
+    datas.add([DataItem(name: '11', value: 100)]);
+    notifyListeners();
+  }
 
   changeItemValue(int arrIndex, int dataIndex, double val) {
     datas[arrIndex][dataIndex].value = val;

@@ -67,7 +67,7 @@ class _ChartsInputState extends State<ChartsInput> {
                 child: TextField(
                   controller: nameCon,
                   onChanged: (val) {
-                    // widget.controller.changeItemName(index, val);
+                    widget.controller.changeItemName(arrIndex, index, val);
                   },
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
@@ -92,10 +92,11 @@ class _ChartsInputState extends State<ChartsInput> {
                 child: TextField(
                   controller: valCon,
                   onChanged: (val) {
-                    // widget.controller.changeItemValue(
-                    //   index,
-                    //   double.parse(val),
-                    // );
+                    widget.controller.changeItemValue(
+                      arrIndex,
+                      index,
+                      double.parse(val),
+                    );
                   },
                   maxLines: 1,
                   maxLength: 5,
