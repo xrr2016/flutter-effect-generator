@@ -16,6 +16,7 @@ import './models/data_item.dart';
 import './curve/curve_chart.dart';
 import './guage/guage_chart.dart';
 import './wave/wave_chart.dart';
+import './chart_type.dart';
 
 class ChartsRender extends StatefulWidget {
   final ChartsController controller;
@@ -39,99 +40,99 @@ class _ChartsRenderState extends State<ChartsRender> {
       case ChartType.area:
         return AreaChart(
           title: _chartTitle(),
-          data: widget.controller.datas,
+          data: widget.controller.datas[0],
         );
-      case ChartType.gauge:
-        return GuageChart(
-          title: _chartTitle(),
-          data: widget.controller.datas,
-        );
-      case ChartType.wave:
-        return WaveChart(
-          title: _chartTitle(),
-          data: widget.controller.datas,
-        );
-      case ChartType.calenderHeatMap:
-        return CalenderHeatMap(
-          title: _chartTitle(),
-          data: widget.controller.datas.isEmpty ? [] : widget.controller.datas,
-        );
+      // case ChartType.gauge:
+      //   return GuageChart(
+      //     title: _chartTitle(),
+      //     data: widget.controller.datas[0],
+      //   );
+      // case ChartType.wave:
+      //   return WaveChart(
+      //     title: _chartTitle(),
+      //     data: widget.controller.datas[0],
+      //   );
+      // case ChartType.calenderHeatMap:
+      //   return CalenderHeatMap(
+      //     title: _chartTitle(),
+      //     data: widget.controller.datas[0].isEmpty ? [] : widget.controller.datas[0],
+      //   );
       case ChartType.treeMap:
         return TreeMap(
           title: _chartTitle(),
-          data: widget.controller.datas,
+          data: widget.controller.datas[0],
         );
       case ChartType.pie:
         return PieChart(
           title: _chartTitle(),
-          data: widget.controller.datas,
+          data: widget.controller.datas[0],
         );
-      case ChartType.radar:
-        return RadarChart(
-          title: _chartTitle(),
-          datas: [
-            [
-              DataItem(name: '小明', value: 80.0),
-              DataItem(name: '小明', value: 70.0),
-              DataItem(name: '小明', value: 60.0),
-              DataItem(name: '小明', value: 50.0),
-              DataItem(name: '小明', value: 90.0),
-              DataItem(name: '小明', value: 80.0),
-            ],
-            [
-              DataItem(name: '小林', value: 50.0),
-              DataItem(name: '小林', value: 90.0),
-              DataItem(name: '小林', value: 30.0),
-              DataItem(name: '小林', value: 70.0),
-              DataItem(name: '小林', value: 60.0),
-              DataItem(name: '小林', value: 40.0),
-            ],
-          ],
-          scores: [
-            10.0,
-            20.0,
-            30.0,
-            40.0,
-            50.0,
-            60.0,
-            70.0,
-            80.0,
-            90.0,
-            100.0,
-          ],
-          features: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
-        );
+      // case ChartType.radar:
+      //   return RadarChart(
+      //     title: _chartTitle(),
+      //     datas: [
+      //       [
+      //         DataItem(name: '小明', value: 80.0),
+      //         DataItem(name: '小明', value: 70.0),
+      //         DataItem(name: '小明', value: 60.0),
+      //         DataItem(name: '小明', value: 50.0),
+      //         DataItem(name: '小明', value: 90.0),
+      //         DataItem(name: '小明', value: 80.0),
+      //       ],
+      //       [
+      //         DataItem(name: '小林', value: 50.0),
+      //         DataItem(name: '小林', value: 90.0),
+      //         DataItem(name: '小林', value: 30.0),
+      //         DataItem(name: '小林', value: 70.0),
+      //         DataItem(name: '小林', value: 60.0),
+      //         DataItem(name: '小林', value: 40.0),
+      //       ],
+      //     ],
+      //     scores: [
+      //       10.0,
+      //       20.0,
+      //       30.0,
+      //       40.0,
+      //       50.0,
+      //       60.0,
+      //       70.0,
+      //       80.0,
+      //       90.0,
+      //       100.0,
+      //     ],
+      //     features: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
+      //   );
       case ChartType.donut:
         return DonutCahrt(
           title: _chartTitle(),
-          data: widget.controller.datas,
+          data: widget.controller.datas[0],
         );
       case ChartType.column:
         return ColumnChart(
           title: _chartTitle(),
-          data: widget.controller.datas,
+          data: widget.controller.datas[0],
         );
-      case ChartType.timeSheet:
-        return TimeSheet(
-          title: _chartTitle(),
-          startDate: DateTime(1949),
-          endDate: DateTime(2021),
-          events: widget.controller.events,
-        );
+      // case ChartType.timeSheet:
+      //   return TimeSheet(
+      //     title: _chartTitle(),
+      //     startDate: DateTime(1949),
+      //     endDate: DateTime(2021),
+      //     events: widget.controller.events,
+      //   );
       case ChartType.line:
         return LineChart(
           title: _chartTitle(),
-          data: widget.controller.datas,
+          data: widget.controller.datas[0],
         );
       case ChartType.curve:
         return CurveChart(
           title: _chartTitle(),
-          data: widget.controller.datas,
+          data: widget.controller.datas[0],
         );
       case ChartType.bar:
         return BarChart(
           title: _chartTitle(),
-          data: widget.controller.datas,
+          data: widget.controller.datas[0],
         );
       default:
         return SizedBox.shrink();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../chart_container.dart';
+import '../chart_type.dart';
 import '../charts_controller.dart';
 import '../colors.dart';
 import './tree_node.dart';

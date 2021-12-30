@@ -74,7 +74,7 @@ class _CalenderHeatMapState extends State<CalenderHeatMap>
         data: widget.data,
         animation: _controller,
       ),
-      type: ChartType.calenderHeatMap,
+      // type: ChartType.calenderHeatMap,
       legend: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

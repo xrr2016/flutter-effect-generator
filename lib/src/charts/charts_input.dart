@@ -1,7 +1,18 @@
-import 'package:flutter_effect_generator/src/charts/models/data_item.dart';
-
 import '../exports.dart';
 import './charts_controller.dart';
+import './models/data_item.dart';
+
+class Item {
+  Item({
+    required this.headerValue,
+    required this.list,
+    this.isExpanded = false,
+  });
+
+  String headerValue;
+  bool isExpanded;
+  List<DataItem> list;
+}
 
 class ChartsInput extends StatefulWidget {
   final ChartsController controller;
@@ -13,21 +24,32 @@ class ChartsInput extends StatefulWidget {
 }
 
 class _ChartsInputState extends State<ChartsInput> {
-  List<DataItem> _datas = [];
+  List<List<DataItem>> _datas = [];
   String _title = '';
+  List<Item> _data = [];
 
   @override
   void initState() {
     _datas = widget.controller.datas;
     _title = widget.controller.title;
+    _data = _generateItems(_datas.length);
     super.initState();
   }
 
-  List<Widget> _buildInputs() {
+  List<Item> _generateItems(int numberOfItems) {
+    return List<Item>.generate(numberOfItems, (int index) {
+      return Item(
+        list: _datas[index],
+        headerValue: '类别 $index',
+      );
+    });
+  }
+
+  List<Widget> _buildInputs(int arrIndex, List<DataItem> list) {
     return List.generate(
-      _datas.length,
+      list.length,
       (index) {
-        DataItem dataItem = widget.controller.datas[index];
+        DataItem dataItem = list[index];
         TextEditingController nameCon = TextEditingController(
           text: dataItem.name,
         );
@@ -36,7 +58,7 @@ class _ChartsInputState extends State<ChartsInput> {
         );
 
         return Container(
-          margin: EdgeInsets.only(bottom: 10.0),
+          margin: EdgeInsets.only(top: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -45,7 +67,7 @@ class _ChartsInputState extends State<ChartsInput> {
                 child: TextField(
                   controller: nameCon,
                   onChanged: (val) {
-                    widget.controller.changeItemName(index, val);
+                    // widget.controller.changeItemName(index, val);
                   },
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
@@ -70,10 +92,10 @@ class _ChartsInputState extends State<ChartsInput> {
                 child: TextField(
                   controller: valCon,
                   onChanged: (val) {
-                    widget.controller.changeItemValue(
-                      index,
-                      double.parse(val),
-                    );
+                    // widget.controller.changeItemValue(
+                    //   index,
+                    //   double.parse(val),
+                    // );
                   },
                   maxLines: 1,
                   maxLength: 5,
@@ -96,7 +118,7 @@ class _ChartsInputState extends State<ChartsInput> {
                 ),
               ),
               SizedBox(width: 12.0),
-              _removeDataButton(index),
+              _removeDataButton(arrIndex, index),
             ],
           ),
         );
@@ -104,11 +126,11 @@ class _ChartsInputState extends State<ChartsInput> {
     );
   }
 
-  Widget _addDataButton() {
+  Widget _addDataButton(int index) {
     return InkWell(
       onTap: () {
         DataItem item = DataItem(name: 'text', value: 100.0);
-        widget.controller.addDataItem(item);
+        widget.controller.addDataItem(index, item);
         setState(() {});
       },
       child: Container(
@@ -142,18 +164,18 @@ class _ChartsInputState extends State<ChartsInput> {
                 ],
               ),
               boxShadow: [
-                BoxShadow(
-                  color: Color(0xffffffff),
-                  offset: Offset(-5.0, -5.0),
-                  blurRadius: 12,
-                  spreadRadius: 0.0,
-                ),
-                BoxShadow(
-                  color: Color(0xffd1d0d0),
-                  offset: Offset(5.0, 5.0),
-                  blurRadius: 12,
-                  spreadRadius: 0.0,
-                ),
+                // BoxShadow(
+                //   color: Color(0xffffffff),
+                //   offset: Offset(-5.0, -5.0),
+                //   blurRadius: 12,
+                //   spreadRadius: 0.0,
+                // ),
+                // BoxShadow(
+                //   color: Color(0xffd1d0d0),
+                //   offset: Offset(5.0, 5.0),
+                //   blurRadius: 12,
+                //   spreadRadius: 0.0,
+                // ),
               ],
             ),
           ),
@@ -162,15 +184,49 @@ class _ChartsInputState extends State<ChartsInput> {
     );
   }
 
-  Widget _removeDataButton(int index) {
+  Widget _removeDataButton(int addIndex, int dataIndex) {
     return SizedBox(
       width: 60.0,
       child: IconButton(
         onPressed: () {
-          widget.controller.removeDataItem(index);
+          widget.controller.removeDataItem(addIndex, dataIndex);
           setState(() {});
         },
         icon: Icon(Icons.delete_outline_rounded),
+      ),
+    );
+  }
+
+  Widget _buildSections() {
+    return ExpansionPanelList(
+      elevation: 1.0,
+      expansionCallback: (int index, bool isExpanded) {
+        setState(() {
+          _data[index].isExpanded = !isExpanded;
+        });
+      },
+      children: List.generate(
+        _data.length,
+        (index) {
+          Item item = _data[index];
+
+          return ExpansionPanel(
+            backgroundColor: Color(0xffefeeee),
+            headerBuilder: (BuildContext context, bool isExpanded) {
+              return ListTile(title: Text(item.headerValue));
+            },
+            body: Container(
+              color: Color(0xffefeeee),
+              child: Column(
+                children: [
+                  ..._buildInputs(index, item.list),
+                  _addDataButton(index),
+                ],
+              ),
+            ),
+            isExpanded: item.isExpanded,
+          );
+        },
       ),
     );
   }
@@ -195,11 +251,10 @@ class _ChartsInputState extends State<ChartsInput> {
           ),
           Expanded(
             child: ListView(
-              padding: EdgeInsets.all(10.0),
-              children: [
-                ..._buildInputs(),
-                _addDataButton(),
-              ],
+              controller: ScrollController(
+                keepScrollOffset: true,
+              ),
+              children: [_buildSections()],
             ),
           ),
         ],

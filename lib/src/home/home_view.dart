@@ -78,9 +78,9 @@ class HomeView extends StatelessWidget {
                     HomeCard(
                       title: 'Charts',
                     ),
-                    HomeCard(
-                      title: 'Generative',
-                    ),
+                    // HomeCard(
+                    //   title: 'Generative',
+                    // ),
                   ],
                 ),
               ),

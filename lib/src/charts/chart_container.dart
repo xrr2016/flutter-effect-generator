@@ -1,5 +1,5 @@
 import '../exports.dart';
-import './charts_controller.dart';
+import './chart_type.dart';
 
 class ChartContainer extends StatelessWidget {
   final Widget title;
@@ -18,7 +18,7 @@ class ChartContainer extends StatelessWidget {
   Widget _renderLegend() {
     if (legend != null) {
       return Padding(
-        padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+        padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
         child: legend,
       );
     }
@@ -35,9 +35,9 @@ class ChartContainer extends StatelessWidget {
         double width = 0.0;
 
         switch (type) {
-          case ChartType.calenderHeatMap:
-            width = covariant.maxWidth;
-            break;
+          // case ChartType.calenderHeatMap:
+          //   width = covariant.maxWidth;
+          //   break;
           case ChartType.treeMap:
             width = covariant.maxWidth - 400.0;
             break;
@@ -46,13 +46,15 @@ class ChartContainer extends StatelessWidget {
             break;
         }
 
-        type == ChartType.calenderHeatMap
-            ? covariant.maxWidth
-            : covariant.maxWidth - 200.0;
+        // type == ChartType.calenderHeatMap
+        //     ? covariant.maxWidth
+        //     : covariant.maxWidth - 200.0;
 
-        double height = type == ChartType.calenderHeatMap
-            ? covariant.maxHeight - 400.0
-            : covariant.maxHeight - 140.0;
+        // double height = type == ChartType.calenderHeatMap
+        //     ? covariant.maxHeight - 400.0
+        //     : covariant.maxHeight - 140.0;
+
+        double height = covariant.maxHeight - 140.0;
 
         return Column(
           children: [

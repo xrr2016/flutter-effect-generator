@@ -21,6 +21,10 @@ class _ChartsViewState extends State<ChartsView> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          IconButton(
+            onPressed: _chartsController.toggleTheme,
+            icon: const Icon(Icons.dark_mode),
+          ),
           const SizedBox(width: 10.0),
           IconButton(
             onPressed: _chartsController.downloadImage,

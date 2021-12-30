@@ -1,5 +1,6 @@
 import '../exports.dart';
 import './charts_controller.dart';
+import './chart_type.dart';
 
 class ChartsSelect extends StatefulWidget {
   final ChartsController controller;
