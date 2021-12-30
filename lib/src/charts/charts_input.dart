@@ -249,6 +249,23 @@ class _ChartsInputState extends State<ChartsInput> {
               },
             ),
           ),
+          Container(
+            width: double.infinity,
+            height: 40.0,
+            margin: EdgeInsets.symmetric(vertical: 10.0),
+            child: OutlinedButton(
+              style: ButtonStyle(),
+              onPressed: () {
+                widget.controller.addDataList();
+                _data = _generateItems(_datas.length);
+                setState(() {});
+              },
+              child: Text(
+                '添加',
+                style: TextStyle(color: Colors.black54),
+              ),
+            ),
+          ),
           Expanded(
             child: ListView(
               controller: ScrollController(

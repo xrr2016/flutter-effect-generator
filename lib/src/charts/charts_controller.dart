@@ -123,7 +123,11 @@ class ChartsController extends ChangeNotifier {
   List<List<DataItem>> datas = [_datas1, _datas2, _datas3];
 
   addDataList() {
-    datas.add([DataItem(name: '11', value: 100)]);
+    List<DataItem> list = List.generate(datas[0].length, (index) {
+      return DataItem(name: datas[0][index].name, value: datas[0][index].value);
+    });
+
+    datas.add(list);
     notifyListeners();
   }
 
