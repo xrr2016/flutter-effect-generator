@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../models/data_item.dart';
 
 void drawAxisText(
   Canvas canvas,
@@ -36,10 +37,28 @@ double getYMaxNum(double num) {
   double n = pow(10, len).toDouble();
   double h = n / 2;
 
-  return num > h ? (num + (n / 10)) : h;
+  if (num > h) {
+    return n;
+  }
+
+  return h;
 }
 
 double getYStepNum(double num) {
   int len = num.toStringAsFixed(0).length;
   return pow(10, len - 1).toDouble();
+}
+
+double calcMaxData(List<List<DataItem>> series) {
+  List<double> _datas = [];
+
+  for (int i = 0; i < series.length; i++) {
+    List<DataItem> list = series[i];
+
+    for (int j = 0; j < list.length; j++) {
+      _datas.add(list[j].value);
+    }
+  }
+
+  return _datas.reduce(max);
 }

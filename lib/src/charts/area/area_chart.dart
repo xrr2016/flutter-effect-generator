@@ -10,12 +10,12 @@ import '../chart_container.dart';
 class AreaChart extends StatefulWidget {
   final Widget title;
   final List<Color> theme;
-  final List<List<DataItem>> data;
+  final List<List<DataItem>> datas;
 
   AreaChart({
     Key? key,
     required this.title,
-    required this.data,
+    required this.datas,
     required this.theme,
   }) : super(key: key);
 
@@ -47,17 +47,37 @@ class _AreaChartState extends State<AreaChart>
     return ChartContainer(
       title: widget.title,
       painter: AreaChartPainter(
-        data: widget.data,
+        datas: widget.datas,
         animation: _controller,
         theme: widget.theme,
+      ),
+      legend: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          widget.datas.length,
+          (index) => Container(
+            width: 50.0,
+            height: 22.0,
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            color: widget.theme[index],
+            alignment: Alignment.center,
+            child: Text(
+              '1111',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.0,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
 class AreaChartPainter extends CustomPainter {
-  final List<List<DataItem>> data;
   final List<Color> theme;
+  final List<List<DataItem>> datas;
   final Animation<double> animation;
   final double _scaleHeight = 10;
   final TextPainter _textPainter = TextPainter(
@@ -65,19 +85,11 @@ class AreaChartPainter extends CustomPainter {
   );
 
   AreaChartPainter({
-    required this.data,
+    required this.datas,
     required this.theme,
     required this.animation,
   }) : super(repaint: animation) {
-    List<double> _datas = [];
-    for (int i = 0; i < data.length; i++) {
-      List<DataItem> list = data[i];
-
-      for (int j = 0; j < list.length; j++) {
-        _datas.add(list[j].value);
-      }
-    }
-    maxData = _datas.reduce(max);
+    _initData();
   }
 
   Paint gridPaint = Paint()
@@ -86,7 +98,6 @@ class AreaChartPainter extends CustomPainter {
     ..strokeWidth = 0.5;
 
   final pathPaint = Paint()..style = PaintingStyle.fill;
-
   final linePaint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0;
@@ -95,6 +106,10 @@ class AreaChartPainter extends CustomPainter {
   double yStep = 0; // y 间隔
   double yStepsHeight = 0.0;
   double maxData = 0.0;
+  double maxYNum = 0.0;
+  double chartHeight = 0.0;
+  double chartWidth = 0.0;
+  double oneNumHeight = 0.0;
 
   void _drawAxisText(
     Canvas canvas,
@@ -125,52 +140,54 @@ class AreaChartPainter extends CustomPainter {
     _textPainter.paint(canvas, offsetPos);
   }
 
+  void _initData() {
+    maxData = calcMaxData(datas);
+    maxYNum = getYMaxNum(maxData);
+
+    debugPrint('maxData: ' + maxData.toString());
+    debugPrint('maxYNum: ' + maxYNum.toString());
+  }
+
   void _drawLines(List<DataItem> list, Color color, Canvas canvas, Size size) {
     final Path path = Path();
-    double maxYNum = getYMaxNum(maxData);
     List<Offset> points = [];
 
+    canvas.save();
     for (int i = 0; i < list.length; i++) {
       final double dx = xStep * i;
-      final double dy =
-          (size.height - _scaleHeight - yStep) * (list[i].value / maxYNum);
+      final double dy = list[i].value * oneNumHeight;
       points.add(Offset(dx, -dy));
-
       if (i == 0) {
         path.moveTo(dx, -dy);
       } else {
         path.lineTo(dx, -dy);
       }
     }
-
     path.lineTo(points.last.dx, 0);
     path.lineTo(points.first.dx, 0);
     path.close();
-
     pathPaint.color = color.withOpacity(.3);
     canvas.drawPath(path, pathPaint);
-
     linePaint.color = color;
     final Path linePath = getCurvePath(canvas, points, tension: 0.05);
     canvas.drawPath(createAnimatedPath(linePath, animation.value), linePaint);
+    canvas.restore();
   }
 
   void _drawPoints(List<DataItem> list, Canvas canvas, Size size) {
-    double maxYNum = getYMaxNum(maxData);
     double aValue = animation.value;
 
     canvas.save();
-    for (int i = 0; i < data[0].length; i++) {
+    for (int i = 0; i < datas.first.length; i++) {
       const double dx = 0.0;
-      final double dy =
-          (size.height - _scaleHeight - yStep) * (list[i].value / maxYNum);
+      final double dy = list[i].value * oneNumHeight;
       final offset = Offset(dx, -dy);
 
       _drawAxisText(
         canvas,
         (list[i].value * aValue).toStringAsFixed(0),
         alignment: Alignment.center,
-        offset: offset.translate(0.0, -_scaleHeight),
+        offset: offset.translate(0.0, -14.0),
       );
       canvas.translate(xStep, 0.0);
     }
@@ -178,15 +195,16 @@ class AreaChartPainter extends CustomPainter {
   }
 
   void _drawXAxis(Canvas canvas, Size size) {
-    xStep = (size.width - _scaleHeight) / (data[0].length - 1);
+    xStep = (size.width - _scaleHeight) / (datas.first.length - 1);
+    chartWidth = size.width - _scaleHeight;
 
     canvas.save();
-    for (int i = 0; i < data[0].length; i++) {
-      canvas.drawLine(Offset(0.0, _scaleHeight / 2), Offset.zero, gridPaint);
+    for (int i = 0; i < datas.first.length; i++) {
+      canvas.drawLine(Offset(0.0, _scaleHeight), Offset.zero, gridPaint);
       _drawDashLine(canvas, size);
       _drawAxisText(
         canvas,
-        data[0][i].name,
+        datas.first[i].name,
         alignment: Alignment.center,
         offset: Offset(0, _scaleHeight + 8),
         color: Colors.black54,
@@ -197,17 +215,22 @@ class AreaChartPainter extends CustomPainter {
   }
 
   void _drawYAxis(Canvas canvas, Size size) {
-    double maxYNum = getYMaxNum(maxData);
     double numStep = getYStepNum(maxData);
     int steps = 0;
     double c = 0.0;
     yStepsHeight = 0.0;
+    chartHeight = size.height - _scaleHeight;
+
+    debugPrint(oneNumHeight.toString());
 
     while (c < maxYNum) {
       steps++;
       c += numStep;
     }
-    yStep = (size.height - _scaleHeight) / (steps + 1);
+
+    oneNumHeight = chartHeight / maxYNum;
+    yStep = chartHeight / steps;
+
     canvas.save();
     for (int i = 0; i <= steps; i++) {
       yStepsHeight += -yStep;
@@ -258,11 +281,16 @@ class AreaChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // canvas.drawRect(
+    //   Rect.fromLTWH(0.0, 0.0, size.width, size.height),
+    //   Paint()..color = Colors.amber,
+    // );
+
     _moveOrigin(canvas, size);
     _drawXAxis(canvas, size);
     _drawYAxis(canvas, size);
 
-    final _datas = data.reversed.toList();
+    final _datas = datas.reversed.toList();
 
     _datas.asMap().forEach((int index, List<DataItem> list) {
       Color color = theme[index];

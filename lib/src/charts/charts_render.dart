@@ -41,7 +41,7 @@ class _ChartsRenderState extends State<ChartsRender> {
         return AreaChart(
           title: _chartTitle(),
           theme: widget.controller.theme,
-          data: widget.controller.datas,
+          datas: widget.controller.datas,
         );
       // case ChartType.gauge:
       //   return GuageChart(
@@ -123,7 +123,8 @@ class _ChartsRenderState extends State<ChartsRender> {
       case ChartType.line:
         return LineChart(
           title: _chartTitle(),
-          data: widget.controller.datas[0],
+          datas: widget.controller.datas,
+          theme: widget.controller.theme,
         );
       case ChartType.curve:
         return CurveChart(

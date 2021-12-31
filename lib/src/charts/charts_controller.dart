@@ -82,7 +82,7 @@ final _datas1 = [
   DataItem(name: '4月', value: 390.0),
   DataItem(name: '5月', value: 439.0),
   DataItem(name: '6月', value: 280.0),
-  DataItem(name: '7月', value: 356.0),
+  DataItem(name: '7月', value: 756.0),
   DataItem(name: '8月', value: 378.0),
 ];
 
@@ -128,7 +128,7 @@ class ChartsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<List<DataItem>> datas = [_datas1, _datas2, _datas3];
+  List<List<DataItem>> datas = [_datas1, _datas2];
 
   addDataList() {
     if (datas.length > 4) {
@@ -157,8 +157,8 @@ class ChartsController extends ChangeNotifier {
   }
 
   changeItemValue(int arrIndex, int dataIndex, double val) {
-    debugPrint('arrIndex: ' + arrIndex.toString());
-    debugPrint('dataIndex: ' + dataIndex.toString());
+    // debugPrint('arrIndex: ' + arrIndex.toString());
+    // debugPrint('dataIndex: ' + dataIndex.toString());
     datas[arrIndex][dataIndex].value = val;
     notifyListeners();
   }

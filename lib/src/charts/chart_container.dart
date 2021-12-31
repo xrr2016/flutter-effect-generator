@@ -29,8 +29,8 @@ class ChartContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, BoxConstraints covariant) {
-        debugPrint(covariant.maxWidth.toString());
-        debugPrint(covariant.maxHeight.toString());
+        // debugPrint(covariant.maxWidth.toString());
+        // debugPrint(covariant.maxHeight.toString());
 
         double width = 0.0;
 
