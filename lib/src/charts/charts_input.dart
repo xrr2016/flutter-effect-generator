@@ -5,12 +5,12 @@ import './models/data_item.dart';
 
 class Item {
   Item({
-    required this.headerValue,
+    required this.header,
     required this.list,
     this.isExpanded = false,
   });
 
-  String headerValue;
+  String header;
   bool isExpanded;
   List<DataItem> list;
 }
@@ -25,26 +25,24 @@ class ChartsInput extends StatefulWidget {
 }
 
 class _ChartsInputState extends State<ChartsInput> {
-  List<List<DataItem>> _datas = [];
   String _title = '';
-  List<Item> _data = [];
+  List<Item> _datas = [];
 
   @override
   void initState() {
-    _datas = widget.controller.datas;
     _title = widget.controller.title;
-    _data = _generateItems(_datas.length);
+    _datas = _generateItems();
     super.initState();
   }
 
-  List<Item> _generateItems(int numberOfItems) {
+  List<Item> _generateItems() {
     return List<Item>.generate(
-      numberOfItems,
+      widget.controller.datas.length,
       (int index) {
         return Item(
-          list: _datas[index],
-          headerValue: '类别 ${index + 1}',
-          isExpanded: index == 0,
+          list: widget.controller.datas[index],
+          header: '类别 ${index + 1}',
+          isExpanded: false,
         );
       },
     );
@@ -59,11 +57,11 @@ class _ChartsInputState extends State<ChartsInput> {
           text: dataItem.name,
         );
         TextEditingController valCon = TextEditingController(
-          text: dataItem.value.toString(),
+          text: dataItem.value.toStringAsFixed(0),
         );
 
         return Container(
-          margin: EdgeInsets.only(top: 10.0),
+          margin: EdgeInsets.only(top: 4.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -79,7 +77,8 @@ class _ChartsInputState extends State<ChartsInput> {
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.ltr,
                   maxLines: 1,
-                  maxLength: 5,
+                  maxLength: 10,
+                  style: TextStyle(fontSize: 12.0),
                   decoration: InputDecoration(
                     counter: Container(),
                     enabledBorder: UnderlineInputBorder(
@@ -104,7 +103,7 @@ class _ChartsInputState extends State<ChartsInput> {
                     );
                   },
                   maxLines: 1,
-                  maxLength: 5,
+                  maxLength: 10,
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.ltr,
                   textInputAction: TextInputAction.next,
@@ -112,13 +111,11 @@ class _ChartsInputState extends State<ChartsInput> {
                     signed: true,
                     decimal: false,
                   ),
+                  style: TextStyle(fontSize: 12.0),
                   decoration: InputDecoration(
                     counter: Container(),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black12,
-                        width: 0.5,
-                      ),
+                      borderSide: BorderSide(color: Colors.black12, width: 0.5),
                     ),
                   ),
                 ),
@@ -175,7 +172,7 @@ class _ChartsInputState extends State<ChartsInput> {
         style: ButtonStyle(),
         onPressed: () {
           widget.controller.addDataList();
-          _data = _generateItems(_datas.length);
+          _datas = _generateItems();
           setState(() {});
         },
         child: Text(
@@ -204,18 +201,28 @@ class _ChartsInputState extends State<ChartsInput> {
       elevation: 1.0,
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
-          _data[index].isExpanded = !isExpanded;
+          _datas[index].isExpanded = !isExpanded;
         });
       },
       children: List.generate(
-        _data.length,
+        _datas.length,
         (index) {
-          Item item = _data[index];
+          Item item = _datas[index];
 
           return ExpansionPanel(
             backgroundColor: Color(0xffefeeee),
             headerBuilder: (BuildContext context, bool isExpanded) {
-              return ListTile(title: Text(item.headerValue));
+              return ListTile(
+                title: Text(item.header),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete_outline_rounded),
+                  onPressed: () {
+                    widget.controller.removeDataList(index);
+                    _datas = _generateItems();
+                    setState(() {});
+                  },
+                ),
+              );
             },
             body: Container(
               color: Color(0xffefeeee),
