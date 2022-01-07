@@ -15,3 +15,10 @@ class DataItem {
         date: DateTime.parse(json['date']),
       );
 }
+
+class Series {
+  String name;
+  List<DataItem> data;
+
+  Series({required this.name, required this.data});
+}

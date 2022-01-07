@@ -8,14 +8,14 @@ import '../models/data_item.dart';
 import '../chart_container.dart';
 
 class AreaChart extends StatefulWidget {
-  final Widget title;
+  final String title;
   final List<Color> theme;
-  final List<List<DataItem>> datas;
+  final List<Series> series;
 
   AreaChart({
     Key? key,
     required this.title,
-    required this.datas,
+    required this.series,
     required this.theme,
   }) : super(key: key);
 
@@ -45,31 +45,50 @@ class _AreaChartState extends State<AreaChart>
   @override
   Widget build(BuildContext context) {
     return ChartContainer(
-      title: widget.title,
-      painter: AreaChartPainter(
-        datas: widget.datas,
-        animation: _controller,
-        theme: widget.theme,
+      title: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Row(
+          children: [
+            Text(
+              widget.title,
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
-      legend: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          widget.datas.length,
-          (index) => Container(
-            width: 50.0,
-            height: 22.0,
-            margin: EdgeInsets.symmetric(horizontal: 5.0),
-            color: widget.theme[index],
-            alignment: Alignment.center,
-            child: Text(
-              '1111',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12.0,
+      legend: Container(
+        padding: EdgeInsets.only(left: 20.0, bottom: 20.0, right: 20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: List.generate(
+            widget.series.length,
+            (index) => Container(
+              width: 80.0,
+              padding: EdgeInsets.only(right: 10.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 18.0,
+                    height: 6.0,
+                    color: widget.theme[index],
+                    alignment: Alignment.center,
+                  ),
+                  SizedBox(width: 4.0),
+                  Text(
+                    widget.series[index].name,
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                ],
               ),
             ),
           ),
         ),
+      ),
+      painter: AreaChartPainter(
+        series: widget.series,
+        animation: _controller,
+        theme: widget.theme,
       ),
     );
   }
@@ -77,15 +96,15 @@ class _AreaChartState extends State<AreaChart>
 
 class AreaChartPainter extends CustomPainter {
   final List<Color> theme;
-  final List<List<DataItem>> datas;
+  final List<Series> series;
   final Animation<double> animation;
-  final double _scaleHeight = 10;
+  final double _scaleHeight = 40.0;
   final TextPainter _textPainter = TextPainter(
     textDirection: TextDirection.ltr,
   );
 
   AreaChartPainter({
-    required this.datas,
+    required this.series,
     required this.theme,
     required this.animation,
   }) : super(repaint: animation) {
@@ -141,11 +160,8 @@ class AreaChartPainter extends CustomPainter {
   }
 
   void _initData() {
-    maxData = calcMaxData(datas);
+    maxData = calcMaxData(series);
     maxYNum = getYMaxNum(maxData);
-
-    debugPrint('maxData: ' + maxData.toString());
-    debugPrint('maxYNum: ' + maxYNum.toString());
   }
 
   void _drawLines(List<DataItem> list, Color color, Canvas canvas, Size size) {
@@ -178,7 +194,7 @@ class AreaChartPainter extends CustomPainter {
     double aValue = animation.value;
 
     canvas.save();
-    for (int i = 0; i < datas.first.length; i++) {
+    for (int i = 0; i < series.first.data.length; i++) {
       const double dx = 0.0;
       final double dy = list[i].value * oneNumHeight;
       final offset = Offset(dx, -dy);
@@ -195,18 +211,18 @@ class AreaChartPainter extends CustomPainter {
   }
 
   void _drawXAxis(Canvas canvas, Size size) {
-    xStep = (size.width - _scaleHeight) / (datas.first.length - 1);
+    xStep = (size.width - _scaleHeight) / (series.first.data.length - 1);
     chartWidth = size.width - _scaleHeight;
 
     canvas.save();
-    for (int i = 0; i < datas.first.length; i++) {
-      canvas.drawLine(Offset(0.0, _scaleHeight), Offset.zero, gridPaint);
+    for (int i = 0; i < series.first.data.length; i++) {
+      canvas.drawLine(Offset(0.0, _scaleHeight / 4), Offset.zero, gridPaint);
       _drawDashLine(canvas, size);
       _drawAxisText(
         canvas,
-        datas.first[i].name,
+        series.first.data[i].name,
         alignment: Alignment.center,
-        offset: Offset(0, _scaleHeight + 8),
+        offset: Offset(0, _scaleHeight / 2),
         color: Colors.black54,
       );
       canvas.translate(xStep, 0);
@@ -221,8 +237,6 @@ class AreaChartPainter extends CustomPainter {
     yStepsHeight = 0.0;
     chartHeight = size.height - _scaleHeight;
 
-    debugPrint(oneNumHeight.toString());
-
     while (c < maxYNum) {
       steps++;
       c += numStep;
@@ -235,7 +249,7 @@ class AreaChartPainter extends CustomPainter {
     for (int i = 0; i <= steps; i++) {
       yStepsHeight += -yStep;
       canvas.drawLine(
-        Offset.zero,
+        Offset(-_scaleHeight / 4, 0.0),
         Offset(size.width - _scaleHeight, 0.0),
         gridPaint,
       );
@@ -243,7 +257,7 @@ class AreaChartPainter extends CustomPainter {
       _drawAxisText(
         canvas,
         str,
-        offset: Offset(-_scaleHeight - 4, 0),
+        offset: Offset(-_scaleHeight / 2, 0),
         color: Colors.black54,
       );
       canvas.translate(0, -yStep);
@@ -290,12 +304,11 @@ class AreaChartPainter extends CustomPainter {
     _drawXAxis(canvas, size);
     _drawYAxis(canvas, size);
 
-    final _datas = datas.reversed.toList();
-
-    _datas.asMap().forEach((int index, List<DataItem> list) {
+    series.asMap().forEach((int index, Series series) {
       Color color = theme[index];
-      _drawLines(list, color, canvas, size);
-      _drawPoints(list, canvas, size);
+
+      _drawLines(series.data, color, canvas, size);
+      _drawPoints(series.data, canvas, size);
     });
   }
 

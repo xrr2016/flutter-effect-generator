@@ -49,11 +49,11 @@ double getYStepNum(double num) {
   return pow(10, len - 1).toDouble();
 }
 
-double calcMaxData(List<List<DataItem>> series) {
+double calcMaxData(List<Series> series) {
   List<double> _datas = [];
 
   for (int i = 0; i < series.length; i++) {
-    List<DataItem> list = series[i];
+    List<DataItem> list = series[i].data;
 
     for (int j = 0; j < list.length; j++) {
       _datas.add(list[j].value);

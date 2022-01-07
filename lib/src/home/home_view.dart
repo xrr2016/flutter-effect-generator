@@ -2,45 +2,31 @@ import 'dart:ui' as ui;
 import '../exports.dart';
 import './home_card.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   static const routeName = '/home';
 
   const HomeView({Key? key}) : super(key: key);
 
-  // List<Widget> _buildColorItems() {
-  //   List<Widget> items = List.generate(
-  //     30,
-  //     (index) => FittedBox(
-  //       fit: BoxFit.cover,
-  //       child: GestureDetector(
-  //         onTap: () {
-  //           // Navigator.restorablePushNamed(
-  //           //   context,
-  //           //   BackgroundView.routeName,
-  //           // );
-  //         },
-  //         child: Column(
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           crossAxisAlignment: CrossAxisAlignment.center,
-  //           children: [
-  //             SizedBox(
-  //               child: FlutterLogo(),
-  //               width: 80.0,
-  //               height: 80.0,
-  //             ),
-  //             SizedBox(height: 10.0),
-  //             Text(
-  //               'Gradient Background',
-  //               style: TextStyle(color: Colors.white),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
 
-  //   return items;
-  // }
+class _HomeViewState extends State<HomeView> {
+  // List<Widget> _buildColorItems() {
+
+  @override
+  void initState() {
+    super.initState();
+
+    _setWindowSize();
+    _getWindowSize();
+  }
+
+  Future _getWindowSize() async {}
+
+  Future _setWindowSize() async {
+    Size winSize = Size(1480, 900);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +64,6 @@ class HomeView extends StatelessWidget {
                     HomeCard(
                       title: 'Charts',
                     ),
-                    // HomeCard(
-                    //   title: 'Generative',
-                    // ),
                   ],
                 ),
               ),

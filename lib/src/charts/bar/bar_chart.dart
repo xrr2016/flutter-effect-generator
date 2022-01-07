@@ -4,7 +4,7 @@ import '../chart_container.dart';
 import '../models/data_item.dart';
 
 class BarChart extends StatefulWidget {
-  final Widget title;
+  final String title;
   final List<DataItem> data;
 
   BarChart({
@@ -38,7 +38,15 @@ class _BarChartState extends State<BarChart> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ChartContainer(
-      title: widget.title,
+      title: Row(
+        children: [
+          SizedBox(width: 20.0),
+          Text(
+            widget.title,
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
       painter: BarChartPainter(
         data: widget.data,
         animation: _controller,

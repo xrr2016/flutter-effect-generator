@@ -22,7 +22,8 @@ class _ChartsSelectState extends State<ChartsSelect> {
             color: Color(0xffefeeee),
             alignment: Alignment.center,
             child: Container(
-              color: Color(0xffefeeee),
+              // color: Color(0xffefeeee),
+              color: Colors.amber,
               child: Container(
                 height: 60.0,
                 alignment: Alignment.center,
@@ -34,7 +35,8 @@ class _ChartsSelectState extends State<ChartsSelect> {
                   ),
                 ),
                 decoration: BoxDecoration(
-                  color: Color(0xffefeeee),
+                  // color: Color(0xffefeeee),
+                  color: Colors.amber,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(5.0),
                     bottomRight: Radius.circular(5.0),
@@ -90,7 +92,7 @@ class _ChartsSelectState extends State<ChartsSelect> {
       builder: (context, Widget? child) {
         return Container(
           margin: EdgeInsets.only(top: 40.0),
-          width: 320.0,
+          width: 180.0,
           child: ListView(
             padding: EdgeInsets.only(top: 20.0, bottom: 20.0, right: 20.0),
             children: _renderChartNames(),

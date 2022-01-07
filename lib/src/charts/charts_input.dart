@@ -37,11 +37,11 @@ class _ChartsInputState extends State<ChartsInput> {
 
   List<Item> _generateItems() {
     return List<Item>.generate(
-      widget.controller.datas.length,
+      widget.controller.series.length,
       (int index) {
         return Item(
-          list: widget.controller.datas[index],
-          header: '类别 ${index + 1}',
+          list: widget.controller.series[index].data,
+          header: widget.controller.series[index].name,
           isExpanded: false,
         );
       },
@@ -283,7 +283,7 @@ class _ChartsInputState extends State<ChartsInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 320.0,
+      width: 240.0,
       margin: EdgeInsets.only(top: 40.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

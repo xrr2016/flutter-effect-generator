@@ -17,10 +17,7 @@ class ChartContainer extends StatelessWidget {
 
   Widget _renderLegend() {
     if (legend != null) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-        child: legend,
-      );
+      return legend!;
     }
     return SizedBox.shrink();
   }
@@ -32,19 +29,20 @@ class ChartContainer extends StatelessWidget {
         // debugPrint(covariant.maxWidth.toString());
         // debugPrint(covariant.maxHeight.toString());
 
-        double width = 0.0;
+        double width = covariant.maxWidth;
+        double height = covariant.maxHeight - 140.0;
 
-        switch (type) {
-          // case ChartType.calenderHeatMap:
-          //   width = covariant.maxWidth;
-          //   break;
-          case ChartType.treeMap:
-            width = covariant.maxWidth - 400.0;
-            break;
-          default:
-            width = covariant.maxWidth - 200.0;
-            break;
-        }
+        // switch (type) {
+        //   // case ChartType.calenderHeatMap:
+        //   //   width = covariant.maxWidth;
+        //   //   break;
+        //   case ChartType.treeMap:
+        //     width = covariant.maxWidth - 400.0;
+        //     break;
+        //   default:
+        //     width = covariant.maxWidth - 200.0;
+        //     break;
+        // }
 
         // type == ChartType.calenderHeatMap
         //     ? covariant.maxWidth
@@ -54,23 +52,22 @@ class ChartContainer extends StatelessWidget {
         //     ? covariant.maxHeight - 400.0
         //     : covariant.maxHeight - 140.0;
 
-        double height = covariant.maxHeight - 140.0;
-
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            title,
+            _renderLegend(),
             Padding(
-              padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
-              child: title,
-            ),
-            CustomPaint(
-              painter: painter,
-              child: SizedBox(
-                width: width,
-                height: height,
-                // color: Colors.red,
+              padding: const EdgeInsets.only(
+                left: 40.0,
+                top: 20.0,
+                right: 40.0,
+              ),
+              child: CustomPaint(
+                painter: painter,
+                child: SizedBox(width: width, height: height),
               ),
             ),
-            _renderLegend(),
           ],
         );
       },

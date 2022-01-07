@@ -6,7 +6,7 @@ import '../../exports.dart';
 import '../models/data_item.dart';
 
 class PieChart extends StatefulWidget {
-  final Widget title;
+  final String title;
   final List<DataItem> data;
 
   PieChart({
@@ -40,7 +40,15 @@ class _PieChartState extends State<PieChart> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ChartContainer(
-      title: widget.title,
+      title: Row(
+        children: [
+          SizedBox(width: 20.0),
+          Text(
+            widget.title,
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
       painter: PeiChartPainter(
         data: widget.data,
         animation: _controller,

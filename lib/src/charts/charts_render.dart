@@ -28,20 +28,13 @@ class ChartsRender extends StatefulWidget {
 }
 
 class _ChartsRenderState extends State<ChartsRender> {
-  Widget _chartTitle() {
-    return Text(
-      widget.controller.title,
-      style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-    );
-  }
-
   Widget _renderChart() {
     switch (widget.controller.chartType) {
       case ChartType.area:
         return AreaChart(
-          title: _chartTitle(),
+          title: widget.controller.title,
           theme: widget.controller.theme,
-          datas: widget.controller.datas,
+          series: widget.controller.series,
         );
       // case ChartType.gauge:
       //   return GuageChart(
@@ -60,12 +53,12 @@ class _ChartsRenderState extends State<ChartsRender> {
       //   );
       case ChartType.treeMap:
         return TreeMap(
-          title: _chartTitle(),
+          title: widget.controller.title,
           data: widget.controller.datas[0],
         );
       case ChartType.pie:
         return PieChart(
-          title: _chartTitle(),
+          title: widget.controller.title,
           data: widget.controller.datas[0],
         );
       // case ChartType.radar:
@@ -105,12 +98,12 @@ class _ChartsRenderState extends State<ChartsRender> {
       //   );
       case ChartType.donut:
         return DonutCahrt(
-          title: _chartTitle(),
+          title: widget.controller.title,
           data: widget.controller.datas[0],
         );
       case ChartType.column:
         return ColumnChart(
-          title: _chartTitle(),
+          title: widget.controller.title,
           data: widget.controller.datas[0],
         );
       // case ChartType.timeSheet:
@@ -122,18 +115,18 @@ class _ChartsRenderState extends State<ChartsRender> {
       //   );
       case ChartType.line:
         return LineChart(
-          title: _chartTitle(),
+          title: widget.controller.title,
           datas: widget.controller.datas,
           theme: widget.controller.theme,
         );
       case ChartType.curve:
         return CurveChart(
-          title: _chartTitle(),
+          title: widget.controller.title,
           data: widget.controller.datas[0],
         );
       case ChartType.bar:
         return BarChart(
-          title: _chartTitle(),
+          title: widget.controller.title,
           data: widget.controller.datas[0],
         );
       default:

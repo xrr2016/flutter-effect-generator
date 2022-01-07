@@ -6,7 +6,7 @@ import '../utils/utils.dart';
 import '../models/data_item.dart';
 
 class DonutCahrt extends StatefulWidget {
-  final Widget title;
+  final String title;
   final List<DataItem> data;
 
   DonutCahrt({
@@ -39,7 +39,15 @@ class _DonutCahrtState extends State<DonutCahrt> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ChartContainer(
-      title: widget.title,
+      title: Row(
+        children: [
+          SizedBox(width: 20.0),
+          Text(
+            widget.title,
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
       painter: DonutChartPainter(
         data: widget.data,
         animation: _controller,

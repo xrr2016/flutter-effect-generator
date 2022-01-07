@@ -128,6 +128,12 @@ class ChartsController extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<Series> series = [
+    Series(name: '类别 1', data: _datas1),
+    Series(name: '类别 2', data: _datas2),
+    Series(name: '类别 3', data: _datas3),
+  ];
+
   List<List<DataItem>> datas = [_datas1, _datas2];
 
   addDataList() {
@@ -157,8 +163,6 @@ class ChartsController extends ChangeNotifier {
   }
 
   changeItemValue(int arrIndex, int dataIndex, double val) {
-    // debugPrint('arrIndex: ' + arrIndex.toString());
-    // debugPrint('dataIndex: ' + dataIndex.toString());
     datas[arrIndex][dataIndex].value = val;
     notifyListeners();
   }
@@ -182,7 +186,7 @@ class ChartsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  String title = '游客访问量 - 2040年';
+  String title = '游客访问量 - 2022年';
 
   changeChartTitle(String val) {
     title = val;
