@@ -1,5 +1,15 @@
 import '../exports.dart';
 
+const Color backgroundColor = Color(0xfff9f9f9);
+
+List<Color> colors0 = [
+  Color(0xff2E93fA),
+  Color(0xff00e396),
+  Color(0xffFF9800),
+  Color(0xffE91E63),
+  Color(0xff546E7A),
+];
+
 List<Color> colors1 = [
   Color(0xff5B8FF9),
   Color(0xff61DDAA),
@@ -51,4 +61,4 @@ List<Color> colors4 = [
   Color(0xffFE8A26),
 ];
 
-List<List<Color>> themes = [colors1, colors2, colors3, colors4];
+List<List<Color>> themes = [colors0, colors1, colors2, colors3, colors4];

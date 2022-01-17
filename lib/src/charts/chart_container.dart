@@ -26,12 +26,8 @@ class ChartContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, BoxConstraints covariant) {
-        // debugPrint(covariant.maxWidth.toString());
-        // debugPrint(covariant.maxHeight.toString());
-
         double width = covariant.maxWidth;
         double height = covariant.maxHeight - 140.0;
-
         // switch (type) {
         //   // case ChartType.calenderHeatMap:
         //   //   width = covariant.maxWidth;
@@ -56,7 +52,6 @@ class ChartContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             title,
-            _renderLegend(),
             Padding(
               padding: const EdgeInsets.only(
                 left: 40.0,
@@ -68,6 +63,7 @@ class ChartContainer extends StatelessWidget {
                 child: SizedBox(width: width, height: height),
               ),
             ),
+            _renderLegend(),
           ],
         );
       },

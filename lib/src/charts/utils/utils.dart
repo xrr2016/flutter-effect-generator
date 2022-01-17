@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../models/series.dart';
 import '../models/data_item.dart';
 
 void drawAxisText(
@@ -53,10 +54,10 @@ double calcMaxData(List<Series> series) {
   List<double> _datas = [];
 
   for (int i = 0; i < series.length; i++) {
-    List<DataItem> list = series[i].data;
+    List<double> list = series[i].data;
 
     for (int j = 0; j < list.length; j++) {
-      _datas.add(list[j].value);
+      _datas.add(list[j]);
     }
   }
 

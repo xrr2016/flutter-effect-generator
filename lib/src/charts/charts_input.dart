@@ -31,22 +31,22 @@ class _ChartsInputState extends State<ChartsInput> {
   @override
   void initState() {
     _title = widget.controller.title;
-    _datas = _generateItems();
+    // _datas = _generateItems();
     super.initState();
   }
 
-  List<Item> _generateItems() {
-    return List<Item>.generate(
-      widget.controller.series.length,
-      (int index) {
-        return Item(
-          list: widget.controller.series[index].data,
-          header: widget.controller.series[index].name,
-          isExpanded: false,
-        );
-      },
-    );
-  }
+  // List<Item> _generateItems() {
+  //   return List<Item>.generate(
+  //     widget.controller.series.length,
+  //     (int index) {
+  //       return Item(
+  //         list: widget.controller.series[index].data,
+  //         header: widget.controller.series[index].name,
+  //         isExpanded: false,
+  //       );
+  //     },
+  //   );
+  // }
 
   List<Widget> _buildInputs(int arrIndex, List<DataItem> list) {
     return List.generate(
@@ -172,7 +172,7 @@ class _ChartsInputState extends State<ChartsInput> {
         style: ButtonStyle(),
         onPressed: () {
           widget.controller.addDataList();
-          _datas = _generateItems();
+          // _datas = _generateItems();
           setState(() {});
         },
         child: Text(
@@ -218,7 +218,7 @@ class _ChartsInputState extends State<ChartsInput> {
                   icon: Icon(Icons.delete_outline_rounded),
                   onPressed: () {
                     widget.controller.removeDataList(index);
-                    _datas = _generateItems();
+                    // _datas = _generateItems();
                     setState(() {});
                   },
                 ),

@@ -1,8 +1,12 @@
+import 'package:flutter_effect_generator/src/charts/base_chart.dart';
+import 'package:flutter_effect_generator/src/charts/chart_type.dart';
+
 import '../exports.dart';
 import './charts_select.dart';
 import './charts_render.dart';
 import './charts_input.dart';
 import './charts_controller.dart';
+import 'colors.dart';
 
 class ChartsView extends StatefulWidget {
   static const routeName = '/charts';
@@ -32,21 +36,39 @@ class _ChartsViewState extends State<ChartsView> {
           ),
           const SizedBox(width: 10.0),
         ],
-        backgroundColor: Color(0xffefeeee),
+        backgroundColor: backgroundColor,
         centerTitle: true,
         elevation: 0.0,
         foregroundColor: Colors.black,
         title: Text('Charts'),
       ),
-      backgroundColor: Color(0xffefeeee),
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ChartsSelect(controller: _chartsController),
-          ChartsRender(controller: _chartsController),
-          ChartsInput(controller: _chartsController),
-        ],
+      backgroundColor: backgroundColor,
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            BaseChart(
+              type: ChartType.area,
+              width: 720.0,
+              height: 480.0,
+              title: '2022 上半年游客统计表',
+              theme: _chartsController.theme,
+              series: _chartsController.series,
+              xaxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
+              yaxis: [
+                '0',
+                '100',
+                '200',
+                '300',
+                '400',
+                '500',
+              ],
+            ),
+            // ChartsSelect(controller: _chartsController),
+            // ChartsRender(controller: _chartsController),
+            // ChartsInput(controller: _chartsController),
+          ],
+        ),
       ),
     );
   }

@@ -91,8 +91,8 @@ class _ChartsSelectState extends State<ChartsSelect> {
       animation: widget.controller,
       builder: (context, Widget? child) {
         return Container(
-          margin: EdgeInsets.only(top: 40.0),
           width: 180.0,
+          margin: EdgeInsets.only(top: 40.0),
           child: ListView(
             padding: EdgeInsets.only(top: 20.0, bottom: 20.0, right: 20.0),
             children: _renderChartNames(),

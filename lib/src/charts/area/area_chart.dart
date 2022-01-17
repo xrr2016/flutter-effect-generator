@@ -5,6 +5,7 @@ import '../utils/utils.dart';
 import '../utils/create_animated_path.dart';
 import '../curve/draw_cruve.dart';
 import '../models/data_item.dart';
+import '../models/series.dart';
 import '../chart_container.dart';
 
 class AreaChart extends StatefulWidget {
@@ -48,6 +49,7 @@ class _AreaChartState extends State<AreaChart>
       title: Padding(
         padding: EdgeInsets.all(20.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               widget.title,
@@ -59,7 +61,7 @@ class _AreaChartState extends State<AreaChart>
       legend: Container(
         padding: EdgeInsets.only(left: 20.0, bottom: 20.0, right: 20.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
             widget.series.length,
             (index) => Container(
@@ -69,10 +71,13 @@ class _AreaChartState extends State<AreaChart>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 18.0,
-                    height: 6.0,
-                    color: widget.theme[index],
+                    width: 10.0,
+                    height: 10.0,
                     alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: widget.theme[index],
+                      shape: BoxShape.circle,
+                    ),
                   ),
                   SizedBox(width: 4.0),
                   Text(
@@ -119,7 +124,7 @@ class AreaChartPainter extends CustomPainter {
   final pathPaint = Paint()..style = PaintingStyle.fill;
   final linePaint = Paint()
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 2.0;
+    ..strokeWidth = 4.0;
 
   double xStep = 0; // x 间隔
   double yStep = 0; // y 间隔
@@ -184,8 +189,9 @@ class AreaChartPainter extends CustomPainter {
     path.close();
     pathPaint.color = color.withOpacity(.3);
     canvas.drawPath(path, pathPaint);
+
     linePaint.color = color;
-    final Path linePath = getCurvePath(canvas, points, tension: 0.05);
+    final Path linePath = getCurvePath(canvas, points, tension: 0.1);
     canvas.drawPath(createAnimatedPath(linePath, animation.value), linePaint);
     canvas.restore();
   }
@@ -199,12 +205,12 @@ class AreaChartPainter extends CustomPainter {
       final double dy = list[i].value * oneNumHeight;
       final offset = Offset(dx, -dy);
 
-      _drawAxisText(
-        canvas,
-        (list[i].value * aValue).toStringAsFixed(0),
-        alignment: Alignment.center,
-        offset: offset.translate(0.0, -14.0),
-      );
+      // _drawAxisText(
+      //   canvas,
+      //   (list[i].value * aValue).toStringAsFixed(0),
+      //   alignment: Alignment.center,
+      //   offset: offset.translate(0.0, -14.0),
+      // );
       canvas.translate(xStep, 0.0);
     }
     canvas.restore();
@@ -217,14 +223,14 @@ class AreaChartPainter extends CustomPainter {
     canvas.save();
     for (int i = 0; i < series.first.data.length; i++) {
       canvas.drawLine(Offset(0.0, _scaleHeight / 4), Offset.zero, gridPaint);
-      _drawDashLine(canvas, size);
-      _drawAxisText(
-        canvas,
-        series.first.data[i].name,
-        alignment: Alignment.center,
-        offset: Offset(0, _scaleHeight / 2),
-        color: Colors.black54,
-      );
+      // _drawDashLine(canvas, size);
+      // _drawAxisText(
+      //   canvas,
+      //   series.first.data[i].name,
+      //   alignment: Alignment.center,
+      //   offset: Offset(0, _scaleHeight / 2),
+      //   color: Colors.black54,
+      // );
       canvas.translate(xStep, 0);
     }
     canvas.restore();
@@ -249,7 +255,7 @@ class AreaChartPainter extends CustomPainter {
     for (int i = 0; i <= steps; i++) {
       yStepsHeight += -yStep;
       canvas.drawLine(
-        Offset(-_scaleHeight / 4, 0.0),
+        Offset(0.0, 0.0),
         Offset(size.width - _scaleHeight, 0.0),
         gridPaint,
       );
@@ -307,8 +313,8 @@ class AreaChartPainter extends CustomPainter {
     series.asMap().forEach((int index, Series series) {
       Color color = theme[index];
 
-      _drawLines(series.data, color, canvas, size);
-      _drawPoints(series.data, canvas, size);
+      // _drawLines(series.data, color, canvas, size);
+      // _drawPoints(series.data, canvas, size);
     });
   }
 

@@ -139,29 +139,33 @@ class _ChartsRenderState extends State<ChartsRender> {
       aspectRatio: 16.0 / 9.0,
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xffefeeee),
-          borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xffefeeee),
-              Color(0xffefeeee),
-            ],
+          border: Border.all(
+            color: Color(0xffe7e7e7),
+            width: 1.0,
           ),
+          // color: Color(0xffefeeee),
+          borderRadius: BorderRadius.circular(2),
+          // gradient: LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: [
+          //     Color(0xffefeeee),
+          //     Color(0xffefeeee),
+          //   ],
+          // ),
           boxShadow: [
-            BoxShadow(
-              color: Color(0xffffffff),
-              offset: Offset(-20.0, -20.0),
-              blurRadius: 30,
-              spreadRadius: 0.0,
-            ),
-            BoxShadow(
-              color: Color(0xffd1d0d0),
-              offset: Offset(20.0, 20.0),
-              blurRadius: 30,
-              spreadRadius: 0.0,
-            ),
+            // BoxShadow(
+            //   color: Color(0xffffffff),
+            //   offset: Offset(-20.0, -20.0),
+            //   blurRadius: 30,
+            //   spreadRadius: 0.0,
+            // ),
+            // BoxShadow(
+            //   color: Color(0xffd1d0d0),
+            //   offset: Offset(20.0, 20.0),
+            //   blurRadius: 30,
+            //   spreadRadius: 0.0,
+            // ),
           ],
         ),
         child: _renderChart(),

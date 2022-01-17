@@ -12,13 +12,6 @@ class DataItem {
   factory DataItem.fromJson(Map<String, dynamic> json) => DataItem(
         name: json['name'] ?? '',
         value: json['commits'] ?? 0,
-        date: DateTime.parse(json['date']),
+        date: DateTime.parse(json['date'] ?? DateTime.now()),
       );
-}
-
-class Series {
-  String name;
-  List<DataItem> data;
-
-  Series({required this.name, required this.data});
 }

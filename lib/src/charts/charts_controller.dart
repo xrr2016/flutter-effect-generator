@@ -6,6 +6,7 @@ import './models/data_item.dart';
 import './models/event_item.dart';
 import './chart_type.dart';
 import './colors.dart';
+import 'models/series.dart';
 
 final List<EventItem> _events = [
   EventItem(
@@ -129,9 +130,21 @@ class ChartsController extends ChangeNotifier {
   }
 
   List<Series> series = [
-    Series(name: '类别 1', data: _datas1),
-    Series(name: '类别 2', data: _datas2),
-    Series(name: '类别 3', data: _datas3),
+    Series(
+      name: '类别 1',
+      data: [280, 340, 290, 220, 320, 270],
+      type: ChartType.area,
+    ),
+    Series(
+      name: '类别 2',
+      data: [230, 320, 180, 300, 240, 220],
+      type: ChartType.area,
+    ),
+    Series(
+      name: '类别 3',
+      data: [320, 440, 310, 490, 340, 400],
+      type: ChartType.area,
+    ),
   ];
 
   List<List<DataItem>> datas = [_datas1, _datas2];
