@@ -132,18 +132,13 @@ class ChartsController extends ChangeNotifier {
   List<Series> series = [
     Series(
       name: '类别 1',
-      data: [280, 340, 290, 220, 320, 270],
-      type: ChartType.area,
+      data: [380, 440, 290, 220, 320, 270],
+      type: ChartType.curve,
     ),
     Series(
       name: '类别 2',
-      data: [230, 320, 180, 300, 240, 220],
-      type: ChartType.area,
-    ),
-    Series(
-      name: '类别 3',
-      data: [320, 440, 310, 490, 340, 400],
-      type: ChartType.area,
+      data: [230, 280, 180, 300, 240, 220],
+      type: ChartType.curve,
     ),
   ];
 

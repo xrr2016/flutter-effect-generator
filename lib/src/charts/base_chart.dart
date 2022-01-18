@@ -87,8 +87,8 @@ class ChartPainter extends StatelessWidget {
   })  : _animation = animation,
         super(key: key);
 
-  final AnimationController _animation;
   final BaseChart widget;
+  final AnimationController _animation;
 
   @override
   Widget build(BuildContext context) {
@@ -180,10 +180,10 @@ class BaseChartPainter extends CustomPainter {
   }
 
   void _drawXAxis(Canvas canvas, Size size) {
-    _xStep = (size.width - _chartPaddding * 6) / xaxis.length;
+    _xStep = (size.width - _chartPaddding * 5) / (xaxis.length - 1);
 
     canvas.save();
-    canvas.translate(_xStep / 2, 0.0);
+    // canvas.translate(_xStep / 2, 0.0);
     for (int i = 0; i < xaxis.length; i++) {
       canvas.drawLine(Offset.zero, Offset(0.0, _chartPaddding / 2), _gridPaint);
       _drawAxisText(canvas, xaxis[i]);
@@ -217,7 +217,7 @@ class BaseChartPainter extends CustomPainter {
     Size size,
   ) {
     canvas.save();
-    canvas.translate(_xStep / 2, 0.0);
+    // canvas.translate(_xStep / 2, 0.0);
     ChartType type = series.type;
 
     switch (type) {
@@ -247,10 +247,11 @@ class BaseChartPainter extends CustomPainter {
     _drawXAxis(canvas, size);
     _drawYAxis(canvas, size);
 
-    series.asMap().forEach((int index, Series series) {
-      Color color = theme[index];
-      _drawSeries(series, color, canvas, size);
-    });
+    for (int i = 0; i < series.length; i++) {
+      Color color = theme[i];
+      Series serie = series[i];
+      _drawSeries(serie, color, canvas, size);
+    }
   }
 
   @override
