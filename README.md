@@ -1,6 +1,22 @@
 # Generator
 
-An app for generate fun things, build with flutter.
+An app for generating interesting stuff, build with flutter.
+
+## Charts
+
+- [x] Area
+- [x] Column
+- [x] Bar
+- [x] Line
+- [x] Curve
+- [ ] Pie
+- [ ] Donut
+- [ ] Radar
+- [ ] TreeMap
+- [ ] TimeSheet
+- [ ] Gauge
+- [ ] Wave
+- [ ] CalenderHeatMap
 
 <!-- ![screenshot](./screenshot.jpg) -->
 

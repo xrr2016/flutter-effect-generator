@@ -220,19 +220,6 @@ class BaseChartPainter extends CustomPainter {
     Size size,
   ) {
     canvas.save();
-
-    // ChartType _type;
-
-    // if (type == ChartType.combine) {
-    //   _type = ChartType.combine;
-    // } else {
-    //   _type = type;
-    // }
-
-    // if (type != ChartType.area || type != ChartType.bar) {
-    //   canvas.translate(_xStep / 2, 0.0);
-    // }
-
     switch (type) {
       case ChartType.area:
         drawAreaChart(
