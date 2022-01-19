@@ -30,6 +30,8 @@ extension ChartTypeName on ChartType {
         return '折线图';
       case ChartType.curve:
         return '曲线图';
+      case ChartType.combine:
+        return '混合图';
       // case ChartType.radar:
       //   return '雷达图';
       case ChartType.pie:

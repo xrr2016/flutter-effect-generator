@@ -2,6 +2,10 @@ import '../../exports.dart';
 import '../models/series.dart';
 import '../models/data_item.dart';
 
+TextPainter _textPainter = TextPainter(
+  textDirection: TextDirection.ltr,
+);
+
 void drawAxisText(
   Canvas canvas,
   String str, {
@@ -9,9 +13,6 @@ void drawAxisText(
   Alignment alignment = Alignment.centerRight,
   Offset offset = Offset.zero,
 }) {
-  TextPainter _textPainter = TextPainter(
-    textDirection: TextDirection.ltr,
-  );
   TextSpan text = TextSpan(
     text: str,
     style: TextStyle(
@@ -62,4 +63,30 @@ double calcMaxData(List<Series> series) {
   }
 
   return _datas.reduce(max);
+}
+
+void drawValueText(
+  List<double> list,
+  List<Offset> points,
+  Color color,
+  Canvas canvas, {
+  double fontSize = 12.0,
+}) {
+  for (int i = 0; i < points.length; i++) {
+    Offset offset = points[i];
+    TextSpan text = TextSpan(
+      text: list[i].toString(),
+      style: TextStyle(fontSize: fontSize, color: color),
+    );
+    _textPainter.text = text;
+    _textPainter.layout();
+    Size size = _textPainter.size;
+    _textPainter.paint(
+      canvas,
+      Offset(
+        offset.dx - size.width / 2,
+        offset.dy - size.height - fontSize / 2,
+      ),
+    );
+  }
 }

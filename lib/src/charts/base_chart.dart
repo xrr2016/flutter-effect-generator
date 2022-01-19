@@ -2,8 +2,10 @@ import '../exports.dart';
 import './models/series.dart';
 import './chart_type.dart';
 import 'area/draw_area_chart.dart';
-import 'column/draw_column_chart.dart';
-import 'curve/draw_cruve_chart.dart';
+import './column/draw_column_chart.dart';
+import './curve/draw_cruve_chart.dart';
+import './line/draw_line_chart.dart';
+import 'bar/draw_bar_chart.dart';
 
 class BaseChart extends StatefulWidget {
   final String title;
@@ -52,29 +54,19 @@ class _BaseChartState extends State<BaseChart>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          ChartTitle(title: widget.title),
-          ChartPainter(animation: _animation, widget: widget),
-          ChartLegend(theme: widget.theme, series: widget.series),
-        ],
+    return Card(
+      elevation: 4.0,
+      child: SizedBox(
+        width: widget.width,
+        height: widget.height,
+        child: Column(
+          children: [
+            ChartTitle(title: widget.title),
+            ChartPainter(animation: _animation, widget: widget),
+            ChartLegend(theme: widget.theme, series: widget.series),
+          ],
+        ),
       ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Color(0xffe7e7e7), width: 1.0),
-        borderRadius: BorderRadius.circular(2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            offset: Offset(0.0, 0.0),
-            spreadRadius: 0.0,
-            blurRadius: 2,
-          ),
-        ],
-      ),
-      width: widget.width,
-      height: widget.height,
     );
   }
 }
@@ -108,6 +100,7 @@ class ChartPainter extends StatelessWidget {
                 theme: widget.theme,
                 xaxis: widget.xaxis,
                 yaxis: widget.yaxis,
+                type: widget.type,
               ),
               size: Size.infinite,
             ),
@@ -119,6 +112,7 @@ class ChartPainter extends StatelessWidget {
 }
 
 class BaseChartPainter extends CustomPainter {
+  final ChartType type;
   final List<Color> theme;
   final List<Series> series;
   final List<String> xaxis;
@@ -130,6 +124,7 @@ class BaseChartPainter extends CustomPainter {
     required this.theme,
     required this.xaxis,
     required this.yaxis,
+    required this.type,
     required this.animation,
   }) : super(repaint: animation);
 
@@ -173,19 +168,27 @@ class BaseChartPainter extends CustomPainter {
           )
         : Offset(
             -size.width / 2,
-            size.height,
+            size.height / 1.5,
           );
 
     _textPainter.paint(canvas, offsetPos);
   }
 
   void _drawXAxis(Canvas canvas, Size size) {
-    _xStep = (size.width - _chartPaddding * 5) / (xaxis.length - 1);
+    double chartWidth = size.width - _chartPaddding * 5;
+
+    if (type == ChartType.area) {
+      _xStep = chartWidth / (xaxis.length - 1);
+    } else {
+      _xStep = chartWidth / xaxis.length;
+    }
 
     canvas.save();
-    // canvas.translate(_xStep / 2, 0.0);
+    if (type != ChartType.area) {
+      canvas.translate(_xStep / 2, 0.0);
+    }
     for (int i = 0; i < xaxis.length; i++) {
-      canvas.drawLine(Offset.zero, Offset(0.0, _chartPaddding / 2), _gridPaint);
+      canvas.drawLine(Offset.zero, Offset(0.0, _chartPaddding / 3), _gridPaint);
       _drawAxisText(canvas, xaxis[i]);
       canvas.translate(_xStep, 0);
     }
@@ -195,7 +198,7 @@ class BaseChartPainter extends CustomPainter {
   void _drawYAxis(Canvas canvas, Size size) {
     double chartHeight = size.height - _chartPaddding * 1.5;
     _yStep = chartHeight / yaxis.length;
-    _numUnit = (_yStep * (yaxis.length - 1)) / 500.0;
+    _numUnit = (_yStep * (yaxis.length - 1)) / double.parse(yaxis.last);
 
     canvas.save();
     for (int i = 0; i < yaxis.length; i++) {
@@ -217,8 +220,18 @@ class BaseChartPainter extends CustomPainter {
     Size size,
   ) {
     canvas.save();
-    // canvas.translate(_xStep / 2, 0.0);
-    ChartType type = series.type;
+
+    // ChartType _type;
+
+    // if (type == ChartType.combine) {
+    //   _type = ChartType.combine;
+    // } else {
+    //   _type = type;
+    // }
+
+    // if (type != ChartType.area || type != ChartType.bar) {
+    //   canvas.translate(_xStep / 2, 0.0);
+    // }
 
     switch (type) {
       case ChartType.area:
@@ -228,8 +241,15 @@ class BaseChartPainter extends CustomPainter {
       case ChartType.column:
         drawColumnChart(series.data, color, canvas, size, _xStep, _numUnit);
         break;
+      case ChartType.bar:
+        drawBarChart(series.data, color, canvas, size, _yStep, _numUnit);
+        break;
       case ChartType.curve:
         drawCruveChart(
+            series.data, color, canvas, size, linePaint, _xStep, _numUnit);
+        break;
+      case ChartType.line:
+        drawLineChart(
             series.data, color, canvas, size, linePaint, _xStep, _numUnit);
         break;
       default:
@@ -243,9 +263,34 @@ class BaseChartPainter extends CustomPainter {
     //   Rect.fromLTWH(0.0, 0.0, size.width, size.height),
     //   Paint()..color = Colors.amber,
     // );
-    _moveOrigin(canvas, size);
-    _drawXAxis(canvas, size);
-    _drawYAxis(canvas, size);
+
+    if (type == ChartType.bar) {
+      moveBarChartOrigin(canvas, size, _chartPaddding);
+      _xStep = (size.width - _chartPaddding) / yaxis.length;
+      _yStep = (size.height - _chartPaddding * 2) / xaxis.length;
+      _numUnit = (_xStep * (yaxis.length - 1)) / double.parse(yaxis.last);
+
+      drawBarChartXAxis(
+        canvas,
+        size,
+        yaxis,
+        _chartPaddding,
+        _gridPaint,
+        _drawAxisText,
+      );
+      drawBarChartYAxis(
+        canvas,
+        size,
+        xaxis,
+        _chartPaddding,
+        _gridPaint,
+        _drawAxisText,
+      );
+    } else {
+      _moveOrigin(canvas, size);
+      _drawXAxis(canvas, size);
+      _drawYAxis(canvas, size);
+    }
 
     for (int i = 0; i < series.length; i++) {
       Color color = theme[i];
@@ -274,7 +319,7 @@ class ChartLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0),
+      padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(

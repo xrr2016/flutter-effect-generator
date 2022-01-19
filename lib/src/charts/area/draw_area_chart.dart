@@ -1,5 +1,5 @@
 import '../curve/draw_cruve.dart';
-
+import '../utils/utils.dart';
 import '../../exports.dart';
 
 void drawAreaChart(
@@ -23,13 +23,12 @@ void drawAreaChart(
   final Path linePath = getCurvePath(canvas, points, tension: 0.6);
   canvas.drawPath(linePath, linePaint);
 
-  final areaPaint = Paint()
-    ..style = PaintingStyle.fill
-    ..strokeWidth = 4.0;
+  final areaPaint = Paint()..style = PaintingStyle.fill;
   final Path areaPath = getCurvePath(canvas, points, tension: 0.6);
   areaPaint.color = color.withOpacity(.3);
   areaPath.lineTo(points.last.dx, 0);
   areaPath.lineTo(points.first.dx, 0);
   areaPath.close();
   canvas.drawPath(areaPath, areaPaint);
+  drawValueText(list, points, color, canvas);
 }
