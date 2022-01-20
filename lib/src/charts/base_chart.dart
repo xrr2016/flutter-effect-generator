@@ -6,6 +6,7 @@ import './column/draw_column_chart.dart';
 import './curve/draw_cruve_chart.dart';
 import './line/draw_line_chart.dart';
 import 'bar/draw_bar_chart.dart';
+import 'donut/draw_dount_cahrt.dart';
 import 'pie/draw_pie.chart.dart';
 import './models/data_item.dart';
 
@@ -297,6 +298,15 @@ class BaseChartPainter extends CustomPainter {
         datas,
         theme,
         _chartPaddding,
+        canvas,
+        size,
+      );
+    } else if (type == ChartType.donut) {
+      drawDountChart(
+        datas,
+        theme,
+        _chartPaddding,
+        40.0,
         canvas,
         size,
       );

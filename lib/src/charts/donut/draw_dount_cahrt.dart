@@ -15,10 +15,11 @@ TextPainter _textPainter = TextPainter(
   textAlign: TextAlign.end,
 );
 
-void drawPieChart(
+void drawDountChart(
   List<DataItem>? datas,
   List<Color> theme,
   double paddding,
+  double dountWidth,
   Canvas canvas,
   Size size,
 ) {
@@ -27,30 +28,33 @@ void drawPieChart(
   final double radius = math.min(sw, sh) / 2 - paddding;
   final double maxData =
       datas!.map((DataItem item) => item.value).reduce((a, b) => a + b);
+
   double currentAngle = 0.0;
+
+  Rect rect = Rect.fromCircle(
+    radius: radius - dountWidth / 2,
+    center: Offset.zero,
+  );
 
   canvas.save();
   canvas.translate(sw / 2, sh / 2);
   canvas.rotate(-pi / 2);
 
+  _drawBackgroudArc(dountWidth, radius, rect, canvas);
+
   for (int i = 0; i < datas.length; i++) {
-    Rect rect = Rect.fromCircle(
-      center: Offset.zero,
-      radius: radius,
-    );
     double sweepAngle = pi * 2 * (datas[i].value / maxData);
     currentAngle += sweepAngle;
 
-    canvas.drawArc(rect, 0.0, sweepAngle, true, partPaint..color = theme[i]);
     canvas.drawArc(
       rect,
       0.0,
       sweepAngle,
-      true,
+      false,
       Paint()
-        ..style = PaintingStyle.stroke
-        ..color = Colors.white
-        ..strokeWidth = 2.0,
+        ..color = theme[i]
+        ..strokeWidth = dountWidth
+        ..style = PaintingStyle.stroke,
     );
 
     _drawValues(
@@ -58,6 +62,7 @@ void drawPieChart(
       sweepAngle,
       currentAngle,
       radius,
+      dountWidth,
       maxData,
       canvas,
     );
@@ -66,21 +71,35 @@ void drawPieChart(
   canvas.restore();
 }
 
+void _drawBackgroudArc(
+  double dountWidth,
+  double radius,
+  Rect rect,
+  Canvas canvas,
+) {
+  Paint paint = Paint()
+    ..color = Colors.black12
+    ..strokeWidth = dountWidth
+    ..style = PaintingStyle.stroke;
+
+  canvas.drawArc(rect, 0.0, pi * 2, false, paint);
+}
+
 void _drawValues(
   double value,
   double sweepAngle,
   double currentAngle,
   double radius,
+  double dountWidth,
   double maxData,
   Canvas canvas,
 ) {
   canvas.save();
   canvas.rotate(sweepAngle / 2);
-  canvas.translate(radius / 2, 0.0);
+  canvas.translate(radius - dountWidth / 2, 0.0);
 
   /// 用于绘制水平文字
   canvas.rotate(pi / 2 - (currentAngle - sweepAngle / 2));
-
   String percent = ((value / maxData * 100).toStringAsFixed(1)) + '%';
   TextSpan text = TextSpan(
     text: percent,
