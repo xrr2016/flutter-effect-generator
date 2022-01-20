@@ -27,6 +27,7 @@ void drawPieChart(
   final double radius = math.min(sw, sh) / 2 - paddding;
   final double maxData =
       datas!.map((DataItem item) => item.value).reduce((a, b) => a + b);
+  double currentAngle = 0.0;
 
   canvas.save();
   canvas.translate(sw / 2, sh / 2);
@@ -39,6 +40,8 @@ void drawPieChart(
       height: radius * 2,
     );
     double sweepAngle = pi * 2 * (datas[i].value / maxData);
+    currentAngle += sweepAngle;
+
     canvas.drawArc(rect, 0.0, sweepAngle, true, partPaint..color = theme[i]);
     canvas.drawArc(
       rect,
@@ -50,7 +53,15 @@ void drawPieChart(
         ..color = Colors.white
         ..strokeWidth = 2.0,
     );
-    _drawValues(datas[i].value, sweepAngle, radius, maxData, canvas);
+
+    _drawValues(
+      datas[i].value,
+      sweepAngle,
+      currentAngle,
+      radius,
+      maxData,
+      canvas,
+    );
     canvas.rotate(sweepAngle);
   }
   canvas.restore();
@@ -59,6 +70,7 @@ void drawPieChart(
 void _drawValues(
   double value,
   double sweepAngle,
+  double currentAngle,
   double radius,
   double maxData,
   Canvas canvas,
@@ -67,11 +79,8 @@ void _drawValues(
   canvas.rotate(sweepAngle / 2);
   canvas.translate(radius / 2, 0.0);
 
-  // canvas.drawCircle(
-  //   Offset.zero,
-  //   4.0,
-  //   Paint()..color = Colors.amber,
-  // );
+  /// 用于绘制水平文字
+  canvas.rotate(pi / 2 - (currentAngle - sweepAngle / 2));
 
   String percent = ((value / maxData * 100).toStringAsFixed(1)) + '%';
   TextSpan text = TextSpan(
