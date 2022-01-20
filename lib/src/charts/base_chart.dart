@@ -6,6 +6,8 @@ import './column/draw_column_chart.dart';
 import './curve/draw_cruve_chart.dart';
 import './line/draw_line_chart.dart';
 import 'bar/draw_bar_chart.dart';
+import 'pie/draw_pie.chart.dart';
+import './models/data_item.dart';
 
 class BaseChart extends StatefulWidget {
   final String title;
@@ -13,6 +15,7 @@ class BaseChart extends StatefulWidget {
   final double height;
   final List<Color> theme;
   final List<Series> series;
+  final List<DataItem>? datas;
   final List<String> xaxis;
   final List<String> yaxis;
   final ChartType type;
@@ -27,6 +30,7 @@ class BaseChart extends StatefulWidget {
     required this.type,
     required this.xaxis,
     required this.yaxis,
+    this.datas,
   }) : super(key: key);
 
   @override
@@ -63,7 +67,12 @@ class _BaseChartState extends State<BaseChart>
           children: [
             ChartTitle(title: widget.title),
             ChartPainter(animation: _animation, widget: widget),
-            ChartLegend(theme: widget.theme, series: widget.series),
+            ChartLegend(
+              theme: widget.theme,
+              series: widget.series,
+              type: widget.type,
+              datas: widget.datas,
+            ),
           ],
         ),
       ),
@@ -101,6 +110,7 @@ class ChartPainter extends StatelessWidget {
                 xaxis: widget.xaxis,
                 yaxis: widget.yaxis,
                 type: widget.type,
+                datas: widget.datas,
               ),
               size: Size.infinite,
             ),
@@ -115,6 +125,7 @@ class BaseChartPainter extends CustomPainter {
   final ChartType type;
   final List<Color> theme;
   final List<Series> series;
+  final List<DataItem>? datas;
   final List<String> xaxis;
   final List<String> yaxis;
   final Animation<double> animation;
@@ -126,6 +137,7 @@ class BaseChartPainter extends CustomPainter {
     required this.yaxis,
     required this.type,
     required this.animation,
+    this.datas,
   }) : super(repaint: animation);
 
   final TextPainter _textPainter = TextPainter(
@@ -239,6 +251,8 @@ class BaseChartPainter extends CustomPainter {
         drawLineChart(
             series.data, color, canvas, size, linePaint, _xStep, _numUnit);
         break;
+      case ChartType.pie:
+        break;
       default:
     }
     canvas.restore();
@@ -273,16 +287,29 @@ class BaseChartPainter extends CustomPainter {
         _gridPaint,
         _drawAxisText,
       );
+      for (int i = 0; i < series.length; i++) {
+        Color color = theme[i];
+        Series serie = series[i];
+        _drawSeries(serie, color, canvas, size);
+      }
+    } else if (type == ChartType.pie) {
+      drawPieChart(
+        datas,
+        theme,
+        _chartPaddding,
+        canvas,
+        size,
+      );
     } else {
       _moveOrigin(canvas, size);
       _drawXAxis(canvas, size);
       _drawYAxis(canvas, size);
-    }
 
-    for (int i = 0; i < series.length; i++) {
-      Color color = theme[i];
-      Series serie = series[i];
-      _drawSeries(serie, color, canvas, size);
+      for (int i = 0; i < series.length; i++) {
+        Color color = theme[i];
+        Series serie = series[i];
+        _drawSeries(serie, color, canvas, size);
+      }
     }
   }
 
@@ -298,42 +325,55 @@ class ChartLegend extends StatelessWidget {
     Key? key,
     required this.series,
     required this.theme,
+    required this.type,
+    this.datas,
   }) : super(key: key);
 
+  final ChartType type;
   final List<Series> series;
   final List<Color> theme;
+  final List<DataItem>? datas;
 
   @override
   Widget build(BuildContext context) {
+    int len;
+
+    if (type == ChartType.pie || type == ChartType.donut) {
+      len = datas!.length;
+    } else {
+      len = series.length;
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
-          series.length,
-          (index) => Container(
-            width: 80.0,
-            padding: EdgeInsets.only(right: 10.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 10.0,
-                  height: 10.0,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: theme[index],
-                    shape: BoxShape.circle,
+          len,
+          (index) {
+            String text;
+
+            if (type == ChartType.pie || type == ChartType.donut) {
+              text = datas![index].name;
+            } else {
+              text = series[index].name;
+            }
+            return Container(
+              margin: EdgeInsets.only(right: 5.0),
+              padding: EdgeInsets.only(right: 5.0, left: 5.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(backgroundColor: theme[index], radius: 5.0),
+                  SizedBox(width: 4.0),
+                  Text(
+                    text,
+                    style: TextStyle(fontSize: 12.0, height: 1.0),
                   ),
-                ),
-                SizedBox(width: 4.0),
-                Text(
-                  series[index].name,
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ],
-            ),
-          ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

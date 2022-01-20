@@ -83,8 +83,6 @@ final _datas1 = [
   DataItem(name: '4月', value: 390.0),
   DataItem(name: '5月', value: 439.0),
   DataItem(name: '6月', value: 280.0),
-  DataItem(name: '7月', value: 756.0),
-  DataItem(name: '8月', value: 378.0),
 ];
 
 final _datas2 = [

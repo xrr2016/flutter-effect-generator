@@ -7,6 +7,7 @@ List<Color> colors0 = [
   Color(0xff00e396),
   Color(0xffFF9800),
   Color(0xffE91E63),
+  Color(0xff554298),
   Color(0xff546E7A),
 ];
 
