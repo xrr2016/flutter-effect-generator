@@ -11,11 +11,13 @@ import '../models/data_item.dart';
 
 class TreeMap extends StatefulWidget {
   final String title;
+  final List<Color> theme;
   final List<DataItem> data;
 
   TreeMap({
     Key? key,
     required this.data,
+    required this.theme,
     required this.title,
   }) : super(key: key);
 
@@ -54,6 +56,7 @@ class _TreeMapState extends State<TreeMap> with SingleTickerProviderStateMixin {
       ),
       painter: TreeMapPainter(
         data: widget.data,
+        theme: widget.theme,
         animation: _controller,
       ),
       type: ChartType.treeMap,
@@ -84,12 +87,14 @@ class _TreeMapState extends State<TreeMap> with SingleTickerProviderStateMixin {
 class TreeMapPainter extends CustomPainter {
   TreeMapPainter({
     required this.data,
+    required this.theme,
     required this.animation,
   }) : super(repaint: animation) {
     _total = data.fold(0, (sum, item) => sum + item.value);
-    _rootNode = parseArrayToBST(data);
+    _rootNode = parseArrayToBST(data, theme);
   }
 
+  final List<Color> theme;
   final List<DataItem> data;
   final Animation<double> animation;
 
@@ -100,15 +105,7 @@ class TreeMapPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Rect rootRect = Rect.fromLTWH(0, 0, size.width, size.height);
 
-    drawTreeRects(
-      canvas,
-      _rootNode,
-      rootRect,
-      _rootNode,
-      0,
-      data,
-      animation.value,
-    );
+    drawTreeRects(canvas, _rootNode, rootRect, _rootNode, 0, data);
   }
 
   @override

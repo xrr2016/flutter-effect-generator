@@ -55,6 +55,7 @@ class _ChartsRenderState extends State<ChartsRender> {
         return TreeMap(
           title: widget.controller.title,
           data: widget.controller.datas[0],
+          theme: widget.controller.theme,
         );
       case ChartType.pie:
         return PieChart(

@@ -1,8 +1,10 @@
+import 'dart:ui';
+
 import '../colors.dart';
 import './tree_node.dart';
 import '../models/data_item.dart';
 
-TreeNode parseArrayToBST(List<DataItem> array) {
+TreeNode parseArrayToBST(List<DataItem> array, List<Color> theme) {
   int n = array.length;
   double sum = 0.0;
   List<double> sums = List.filled(n + 1, 0);
@@ -19,7 +21,7 @@ TreeNode parseArrayToBST(List<DataItem> array) {
   void partition(int start, int end, TreeNode node) {
     if (start >= end - 1) {
       node.item.name = array[start].name;
-      node.color = colors1[start];
+      node.color = theme[start];
       return;
     }
 

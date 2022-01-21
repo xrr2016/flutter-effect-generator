@@ -1,15 +1,16 @@
 import '../exports.dart';
 import './models/series.dart';
 import './chart_type.dart';
-import 'area/draw_area_chart.dart';
+import './area/draw_area_chart.dart';
 import './column/draw_column_chart.dart';
 import './curve/draw_cruve_chart.dart';
 import './line/draw_line_chart.dart';
-import 'bar/draw_bar_chart.dart';
-import 'donut/draw_dount_cahrt.dart';
+import './bar/draw_bar_chart.dart';
+import './donut/draw_dount_cahrt.dart';
 import './radar/draw_radar_chart.dart';
-import 'pie/draw_pie.chart.dart';
+import './pie/draw_pie.chart.dart';
 import './models/data_item.dart';
+import './tree_map/draw_tree_map_chart.dart';
 
 class BaseChart extends StatefulWidget {
   final String title;
@@ -321,6 +322,14 @@ class BaseChartPainter extends CustomPainter {
         canvas,
         size,
       );
+    } else if (type == ChartType.treeMap) {
+      drawTreeMapChart(
+        datas,
+        theme,
+        _chartPaddding,
+        canvas,
+        size,
+      );
     } else {
       _moveOrigin(canvas, size);
       _drawXAxis(canvas, size);
@@ -359,7 +368,9 @@ class ChartLegend extends StatelessWidget {
   Widget build(BuildContext context) {
     int len;
 
-    if (type == ChartType.pie || type == ChartType.donut) {
+    if (type == ChartType.pie ||
+        type == ChartType.donut ||
+        type == ChartType.treeMap) {
       len = datas!.length;
     } else {
       len = series.length;
@@ -374,7 +385,9 @@ class ChartLegend extends StatelessWidget {
           (index) {
             String text;
 
-            if (type == ChartType.pie || type == ChartType.donut) {
+            if (type == ChartType.pie ||
+                type == ChartType.donut ||
+                type == ChartType.treeMap) {
               text = datas![index].name;
             } else {
               text = series[index].name;

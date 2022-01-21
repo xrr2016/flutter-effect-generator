@@ -49,8 +49,19 @@ class _ChartsViewState extends State<ChartsView> {
             child: Wrap(
               children: [
                 BaseChart(
-                  width: 480.0,
-                  height: 360.0,
+                  width: 460.0,
+                  height: 320.0,
+                  type: ChartType.treeMap,
+                  title: '2022 上半年游客组成',
+                  theme: _chartsController.theme,
+                  series: _chartsController.series,
+                  datas: _chartsController.datas[0],
+                  xaxis: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
+                  yaxis: ['100.0', '200.0', '300.0', '400.0', '500.0'],
+                ),
+                BaseChart(
+                  width: 460.0,
+                  height: 320.0,
                   type: ChartType.radar,
                   title: '程序员能力组成',
                   theme: _chartsController.theme,
@@ -59,8 +70,8 @@ class _ChartsViewState extends State<ChartsView> {
                   yaxis: ['100.0', '200.0', '300.0', '400.0', '500.0'],
                 ),
                 BaseChart(
-                  width: 480.0,
-                  height: 360.0,
+                  width: 460.0,
+                  height: 320.0,
                   type: ChartType.donut,
                   title: '2022 上半年游客组成',
                   theme: _chartsController.theme,
@@ -70,8 +81,8 @@ class _ChartsViewState extends State<ChartsView> {
                   yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
-                  width: 480.0,
-                  height: 360.0,
+                  width: 460.0,
+                  height: 320.0,
                   type: ChartType.pie,
                   title: '2022 上半年游客组成',
                   theme: _chartsController.theme,
@@ -81,8 +92,8 @@ class _ChartsViewState extends State<ChartsView> {
                   yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
-                  width: 480.0,
-                  height: 360.0,
+                  width: 460.0,
+                  height: 320.0,
                   type: ChartType.area,
                   title: '2022 上半年游客统计表',
                   theme: _chartsController.theme,
@@ -91,8 +102,8 @@ class _ChartsViewState extends State<ChartsView> {
                   yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
-                  width: 480.0,
-                  height: 360.0,
+                  width: 460.0,
+                  height: 320.0,
                   type: ChartType.column,
                   title: '2022 上半年游客统计表',
                   theme: _chartsController.theme,
@@ -101,8 +112,8 @@ class _ChartsViewState extends State<ChartsView> {
                   yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
-                  width: 480.0,
-                  height: 360.0,
+                  width: 460.0,
+                  height: 320.0,
                   type: ChartType.curve,
                   title: '2022 上半年游客统计表',
                   theme: _chartsController.theme,
@@ -111,8 +122,8 @@ class _ChartsViewState extends State<ChartsView> {
                   yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
-                  width: 480.0,
-                  height: 360.0,
+                  width: 460.0,
+                  height: 320.0,
                   type: ChartType.line,
                   title: '2022 上半年游客统计表',
                   theme: _chartsController.theme,
@@ -121,8 +132,8 @@ class _ChartsViewState extends State<ChartsView> {
                   yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
-                  width: 480.0,
-                  height: 360.0,
+                  width: 460.0,
+                  height: 320.0,
                   type: ChartType.bar,
                   title: '2022 上半年游客统计表',
                   theme: _chartsController.theme,
