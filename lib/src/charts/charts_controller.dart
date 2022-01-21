@@ -108,7 +108,7 @@ final _datas3 = [
 ];
 
 class ChartsController extends ChangeNotifier {
-  ChartType chartType = ChartType.area;
+  ChartType chartType = ChartType.radar;
 
   void changeChartType(ChartType type) {
     chartType = type;

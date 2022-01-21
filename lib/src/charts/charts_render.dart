@@ -61,41 +61,41 @@ class _ChartsRenderState extends State<ChartsRender> {
           title: widget.controller.title,
           data: widget.controller.datas[0],
         );
-      // case ChartType.radar:
-      //   return RadarChart(
-      //     title: _chartTitle(),
-      //     datas: [
-      //       [
-      //         DataItem(name: '小明', value: 80.0),
-      //         DataItem(name: '小明', value: 70.0),
-      //         DataItem(name: '小明', value: 60.0),
-      //         DataItem(name: '小明', value: 50.0),
-      //         DataItem(name: '小明', value: 90.0),
-      //         DataItem(name: '小明', value: 80.0),
-      //       ],
-      //       [
-      //         DataItem(name: '小林', value: 50.0),
-      //         DataItem(name: '小林', value: 90.0),
-      //         DataItem(name: '小林', value: 30.0),
-      //         DataItem(name: '小林', value: 70.0),
-      //         DataItem(name: '小林', value: 60.0),
-      //         DataItem(name: '小林', value: 40.0),
-      //       ],
-      //     ],
-      //     scores: [
-      //       10.0,
-      //       20.0,
-      //       30.0,
-      //       40.0,
-      //       50.0,
-      //       60.0,
-      //       70.0,
-      //       80.0,
-      //       90.0,
-      //       100.0,
-      //     ],
-      //     features: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
-      //   );
+      case ChartType.radar:
+        return RadarChart(
+          title: Text('111'),
+          datas: [
+            [
+              DataItem(name: '小明', value: 80.0),
+              DataItem(name: '小明', value: 70.0),
+              DataItem(name: '小明', value: 60.0),
+              DataItem(name: '小明', value: 50.0),
+              DataItem(name: '小明', value: 90.0),
+              DataItem(name: '小明', value: 80.0),
+            ],
+            [
+              DataItem(name: '小林', value: 50.0),
+              DataItem(name: '小林', value: 90.0),
+              DataItem(name: '小林', value: 30.0),
+              DataItem(name: '小林', value: 70.0),
+              DataItem(name: '小林', value: 60.0),
+              DataItem(name: '小林', value: 40.0),
+            ],
+          ],
+          scores: [
+            10.0,
+            20.0,
+            30.0,
+            40.0,
+            50.0,
+            60.0,
+            70.0,
+            80.0,
+            90.0,
+            100.0,
+          ],
+          features: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
+        );
       case ChartType.donut:
         return DonutCahrt(
           title: widget.controller.title,

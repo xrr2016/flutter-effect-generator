@@ -1,6 +1,5 @@
-import 'package:flutter_effect_generator/src/charts/base_chart.dart';
-import 'package:flutter_effect_generator/src/charts/chart_type.dart';
-
+import './base_chart.dart';
+import './chart_type.dart';
 import '../exports.dart';
 import './charts_select.dart';
 import './charts_render.dart';
@@ -52,20 +51,23 @@ class _ChartsViewState extends State<ChartsView> {
                 BaseChart(
                   width: 480.0,
                   height: 360.0,
+                  type: ChartType.radar,
+                  title: '程序员能力组成',
+                  theme: _chartsController.theme,
+                  series: _chartsController.series,
+                  xaxis: ['学习能力', '英语水平', '编码能力', '解决问题能力', '工作态度', '沟通能力'],
+                  yaxis: ['100.0', '200.0', '300.0', '400.0', '500.0'],
+                ),
+                BaseChart(
+                  width: 480.0,
+                  height: 360.0,
                   type: ChartType.donut,
                   title: '2022 上半年游客组成',
                   theme: _chartsController.theme,
                   series: _chartsController.series,
                   datas: _chartsController.datas[0],
                   xaxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
-                  yaxis: [
-                    '0',
-                    '100',
-                    '200',
-                    '300',
-                    '400',
-                    '500',
-                  ],
+                  yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
                   width: 480.0,
@@ -76,14 +78,7 @@ class _ChartsViewState extends State<ChartsView> {
                   series: _chartsController.series,
                   datas: _chartsController.datas[0],
                   xaxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
-                  yaxis: [
-                    '0',
-                    '100',
-                    '200',
-                    '300',
-                    '400',
-                    '500',
-                  ],
+                  yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
                   width: 480.0,
@@ -93,14 +88,7 @@ class _ChartsViewState extends State<ChartsView> {
                   theme: _chartsController.theme,
                   series: _chartsController.series,
                   xaxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
-                  yaxis: [
-                    '0',
-                    '100',
-                    '200',
-                    '300',
-                    '400',
-                    '500',
-                  ],
+                  yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
                   width: 480.0,
@@ -110,14 +98,7 @@ class _ChartsViewState extends State<ChartsView> {
                   theme: _chartsController.theme,
                   series: _chartsController.series,
                   xaxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
-                  yaxis: [
-                    '0',
-                    '100',
-                    '200',
-                    '300',
-                    '400',
-                    '500',
-                  ],
+                  yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
                   width: 480.0,
@@ -127,14 +108,7 @@ class _ChartsViewState extends State<ChartsView> {
                   theme: _chartsController.theme,
                   series: _chartsController.series,
                   xaxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
-                  yaxis: [
-                    '0',
-                    '100',
-                    '200',
-                    '300',
-                    '400',
-                    '500',
-                  ],
+                  yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
                   width: 480.0,
@@ -144,14 +118,7 @@ class _ChartsViewState extends State<ChartsView> {
                   theme: _chartsController.theme,
                   series: _chartsController.series,
                   xaxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
-                  yaxis: [
-                    '0',
-                    '100',
-                    '200',
-                    '300',
-                    '400',
-                    '500',
-                  ],
+                  yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
                 BaseChart(
                   width: 480.0,
@@ -161,14 +128,7 @@ class _ChartsViewState extends State<ChartsView> {
                   theme: _chartsController.theme,
                   series: _chartsController.series,
                   xaxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
-                  yaxis: [
-                    '0',
-                    '100',
-                    '200',
-                    '300',
-                    '400',
-                    '500',
-                  ],
+                  yaxis: ['0', '100', '200', '300', '400', '500'],
                 ),
 
                 // ChartsSelect(controller: _chartsController),

@@ -9,14 +9,14 @@ An app for generating interesting stuff, build with flutter.
 - [x] Bar
 - [x] Line
 - [x] Curve
-- [ ] Pie
-- [ ] Donut
+- [x] Pie
+- [x] Donut
 - [ ] Radar
 - [ ] TreeMap
-- [ ] TimeSheet
-- [ ] Gauge
-- [ ] Wave
 - [ ] CalenderHeatMap
+- [ ] TimeSheet
+- [ ] Wave
+- [ ] Gauge
 
 <!-- ![screenshot](./screenshot.jpg) -->
 

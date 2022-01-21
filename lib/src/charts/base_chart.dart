@@ -7,6 +7,7 @@ import './curve/draw_cruve_chart.dart';
 import './line/draw_line_chart.dart';
 import 'bar/draw_bar_chart.dart';
 import 'donut/draw_dount_cahrt.dart';
+import './radar/draw_radar_chart.dart';
 import 'pie/draw_pie.chart.dart';
 import './models/data_item.dart';
 
@@ -307,6 +308,16 @@ class BaseChartPainter extends CustomPainter {
         theme,
         _chartPaddding,
         40.0,
+        canvas,
+        size,
+      );
+    } else if (type == ChartType.radar) {
+      drawRadarChart(
+        series,
+        xaxis,
+        yaxis,
+        theme,
+        _chartPaddding,
         canvas,
         size,
       );
